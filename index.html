@@ -117,7 +117,7 @@
         }
 
         .char-item {
-            aspect-ratio: 1;
+            aspect-ratio: 1.2;
             background: #1a1a2e;
             border: 2px solid #333;
             display: flex;
@@ -126,7 +126,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
-            padding: 8px;
+            padding: 6px;
         }
         
         .char-item:hover {
@@ -169,12 +169,22 @@
     </style>
 </head>
 <body class="p-4 md:p-10">
+    <!-- 角色背景图层 -->
+    <div id="bgOverlay" class="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-0 transition-opacity duration-500" style="background-position: center 20%;"></div>
+    <div class="fixed inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/85 to-black"></div>
+    
     <div class="max-w-6xl mx-auto">
         <!-- HEADER -->
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-16 border-b-2 border-zinc-800 pb-6">
-            <div class="flex items-baseline gap-4">
-                <h1 class="impact-text text-4xl sm:text-5xl tracking-tighter">FRAME LAB</h1>
-                <span class="text-zinc-500 font-bold text-xs sm:text-sm tracking-widest uppercase">SF6</span>
+            <div class="flex flex-col">
+                <div class="flex items-center gap-3">
+                    <h1 class="impact-text text-4xl sm:text-5xl tracking-tighter">SF6 FRAME LAB</h1>
+                    <button onclick="openHelpModal()" class="group px-2.5 py-1 bg-gradient-to-r from-cyan-600/20 to-pink-600/20 border border-cyan-500/50 hover:border-cyan-400 text-cyan-400 hover:text-cyan-300 text-xs font-bold tracking-wider uppercase transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.3)] flex items-center gap-1" title="使用说明">
+                        <span class="text-sm">?</span>
+                        <span>说明</span>
+                    </button>
+                </div>
+                <span class="text-zinc-500 font-bold text-xs tracking-widest mt-1">made by Yuetian</span>
             </div>
             <nav class="flex items-center gap-4">
                 <button onclick="openCharacterModal()" class="champion-btn px-4 sm:px-6 py-2 text-sm tracking-widest uppercase flex items-center gap-2">
@@ -191,10 +201,10 @@
         <!-- VIEW: SOLUTION -->
         <div id="view-notes" class="space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                <h2 class="impact-text text-2xl sm:text-3xl text-zinc-400">OPTIMIZED_SOLUTIONS</h2>
+                <h2 class="impact-text text-2xl sm:text-3xl text-zinc-400">卡帧策略</h2>
                 <div class="flex gap-2">
                     <button onclick="resetToDefault()" class="px-4 py-3 text-xs tracking-widest uppercase bg-zinc-800 text-zinc-500 hover:bg-zinc-700 hover:text-white transition-all">Reset</button>
-                    <button onclick="openNoteModal()" class="btn-hype px-6 sm:px-8 py-3 text-xs tracking-widest uppercase">Add Scenario</button>
+                    <button onclick="openNoteModal()" class="btn-hype px-8 sm:px-10 py-4 text-sm tracking-widest uppercase">Add Scenario</button>
                 </div>
             </div>
             <!-- 搜索框和排序按钮 -->
@@ -259,11 +269,11 @@
             <div class="space-y-6">
                 <div>
                     <label class="block text-[10px] font-black uppercase mb-2 text-zinc-500">Advantage Frames (初始有利帧)</label>
-                    <input type="number" id="inputAdv" class="w-full bg-black border border-zinc-700 p-4 text-4xl font-black text-pink-500" placeholder="32">
+                    <input type="number" id="inputAdv" class="w-full bg-black border border-zinc-700 p-4 text-4xl font-black text-pink-500" placeholder="40">
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase mb-2 text-zinc-500">Scenario Context (情境说明)</label>
-                    <input type="text" id="inputContext" class="w-full bg-black border border-zinc-700 p-4 font-bold" placeholder="例如：2HK 破招击倒">
+                    <input type="text" id="inputContext" class="w-full bg-black border border-zinc-700 p-4 font-bold" placeholder="例如：2HK放倒">
                 </div>
                 <div class="flex gap-2">
                     <button onclick="saveNote()" class="flex-1 bg-pink-600 text-white py-4 font-black impact-text text-lg">Calculate</button>
@@ -286,6 +296,52 @@
                     <span class="text-green-500">●</span> 已有数据 &nbsp;&nbsp;
                     <span class="text-zinc-600">●</span> 暂无数据 (可手动导入)
                 </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Help -->
+    <div id="helpModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-zinc-900 border border-zinc-700 w-full max-w-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="impact-text text-2xl sm:text-3xl text-cyan-400">使用说明</h2>
+                <button onclick="closeHelpModal()" class="text-zinc-500 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="space-y-6 text-zinc-300 text-sm leading-relaxed">
+                <section>
+                    <h3 class="text-lg font-bold text-white mb-2">📌 这是什么？</h3>
+                    <p>SF6 FRAME LAB 是一款卡帧套路压制计算工具，帮助找到最优的<strong class="text-cyan-400">卡帧压制</strong>组合方案。</p>
+                </section>
+                
+                <section>
+                    <h3 class="text-lg font-bold text-white mb-2">🎮 如何使用</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-zinc-400">
+                        <li><strong class="text-white">选择角色</strong> - 点击右上角角色按钮切换</li>
+                        <li><strong class="text-white">查看卡帧策略</strong> - SOLUTION 页签展示各种击倒情境下的最优方案</li>
+                        <li><strong class="text-white">添加场景</strong> - 点击 Add Scenario 输入有利帧数，系统自动计算</li>
+                        <li><strong class="text-white">管理帧数据</strong> - FRAME DATA 页签可查看/导入角色招式数据</li>
+                    </ol>
+                </section>
+                
+                <section>
+                    <h3 class="text-lg font-bold text-white mb-2">💡 方案解读</h3>
+                    <ul class="space-y-2 text-zinc-400">
+                        <li><span class="text-yellow-500">卡帧招式</span> → 用来消耗多余的有利帧</li>
+                        <li><span class="text-white">压制招式</span> → 对手起身时攻击命中的招式</li>
+                        <li><span class="text-cyan-400">H +X</span> → 命中时的帧数优势</li>
+                        <li><span class="text-pink-400">B +X/-X</span> → 防御时的帧数优势</li>
+                        <li><span class="text-zinc-500">偷 XF</span> → 比正常更早命中，多偷的帧数</li>
+                    </ul>
+                </section>
+                
+                <section>
+                    <h3 class="text-lg font-bold text-white mb-2">⭐ 收藏功能</h3>
+                    <p class="text-zinc-400">点击方案旁的 <span class="text-yellow-400">☆</span> 可收藏个人喜欢的方案，收藏后会优先显示并高亮。</p>
+                </section>
+                
+                <div class="pt-4 border-t border-zinc-800 text-center text-zinc-600 text-xs">
+                    Made by Yuetian
+                </div>
             </div>
         </div>
     </div>
@@ -326,14 +382,16 @@
                     secondary: "#f5f5f5",    // 白色
                     accent: "#1a1a1a",       // 黑色
                     cardBg: "#1a1010",       // 深红背景
-                    cardBorder: "#3d1515"    // 红色边框
+                    cardBorder: "#3d1515",   // 红色边框
+                    bgImage: "asset/ryu_ss01.jpg"
                 },
                 "BLANKA": {
                     primary: "#ffd700",      // 金黄色
                     secondary: "#50fa7b",    // 亮草绿色
                     accent: "#00ff7f",       // 春绿色
                     cardBg: "#0a1f0a",       // 深绿背景
-                    cardBorder: "#2d5a2d"    // 亮绿边框
+                    cardBorder: "#2d5a2d",   // 亮绿边框
+                    bgImage: "asset/blanka_ss01.jpg"
                 },
                 // 默认主题（用于无特定主题的角色）
                 "_DEFAULT": {
@@ -341,7 +399,8 @@
                     secondary: "#00f2ff",
                     accent: "#ffd700",
                     cardBg: "#111114",
-                    cardBorder: "#222"
+                    cardBorder: "#222",
+                    bgImage: null
                 }
             }
         };
@@ -376,6 +435,16 @@
             root.style.setProperty('--theme-accent', theme.accent);
             root.style.setProperty('--theme-card-bg', theme.cardBg);
             root.style.setProperty('--theme-card-border', theme.cardBorder);
+            
+            // 应用背景图
+            const bgOverlay = document.getElementById('bgOverlay');
+            if (theme.bgImage) {
+                bgOverlay.style.backgroundImage = `url('${theme.bgImage}')`;
+                bgOverlay.style.opacity = '1';
+            } else {
+                bgOverlay.style.backgroundImage = 'none';
+                bgOverlay.style.opacity = '0';
+            }
             
             console.log(`[主题] 应用 ${char} 主题:`, theme);
         }
@@ -1379,9 +1448,9 @@
                 // 特殊处理 Dash 招式
                 if (m.isDash) {
                     return `
-                        <tr class="border-b border-zinc-900 hover:bg-zinc-800/20 bg-yellow-900/10">
-                            <td class="p-4 text-yellow-400">${m.name} <span class="text-[10px] text-yellow-600">DASH</span></td>
-                            <td class="p-4 text-center font-mono text-yellow-500" colspan="3">${m.dashFrames || 19}F 总帧数 (仅卡帧用)</td>
+                        <tr class="border-b border-zinc-900 hover:bg-zinc-800/20">
+                            <td class="p-4 text-zinc-300">${m.name} <span class="text-[10px] text-zinc-500">DASH</span></td>
+                            <td class="p-4 text-center font-mono text-zinc-500" colspan="3">${m.dashFrames || 19}F 总帧数 (仅卡帧用)</td>
                             <td class="p-4 text-center font-mono text-zinc-600">-</td>
                             <td class="p-4 text-center font-mono text-zinc-600">-</td>
                             <td class="p-4 text-right">
@@ -1394,12 +1463,13 @@
                 // 特殊处理投技
                 if (m.isThrow) {
                     return `
-                        <tr class="border-b border-zinc-900 hover:bg-zinc-800/20 bg-orange-900/10">
-                            <td class="p-4 text-orange-400">${m.name} <span class="text-[10px] text-orange-600">THROW</span></td>
-                            <td class="p-4 text-center font-mono text-orange-500">${m.startup}</td>
-                            <td class="p-4 text-center font-mono text-orange-500">${m.active}</td>
-                            <td class="p-4 text-center font-mono text-orange-500">${m.recovery}</td>
-                            <td class="p-4 text-center font-mono text-orange-400" colspan="2">投中即获利</td>
+                        <tr class="border-b border-zinc-900 hover:bg-zinc-800/20">
+                            <td class="p-4 text-zinc-300">${m.name} <span class="text-[10px] text-zinc-500">THROW</span></td>
+                            <td class="p-4 text-center font-mono text-zinc-500">${m.startup}</td>
+                            <td class="p-4 text-center font-mono text-zinc-500">${m.active}</td>
+                            <td class="p-4 text-center font-mono text-zinc-500">${m.recovery}</td>
+                            <td class="p-4 text-center font-mono text-zinc-600">-</td>
+                            <td class="p-4 text-center font-mono text-zinc-600">-</td>
                             <td class="p-4 text-right">
                                 <button onclick="removeMove(${idx})" class="text-zinc-700 hover:text-red-500 transition-colors">✕</button>
                             </td>
@@ -1441,6 +1511,14 @@
         
         function closeCharModal() { 
             document.getElementById('charModal').classList.add('hidden'); 
+        }
+        
+        function openHelpModal() {
+            document.getElementById('helpModal').classList.remove('hidden');
+        }
+        
+        function closeHelpModal() {
+            document.getElementById('helpModal').classList.add('hidden');
         }
         
         function openNoteModal() { 
@@ -1579,6 +1657,7 @@
             if (e.key === 'Escape') {
                 closeModal();
                 closeCharModal();
+                closeHelpModal();
             }
             if (e.key === 'Enter' && !document.getElementById('noteModal').classList.contains('hidden')) {
                 saveNote();
