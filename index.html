@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>SF6 FRAME LAB - 街霸6 帧数计算器</title>
     <meta name="description" content="Street Fighter 6 帧数压制计算工具，自动计算最优卡帧方案和投技时机">
     <meta name="keywords" content="SF6, Street Fighter 6, 街霸6, 帧数, Frame Data, 压起身, Meaty, Okizeme">
@@ -20,37 +20,130 @@
             --theme-bg: #0a0a0c;
             --theme-card-bg: #111114;
             --theme-card-border: #222;
-            /* 兼容旧变量 */
-            --neon-pink: var(--theme-primary);
-            --neon-blue: var(--theme-secondary);
-            --neon-gold: var(--theme-accent);
-            --bg-black: var(--theme-bg);
         }
 
         body { 
-            background-color: var(--bg-black); 
+            background-color: var(--theme-bg); 
             color: #fff; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
         }
-
+        
         .impact-text { 
             font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif; 
             text-transform: uppercase; 
             font-style: italic; 
         }
         
-        .trend-card { 
-            background: var(--theme-card-bg);
-            border: 2px solid var(--theme-card-border);
-            transition: border-color 0.3s, background 0.3s;
+        /* ========== 阶段A：Glitch 动态效果 ========== */
+        /* 主标题悬停 Glitch - 持续但不规律 */
+        .glitch-hover {
+            position: relative;
+            cursor: default;
+            user-select: none;
+            display: inline-block;
         }
         
-        .trend-card:hover { border-color: var(--theme-primary); }
+        /* 悬停时抖动 */
+        html.loaded .glitch-hover:hover {
+            animation: glitch-chaotic 1.1s steps(1) infinite !important;
+            text-shadow: 
+                3px 0 var(--theme-primary), 
+                -3px 0 var(--theme-secondary),
+                0 0 10px var(--theme-primary) !important;
+        }
+        
+        /* 悬停离开后立即静止，无动画 */
+        html.loaded .glitch-hover:not(:hover) {
+            animation: none !important;
+            transform: none;
+            text-shadow: none;
+        }
+        
+        @keyframes glitch-chaotic {
+            /* 0-91%: 快速抖动闪烁（约1秒） */
+            0% { transform: translate(0) skewX(0); }
+            5% { transform: translate(-4px, 3px) skewX(-3deg); }
+            7% { transform: translate(0) skewX(0); }
+            12% { transform: translate(3px, -2px) skewX(2deg); }
+            14% { transform: translate(0) skewX(0); }
+            20% { transform: translate(-2px, -3px) skewX(-1deg); }
+            22% { transform: translate(0) skewX(0); }
+            28% { transform: translate(5px, 1px) skewX(4deg); }
+            30% { transform: translate(0) skewX(0); }
+            36% { transform: translate(-3px, 2px) skewX(-2deg); }
+            38% { transform: translate(0) skewX(0); }
+            44% { transform: translate(2px, -4px) skewX(3deg); }
+            46% { transform: translate(0) skewX(0); }
+            52% { transform: translate(-1px, 1px) skewX(-1deg); }
+            54% { transform: translate(0) skewX(0); }
+            60% { transform: translate(4px, -1px) skewX(2deg); }
+            62% { transform: translate(0) skewX(0); }
+            68% { transform: translate(-3px, -2px) skewX(-2deg); }
+            70% { transform: translate(0) skewX(0); }
+            76% { transform: translate(2px, 3px) skewX(1deg); }
+            78% { transform: translate(0) skewX(0); }
+            84% { transform: translate(-2px, -1px) skewX(-2deg); }
+            86% { transform: translate(0) skewX(0); }
+            91% { transform: translate(3px, 2px) skewX(1deg); }
+            /* 91-100%: 短暂停顿（约0.1秒） */
+            91%, 100% { transform: translate(0) skewX(0); }
+        }
+        
+        /* 招式名悬停 - 优雅微动效 + 发光 */
+        .glitch-text {
+            cursor: default;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .glitch-text:hover {
+            transform: translateY(-2px);
+            text-shadow: 0 0 15px var(--theme-primary), 0 4px 12px rgba(0, 0, 0, 0.5);
+            filter: brightness(1.15);
+        }
+        
+        /* 帧数数字悬停效果 */
+        .frame-number {
+            cursor: default;
+            display: inline-block;
+        }
+        
+        .frame-number:hover {
+            animation: glitch-number 0.2s ease;
+            color: var(--theme-primary);
+            text-shadow: 0 0 20px var(--theme-primary), 0 0 40px var(--theme-primary);
+        }
+        
+        @keyframes glitch-number {
+            0%, 100% { transform: translate(0); opacity: 1; }
+            33% { transform: translate(2px, -1px); opacity: 0.8; }
+            66% { transform: translate(-2px, 1px); opacity: 0.9; }
+        }
+        
+        /* ========== 第一阶段：New-Brutalism 结构强化 ========== */
+        .trend-card { 
+            background: color-mix(in srgb, var(--theme-primary) 8%, #0a0a0c);
+            border: 3px solid color-mix(in srgb, var(--theme-primary) 30%, #222);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .trend-card:hover { 
+            border-color: var(--theme-primary); 
+            background: color-mix(in srgb, var(--theme-primary) 12%, #0a0a0c);
+            /* New-Brutalism 半硬阴影：有位移 + 轻微模糊 */
+            box-shadow: 6px 6px 0 color-mix(in srgb, var(--theme-primary) 60%, transparent);
+            transform: translate(-2px, -2px);
+        }
+        
+        .trend-card:active {
+            transform: translate(0, 0);
+            box-shadow: 2px 2px 0 color-mix(in srgb, var(--theme-primary) 40%, transparent);
+        }
 
         .btn-hype {
             background: #fff;
             color: #000;
-            transition: all 0.2s;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 900;
             clip-path: polygon(8% 0, 100% 0, 92% 100%, 0% 100%);
         }
@@ -58,11 +151,32 @@
         .btn-hype:hover {
             background: var(--theme-primary);
             color: #fff;
+            box-shadow: 0 0 25px var(--theme-primary), 0 0 50px color-mix(in srgb, var(--theme-primary) 50%, transparent);
         }
-
-        .stat-result {
-            background: #1a1a1d;
-            border: 1px solid #333;
+        
+        /* ========== 第三阶段：物理点击反馈 ========== */
+        .btn-hype:active {
+            transform: translateY(3px);
+            box-shadow: none;
+            filter: brightness(0.85);
+        }
+        
+        /* ========== 第五阶段：收藏印章标签 ========== */
+        .favorite-stamp {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            background: #f59e0b;
+            color: #000;
+            font-size: 9px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 3px 10px;
+            transform: rotate(-8deg);
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            z-index: 5;
+            pointer-events: none;
         }
 
         .tab-btn {
@@ -72,6 +186,15 @@
             color: #666;
             border-bottom: 2px solid transparent;
             transition: all 0.3s;
+        }
+        
+        .tab-btn:hover {
+            color: var(--theme-primary);
+            text-shadow: 0 0 15px var(--theme-primary);
+        }
+        
+        .tab-btn:active {
+            transform: translateY(2px);
         }
 
         .tab-btn.active { color: #fff; border-bottom-color: var(--theme-primary); }
@@ -85,20 +208,53 @@
             color: var(--theme-secondary);
         }
 
-        /* 角色选择按钮 */
+        /* 角色选择按钮 - 类似 Tab 样式 + 下划线效果 */
         .champion-btn {
-            background: var(--theme-card-bg);
-            border: 2px solid var(--theme-primary);
-            color: var(--theme-primary);
             font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
             font-style: italic;
+            font-size: 1.25rem;
+            color: #666;
             transition: all 0.3s;
+            background: transparent;
+            border: none;
+            padding-bottom: 0.5rem;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        /* 下划线效果 */
+        .champion-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--theme-primary);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px var(--theme-primary);
+        }
+        
+        .champion-btn:hover::after {
+            width: 100%;
         }
         
         .champion-btn:hover {
-            background: var(--theme-primary);
-            color: #fff;
-            box-shadow: 0 0 20px color-mix(in srgb, var(--theme-primary) 40%, transparent);
+            color: var(--theme-primary);
+            text-shadow: 0 0 20px var(--theme-primary);
+        }
+        
+        .champion-btn:active {
+            transform: translateY(2px);
+        }
+        
+        .champion-btn .char-icon {
+            transition: transform 0.3s;
+        }
+        
+        .champion-btn:hover .char-icon {
+            transform: scale(1.2);
         }
 
         /* 角色选择网格 - 响应式 */
@@ -160,25 +316,370 @@
         }
         
         .char-icon { font-size: 24px; }
-
-        /* 加载状态 */
-        .loading { 
-            opacity: 0.5; 
-            pointer-events: none; 
+        
+        /* ========== 移动端优化 ========== */
+        /* 触摸设备上移除 hover 变换效果，避免 sticky hover */
+        @media (hover: none) {
+            .char-item:hover { transform: none; }
+            .trend-card:hover { 
+                border-color: var(--theme-card-border); 
+                box-shadow: none;
+                transform: none;
+            }
+        }
+        
+        /* 移动端始终显示操作按钮（不依赖 hover） */
+        @media (hover: none), (max-width: 640px) {
+            .group .group-hover\:opacity-100 {
+                opacity: 1 !important;
+            }
+            .sm\:opacity-0 {
+                opacity: 0.7 !important;
+            }
+            .sm\:group-hover\/ctx\:opacity-100 {
+                opacity: 1 !important;
+            }
+        }
+        
+        /* 防止 iOS 输入框缩放 */
+        input, textarea, select {
+            font-size: 16px;
+        }
+        @media (min-width: 640px) {
+            input, textarea, select {
+                font-size: inherit;
+            }
+        }
+        
+        /* 优化滚动性能 */
+        .overflow-x-auto, .overflow-y-auto {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* 防止长按弹出菜单 */
+        button, a {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        /* ========== 可访问性优化 ========== */
+        /* 统一焦点样式 */
+        button:focus-visible, 
+        input:focus-visible, 
+        textarea:focus-visible,
+        select:focus-visible,
+        a:focus-visible,
+        details summary:focus-visible {
+            outline: 2px solid var(--theme-secondary);
+            outline-offset: 2px;
+        }
+        
+        /* 减少动画（用户偏好） */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* 高对比度模式支持 */
+        @media (prefers-contrast: high) {
+            .trend-card {
+                border-width: 3px;
+            }
+            button {
+                border: 2px solid currentColor;
+            }
+        }
+        
+        /* 按钮点击反馈 */
+        button:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+        
+        /* iPhone 安全区域适配 */
+        body {
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        /* Modal 底部安全区域 */
+        .fixed.inset-0 > div {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        /* 页面加载过渡，防止 FOUC */
+        html:not(.loaded) body {
+            opacity: 0;
+        }
+        html.loaded body {
+            opacity: 1;
+            transition: opacity 0.3s ease-out;
+        }
+        
+        /* ========== 标题进入动画 ========== */
+        @keyframes title-glitch-in {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px) skewX(-10deg);
+                filter: blur(10px);
+                clip-path: inset(0 100% 0 0);
+            }
+            30% {
+                opacity: 1;
+                transform: translateX(5px) skewX(5deg);
+                filter: blur(0);
+                clip-path: inset(0 0 0 0);
+            }
+            50% {
+                transform: translateX(-3px) skewX(-2deg);
+                text-shadow: 3px 0 var(--theme-primary), -3px 0 var(--theme-secondary);
+            }
+            70% {
+                transform: translateX(2px) skewX(1deg);
+                text-shadow: -2px 0 var(--theme-primary), 2px 0 var(--theme-secondary);
+            }
+            100% {
+                transform: translateX(0) skewX(0);
+                text-shadow: none;
+            }
+        }
+        
+        html.loaded .title-animate {
+            animation: title-glitch-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        html:not(.loaded) .title-animate {
+            opacity: 0;
+        }
+        
+        /* ========== Tab 滑动下划线 ========== */
+        .tab-container {
+            position: relative;
+        }
+        
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 2px;
+            background: var(--theme-primary);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 10px var(--theme-primary);
+        }
+        
+        .tab-btn {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tab-btn.active {
+            text-shadow: 0 0 20px var(--theme-primary);
+        }
+        
+        /* ========== 封条胶带滚动效果 (Marquee Tape) ========== */
+        /* 单条封条 - 页面顶部，随页面滚动 */
+        .marquee-tape {
+            position: relative;
+            width: 100vw;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: -1rem;
+            margin-bottom: 1.5rem;
+            height: 52px;
+            background: 
+                linear-gradient(90deg, 
+                    transparent 0%, 
+                    rgba(255,255,255,0.05) 25%, 
+                    transparent 50%,
+                    rgba(0,0,0,0.05) 75%,
+                    transparent 100%
+                ),
+                var(--theme-primary);
+            overflow: hidden;
+            z-index: 10;
+            box-shadow: 
+                0 4px 20px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                inset 0 -1px 0 rgba(0,0,0,0.2);
+            pointer-events: none;
+            border-bottom: 2px solid rgba(0,0,0,0.3);
+        }
+        
+        @media (min-width: 768px) {
+            .marquee-tape {
+                margin-top: -2.5rem;
+            }
+        }
+        
+        .marquee-track {
+            display: flex;
+            animation: marquee-scroll 30s linear infinite;
+            white-space: nowrap;
+        }
+        
+        .marquee-content {
+            display: flex;
+            align-items: center;
+            height: 52px;
+        }
+        
+        .marquee-content span {
+            font-family: "Arial Black", Impact, sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #000;
+            padding: 0 50px;
+        }
+        
+        .marquee-content span::after {
+            content: "✦";
+            margin-left: 50px;
+            opacity: 0.5;
+            font-size: 22px;
+        }
+        
+        @keyframes marquee-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* 第二条胶带 - 隐藏 */
+        .marquee-tape-2 {
+            display: none;
+        }
+        
+        /* 页面内容正常布局 */
+        .main-content {
+            padding-top: 20px;
+        }
+        
+        .marquee-track-reverse {
+            display: flex;
+            animation: marquee-scroll-reverse 35s linear infinite;
+            white-space: nowrap;
+        }
+        
+        .marquee-content-2 {
+            display: flex;
+            align-items: center;
+            height: 44px;
+        }
+        
+        .marquee-content-2 span {
+            font-family: "Arial Black", Impact, sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #000;
+            padding: 0 50px;
+        }
+        
+        .marquee-content-2 span::after {
+            content: "✦";
+            margin-left: 50px;
+            opacity: 0.3;
+        }
+        
+        @keyframes marquee-scroll-reverse {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+        
+        /* ========== 阶段F：背景氛围层 ========== */
+        .ambient-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -8;
+            pointer-events: none;
+            opacity: 0.4;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 80%, var(--theme-primary), transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 20%, var(--theme-secondary), transparent 50%);
+            animation: ambient-drift 20s ease-in-out infinite alternate;
+            filter: blur(80px);
+        }
+        
+        @keyframes ambient-drift {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-5%, 3%) scale(1.1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(5%, -3%) scale(1);
+                opacity: 0.35;
+            }
+        }
+        
+        /* ========== 阶段G：页面过渡动画 ========== */
+        /* 卡片入场动画 */
+        .card-enter {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: card-fade-in 0.4s ease forwards;
+        }
+        
+        @keyframes card-fade-in {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Tab 内容切换动画 */
+        .view-transition {
+            animation: view-fade-in 0.3s ease;
+        }
+        
+        @keyframes view-fade-in {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
 <body class="p-4 md:p-10">
+    <!-- 背景氛围层 -->
+    <div class="ambient-layer"></div>
+    
     <!-- 角色背景图层 -->
     <div id="bgOverlay" class="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-0 transition-opacity duration-500" style="background-position: center 20%;"></div>
     <div class="fixed inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/85 to-black"></div>
     
-    <div class="max-w-6xl mx-auto">
+    <!-- 封条胶带滚动效果 (Fixed 定位，横向无限) -->
+    <div class="marquee-tape" id="marqueeTape1">
+        <div class="marquee-track">
+            <div class="marquee-content" id="marqueeContent1"></div>
+            <div class="marquee-content" id="marqueeContent1Clone"></div>
+        </div>
+    </div>
+    <div class="marquee-tape-2">
+        <div class="marquee-track-reverse">
+            <div class="marquee-content-2" id="marqueeContent2"></div>
+            <div class="marquee-content-2" id="marqueeContent2Clone"></div>
+        </div>
+    </div>
+    
+    <div class="max-w-6xl mx-auto main-content">
         <!-- HEADER -->
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-16 border-b-2 border-zinc-800 pb-6">
-            <div class="flex flex-col">
+                <div class="flex flex-col">
                 <div class="flex items-center gap-3">
-                    <h1 class="impact-text text-4xl sm:text-5xl tracking-tighter">SF6 FRAME LAB</h1>
+                    <h1 class="impact-text text-4xl sm:text-5xl tracking-tighter title-animate glitch-hover">SF6 FRAME LAB</h1>
                     <button onclick="openHelpModal()" class="group px-2.5 py-1 bg-gradient-to-r from-cyan-600/20 to-pink-600/20 border border-cyan-500/50 hover:border-cyan-400 text-cyan-400 hover:text-cyan-300 text-xs font-bold tracking-wider uppercase transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.3)] flex items-center gap-1" title="使用说明">
                         <span class="text-sm">?</span>
                         <span>说明</span>
@@ -187,13 +688,14 @@
                 <span class="text-zinc-500 font-bold text-xs tracking-widest mt-1">made by Yuetian</span>
             </div>
             <nav class="flex items-center gap-4">
-                <button onclick="openCharacterModal()" class="champion-btn px-4 sm:px-6 py-2 text-sm tracking-widest uppercase flex items-center gap-2">
-                    <span class="text-lg" id="currentCharIcon">🥋</span>
-                    <span id="currentCharName">RYU</span>
+                <button onclick="openCharacterModal()" class="champion-btn tracking-widest uppercase flex items-center gap-2">
+                    <span class="char-icon text-xl" id="currentCharIcon">🥋</span>
+                    <span>CHAMPION</span>
                 </button>
-                <div class="flex gap-4 sm:gap-8">
-                    <button onclick="switchTab('notes')" id="tab-notes" class="tab-btn active uppercase tracking-widest text-base sm:text-xl">SOLUTION</button>
-                    <button onclick="switchTab('library')" id="tab-library" class="tab-btn uppercase tracking-widest text-base sm:text-xl">FRAME DATA</button>
+                <div class="flex gap-4 sm:gap-8 tab-container relative" id="tabContainer">
+                    <button onclick="switchTab('notes')" id="tab-notes" class="tab-btn active uppercase tracking-widest text-base sm:text-xl pb-2">SOLUTION</button>
+                    <button onclick="switchTab('library')" id="tab-library" class="tab-btn uppercase tracking-widest text-base sm:text-xl pb-2">DATA</button>
+                    <div class="tab-indicator" id="tabIndicator"></div>
                 </div>
             </nav>
         </header>
@@ -203,8 +705,8 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                 <h2 class="impact-text text-2xl sm:text-3xl text-zinc-400">卡帧策略</h2>
                 <div class="flex gap-2">
-                    <button onclick="resetToDefault()" class="px-4 py-3 text-xs tracking-widest uppercase bg-zinc-800 text-zinc-500 hover:bg-zinc-700 hover:text-white transition-all">Reset</button>
-                    <button onclick="openNoteModal()" class="btn-hype px-8 sm:px-10 py-4 text-sm tracking-widest uppercase">Add Scenario</button>
+                    <button onclick="resetToDefault()" class="px-4 py-3 text-xs bg-zinc-800 text-zinc-500 hover:bg-zinc-700 hover:text-white transition-all font-bold">重置</button>
+                    <button onclick="openNoteModal()" class="btn-hype px-6 sm:px-8 py-3 text-sm font-bold">+ 添加场景</button>
                 </div>
             </div>
             <!-- 搜索框和排序按钮 -->
@@ -212,7 +714,8 @@
                 <input type="text" id="solutionSearch" 
                     class="flex-1 bg-black border border-zinc-700 p-3 text-sm text-white placeholder-zinc-600 focus:border-cyan-500 focus:outline-none transition-colors"
                     placeholder="搜索帧数 (如 32) 或情境 (如 升龙)..."
-                    oninput="filterSolutions()">
+                    aria-label="搜索场景"
+                    oninput="debounce(filterSolutions)()">
                 <button onclick="toggleSortOrder()" id="sortOrderBtn" 
                     class="px-4 py-3 bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:border-cyan-500 transition-all flex items-center gap-2 text-sm font-bold"
                     title="切换排序方向">
@@ -223,11 +726,11 @@
             <div id="noteListContainer" class="grid grid-cols-1 gap-6"></div>
         </div>
 
-        <!-- VIEW: FRAME DATA -->
+        <!-- VIEW: DATA -->
         <div id="view-library" class="hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div class="lg:col-span-4 bg-zinc-900 p-6 border border-zinc-800">
-                    <h3 class="impact-text text-xl mb-4 text-pink-500">BATCH_SYNC</h3>
+                    <h3 class="impact-text text-xl mb-4 text-pink-500">数据导入</h3>
                     
                     <div class="json-hint mb-4">
                         <button onclick="loadTemplate()" class="font-bold text-cyan-400 hover:text-cyan-300 underline transition-colors">
@@ -236,13 +739,15 @@
                     </div>
 
                     <textarea id="rawPaste" class="w-full h-40 bg-black border border-zinc-700 p-4 text-xs font-mono text-cyan-500 resize-none" placeholder='粘贴 JSON 数据...'></textarea>
-                    <button onclick="importJson()" class="w-full mt-4 py-3 bg-white text-black font-black impact-text hover:bg-pink-600 hover:text-white transition-all">Import Data</button>
+                    <button onclick="importJson()" class="w-full mt-4 py-3 bg-white text-black font-black hover:bg-pink-600 hover:text-white transition-all">导入数据</button>
                     <div class="flex gap-2 mt-2">
-                        <button onclick="resetMovesToDefault()" class="flex-1 py-2 bg-zinc-800 text-zinc-500 text-xs font-bold hover:bg-blue-900 hover:text-white transition-all">Reset Default</button>
-                        <button onclick="clearLibrary()" class="flex-1 py-2 bg-zinc-800 text-zinc-500 text-xs font-bold hover:bg-red-900 hover:text-white transition-all">Clear All</button>
+                        <button onclick="resetMovesToDefault()" class="flex-1 py-2 bg-zinc-800 text-zinc-500 text-xs font-bold hover:bg-blue-900 hover:text-white transition-all">重置预设</button>
+                        <button onclick="clearLibrary()" class="flex-1 py-2 bg-zinc-800 text-zinc-500 text-xs font-bold hover:bg-red-900 hover:text-white transition-all">清空全部</button>
                     </div>
                 </div>
-                <div class="lg:col-span-8 overflow-x-auto">
+                <div class="lg:col-span-8 overflow-x-auto relative">
+                    <!-- 移动端滚动提示 -->
+                    <div class="lg:hidden text-[10px] text-zinc-600 text-right mb-1 italic">← 左右滑动查看 →</div>
                     <table class="w-full text-left min-w-[500px]">
                         <thead class="text-zinc-600 text-[10px] font-black uppercase tracking-widest border-b border-zinc-800">
                             <tr>
@@ -259,36 +764,89 @@
                     </table>
                 </div>
             </div>
+            
+            <!-- 规则区域 -->
+            <div class="mt-8 p-4 bg-zinc-900/50 border border-zinc-800/50">
+                <div class="flex justify-between items-center mb-3">
+                    <h4 class="text-xs font-bold text-zinc-500 uppercase tracking-widest">组合过滤规则</h4>
+                    <button onclick="openRuleModal()" class="text-[10px] px-3 py-1.5 bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all font-bold">+ 添加规则</button>
+                </div>
+                <div id="rulesContainer" class="space-y-1 text-xs"></div>
+            </div>
         </div>
     </div>
 
     <!-- MODAL: Add Scenario -->
-    <div id="noteModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md p-8">
-            <h2 class="impact-text text-2xl mb-6">New Scenario</h2>
+    <div id="noteModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="noteModalTitle">
+        <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="noteModalTitle" class="impact-text text-2xl text-pink-500">添加场景</h2>
+                <button onclick="closeModal()" class="text-zinc-500 hover:text-white text-3xl sm:text-2xl p-2 -m-2" title="关闭">&times;</button>
+            </div>
             <div class="space-y-6">
                 <div>
                     <label class="block text-[10px] font-black uppercase mb-2 text-zinc-500">Advantage Frames (初始有利帧)</label>
-                    <input type="number" id="inputAdv" class="w-full bg-black border border-zinc-700 p-4 text-4xl font-black text-pink-500" placeholder="40">
+                    <input type="number" id="inputAdv" class="w-full bg-black border border-zinc-700 p-4 text-4xl font-black text-pink-500" placeholder="40" oninput="updateExpectOptions()">
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase mb-2 text-zinc-500">Scenario Context (情境说明)</label>
                     <input type="text" id="inputContext" class="w-full bg-black border border-zinc-700 p-4 font-bold" placeholder="例如：2HK放倒">
                 </div>
+                
+                <!-- 期望后续 - 进阶选项 -->
+                <details id="expectDetails" class="border border-zinc-800 bg-zinc-900/50">
+                    <summary class="px-4 py-3 cursor-pointer text-zinc-500 hover:text-zinc-300 text-sm font-bold transition-colors select-none">
+                        ▶ 期望后续 (进阶)
+                    </summary>
+                    <div class="p-4 border-t border-zinc-800 space-y-4">
+                        <!-- 模式选择 -->
+                        <div class="flex gap-2">
+                            <button type="button" onclick="setExpectMode('remain')" id="expectModeRemain" class="flex-1 py-2 text-xs font-bold transition-all bg-cyan-600 text-white">指定剩余帧数</button>
+                            <button type="button" onclick="setExpectMode('move')" id="expectModeMove" class="flex-1 py-2 text-xs font-bold transition-all bg-zinc-800 text-zinc-400 hover:text-white">指定压制招式</button>
+                        </div>
+                        
+                        <!-- 模式A：指定剩余帧数 -->
+                        <div id="expectRemainPanel" class="space-y-3">
+                            <div>
+                                <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">期望剩余帧数</label>
+                                <input type="number" id="inputExpectRemain" class="w-full bg-black border border-zinc-700 p-3 text-xl font-black text-cyan-400" placeholder="如 5" oninput="calculateExpectPlan()">
+                                <p class="text-[10px] text-zinc-600 mt-1">系统将计算如何卡帧到剩余这个帧数</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 模式B：指定压制招式 -->
+                        <div id="expectMovePanel" class="space-y-3 hidden">
+                            <div>
+                                <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">选择压制招式</label>
+                                <select id="inputExpectMove" class="w-full bg-black border border-zinc-700 p-3 text-sm font-bold text-cyan-400" onchange="calculateExpectPlan()">
+                                    <option value="">-- 选择招式 --</option>
+                                </select>
+                                <p class="text-[10px] text-zinc-600 mt-1">系统将计算如何卡帧使该招式能偷至少 1 帧</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 计算结果预览 -->
+                        <div id="expectResult" class="hidden">
+                            <div class="text-[10px] font-black uppercase mb-2 text-zinc-500">计算结果</div>
+                            <div id="expectResultContent" class="bg-black/50 border border-zinc-700 p-3 text-sm"></div>
+                        </div>
+                    </div>
+                </details>
+                
                 <div class="flex gap-2">
-                    <button onclick="saveNote()" class="flex-1 bg-pink-600 text-white py-4 font-black impact-text text-lg">Calculate</button>
-                    <button onclick="closeModal()" class="px-6 py-4 bg-zinc-800 font-bold">Cancel</button>
+                    <button onclick="saveNote()" class="flex-1 bg-pink-600 text-white py-3 font-bold text-sm hover:bg-pink-500 transition-all">计算方案</button>
+                    <button onclick="closeModal()" class="px-4 py-3 bg-zinc-800 text-zinc-400 font-bold text-sm hover:text-white transition-all">取消</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- MODAL: Character Select -->
-    <div id="charModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div id="charModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="charModalTitle">
         <div class="bg-zinc-900 border border-zinc-700 w-full max-w-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="impact-text text-2xl sm:text-3xl text-yellow-400">SELECT CHAMPION</h2>
-                <button onclick="closeCharModal()" class="text-zinc-500 hover:text-white text-2xl">&times;</button>
+                <h2 id="charModalTitle" class="impact-text text-2xl sm:text-3xl text-yellow-400">选择角色</h2>
+                <button onclick="closeCharModal()" class="text-zinc-500 hover:text-white text-3xl sm:text-2xl p-2 -m-2" title="关闭">&times;</button>
             </div>
             <div class="char-grid" id="charGrid"></div>
             <div class="mt-6 p-4 bg-black/50 border border-zinc-800">
@@ -300,12 +858,42 @@
         </div>
     </div>
 
+    <!-- MODAL: Add Rule -->
+    <div id="ruleModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="ruleModalTitle">
+        <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="ruleModalTitle" class="impact-text text-xl text-cyan-400">添加规则</h2>
+                <button onclick="closeRuleModal()" class="text-zinc-500 hover:text-white text-3xl sm:text-2xl p-2 -m-2" title="关闭">&times;</button>
+            </div>
+            <p class="text-zinc-500 text-xs mb-4">添加角色专属的组合过滤规则，匹配的招式组合将不会出现在方案中。</p>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">Pattern 1 (招式关键词)</label>
+                    <input type="text" id="inputPattern1" class="w-full bg-black border border-zinc-700 p-3 text-sm font-bold text-white uppercase" placeholder="例如: LP, 5MP, HK">
+                </div>
+                <div class="text-center text-zinc-600 text-xs">× 禁止组合 ×</div>
+                <div>
+                    <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">Pattern 2 (招式关键词)</label>
+                    <input type="text" id="inputPattern2" class="w-full bg-black border border-zinc-700 p-3 text-sm font-bold text-white uppercase" placeholder="例如: LP, 2MK, 投">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">说明 (可选)</label>
+                    <input type="text" id="inputRuleDesc" class="w-full bg-black border border-zinc-700 p-3 text-sm text-zinc-400" placeholder="例如: 连招不稳定">
+                </div>
+                <div class="flex gap-2 pt-2">
+                    <button onclick="saveRule()" class="flex-1 bg-cyan-600 text-white py-3 font-bold text-sm hover:bg-cyan-500 transition-all">保存规则</button>
+                    <button onclick="closeRuleModal()" class="px-4 py-3 bg-zinc-800 text-zinc-400 font-bold text-sm hover:text-white transition-all">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL: Help -->
-    <div id="helpModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div id="helpModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
         <div class="bg-zinc-900 border border-zinc-700 w-full max-w-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="impact-text text-2xl sm:text-3xl text-cyan-400">使用说明</h2>
-                <button onclick="closeHelpModal()" class="text-zinc-500 hover:text-white text-2xl">&times;</button>
+                <h2 id="helpModalTitle" class="impact-text text-2xl sm:text-3xl text-cyan-400">使用说明</h2>
+                <button onclick="closeHelpModal()" class="text-zinc-500 hover:text-white text-3xl sm:text-2xl p-2 -m-2" title="关闭">&times;</button>
             </div>
             <div class="space-y-6 text-zinc-300 text-sm leading-relaxed">
                 <section>
@@ -318,8 +906,8 @@
                     <ol class="list-decimal list-inside space-y-2 text-zinc-400">
                         <li><strong class="text-white">选择角色</strong> - 点击右上角角色按钮切换</li>
                         <li><strong class="text-white">查看卡帧策略</strong> - SOLUTION 页签展示各种击倒情境下的最优方案</li>
-                        <li><strong class="text-white">添加场景</strong> - 点击 Add Scenario 输入有利帧数，系统自动计算</li>
-                        <li><strong class="text-white">管理帧数据</strong> - FRAME DATA 页签可查看/导入角色招式数据</li>
+                        <li><strong class="text-white">添加场景</strong> - 点击 <span class="text-cyan-400">+ 添加场景</span> 输入有利帧数，系统自动计算</li>
+                        <li><strong class="text-white">管理帧数据</strong> - DATA 页签可查看/导入角色招式数据</li>
                     </ol>
                 </section>
                 
@@ -337,6 +925,39 @@
                 <section>
                     <h3 class="text-lg font-bold text-white mb-2">⭐ 收藏功能</h3>
                     <p class="text-zinc-400">点击方案旁的 <span class="text-yellow-400">☆</span> 可收藏个人喜欢的方案，收藏后会优先显示并高亮。</p>
+                </section>
+                
+                <section>
+                    <h3 class="text-lg font-bold text-white mb-2">🎯 期望后续 (进阶)</h3>
+                    <p class="text-zinc-400">添加场景时可展开"期望后续"选项，支持两种模式：</p>
+                    <ul class="mt-2 space-y-1 text-zinc-500 text-xs">
+                        <li>• <span class="text-cyan-400">指定剩余帧数</span> - 输入期望卡帧后剩余的帧数，验证是否有可行方案</li>
+                        <li>• <span class="text-cyan-400">指定压制招式</span> - 选择想用的压制招式，系统计算如何卡帧（需偷至少1帧）</li>
+                        <li>• 若无可行方案，将提示并阻止添加</li>
+                    </ul>
+                </section>
+                
+                <section>
+                    <h3 class="text-lg font-bold text-white mb-2">🚫 组合规则</h3>
+                    <p class="text-zinc-400">在 DATA 页签底部可以管理组合过滤规则：</p>
+                    <ul class="mt-2 space-y-1 text-zinc-500 text-xs">
+                        <li>• <span class="text-zinc-400">GLOBAL</span> 规则对所有角色生效（如轻拳+轻拳禁止）</li>
+                        <li>• <span class="text-cyan-400">角色专属</span> 规则只对当前角色生效</li>
+                        <li>• 点击 <span class="text-cyan-400">+ 添加规则</span> 可添加自定义规则</li>
+                    </ul>
+                </section>
+                
+                <section>
+                    <h3 class="text-lg font-bold text-white mb-2">⌨️ 快捷键</h3>
+                    <ul class="space-y-1 text-zinc-500 text-xs">
+                        <li>• <kbd class="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-300">Esc</kbd> 关闭弹窗</li>
+                        <li>• <kbd class="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-300">Enter</kbd> 确认保存</li>
+                    </ul>
+                </section>
+                
+                <section>
+                    <h3 class="text-lg font-bold text-white mb-2">📝 写在最后</h3>
+                    <p class="text-zinc-400">本网页仍处于测试早期版本，如有反馈和建议，请B站私信 <strong class="text-cyan-400">Cold_Visions</strong>，十分感谢！</p>
                 </section>
                 
                 <div class="pt-4 border-t border-zinc-800 text-center text-zinc-600 text-xs">
@@ -365,6 +986,33 @@
             ],
             // 已有JSON数据的角色
             CHARACTERS_WITH_DATA: ["RYU", "BLANKA"],
+            // 全局规则（适用于所有角色，不可编辑）
+            GLOBAL_RULES: [
+                {
+                    id: "global_lp_lp",
+                    pattern1: "LP",
+                    pattern2: "LP",
+                    description: "轻拳不会和轻拳组合（连点取消不能精准卡帧）"
+                },
+                {
+                    id: "global_2lp_2lp",
+                    pattern1: "2LP",
+                    pattern2: "2LP",
+                    description: "下轻拳不会和下轻拳组合（连点取消不能精准卡帧）"
+                },
+                {
+                    id: "global_2lp_lp",
+                    pattern1: "2LP",
+                    pattern2: "LP",
+                    description: "下轻拳不会和轻拳组合（连点取消不能精准卡帧）"
+                },
+                {
+                    id: "global_lp_2lp",
+                    pattern1: "LP",
+                    pattern2: "2LP",
+                    description: "轻拳不会和下轻拳组合（连点取消不能精准卡帧）"
+                }
+            ],
             // 角色图标映射
             CHAR_ICONS: {
                 "RYU": "🥋", "LUKE": "🥊", "KEN": "🔥", "CHUN-LI": "💃", "GUILE": "✈️", "KIMBERLY": "🎤",
@@ -378,19 +1026,19 @@
             // 角色主题配色方案
             CHAR_THEMES: {
                 "RYU": {
-                    primary: "#c41e3a",      // 朱红色
-                    secondary: "#f5f5f5",    // 白色
+                    primary: "#8b2500",      // 深咖啡红
+                    secondary: "#d4a574",    // 米棕色
                     accent: "#1a1a1a",       // 黑色
-                    cardBg: "#1a1010",       // 深红背景
-                    cardBorder: "#3d1515",   // 红色边框
+                    cardBg: "#1c1412",       // 深棕红背景
+                    cardBorder: "#4a2c20",   // 棕红边框
                     bgImage: "asset/ryu_ss01.jpg"
                 },
                 "BLANKA": {
-                    primary: "#ffd700",      // 金黄色
-                    secondary: "#50fa7b",    // 亮草绿色
-                    accent: "#00ff7f",       // 春绿色
-                    cardBg: "#0a1f0a",       // 深绿背景
-                    cardBorder: "#2d5a2d",   // 亮绿边框
+                    primary: "#d4a017",      // 暗金色
+                    secondary: "#2d8b57",    // 森林绿
+                    accent: "#1a4a1a",       // 深绿
+                    cardBg: "#141c14",       // 深绿背景
+                    cardBorder: "#2a4a2a",   // 绿色边框
                     bgImage: "asset/blanka_ss01.jpg"
                 },
                 // 默认主题（用于无特定主题的角色）
@@ -398,8 +1046,8 @@
                     primary: "#ff007a",
                     secondary: "#00f2ff",
                     accent: "#ffd700",
-                    cardBg: "#111114",
-                    cardBorder: "#222",
+                    cardBg: "#141416",
+                    cardBorder: "#2a2a2e",
                     bgImage: null
                 }
             }
@@ -412,15 +1060,67 @@
             notes: [],
             // 角色数据缓存：{ moves: [], scenarios: [] }
             characterCache: {},
-            // 收藏的方案 { "adv:planKey": true }
+            // 收藏的方案 { "charName:adv:planKey": true }
             favorites: {},
-            // 最小化的方案 { "adv:planKey": true }
+            // 最小化的方案 { "charName:adv:planKey": true }
             minimized: {},
             // 排序方向：'asc' 从小到大，'desc' 从大到小
-            sortOrder: 'asc'
+            sortOrder: 'asc',
+            // 角色专属规则 { charName: [rules] }
+            characterRules: {}
         };
 
         // ==================== 工具函数 ====================
+        // HTML 转义，防止 XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 显示操作提示（轻量级 toast）
+        function showToast(message, type = 'success') {
+            // 移除已有的 toast
+            const existing = document.getElementById('toast');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = `fixed bottom-20 left-1/2 -translate-x-1/2 px-4 py-2 rounded text-sm font-bold z-50 transition-all duration-300 ${
+                type === 'success' ? 'bg-green-600 text-white' : 
+                type === 'error' ? 'bg-red-600 text-white' : 
+                'bg-zinc-700 text-white'
+            }`;
+            toast.textContent = message;
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(-50%) translateY(10px)';
+            
+            document.body.appendChild(toast);
+            
+            // 显示动画
+            requestAnimationFrame(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(-50%) translateY(0)';
+            });
+            
+            // 自动消失
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 1500);
+        }
+        
+        // 搜索防抖
+        let searchDebounceTimer = null;
+        function debounce(func, delay = 150) {
+            return function(...args) {
+                clearTimeout(searchDebounceTimer);
+                searchDebounceTimer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+        
         function getCharIcon(char) {
             return CONFIG.CHAR_ICONS[char] || "👤";
         }
@@ -485,12 +1185,6 @@
             return null; // 未命中任何active段
         }
 
-        // 获取active总宽度（兼容旧逻辑，用于显示）
-        function getActiveWidth(activeStr) {
-            const ranges = parseActiveRanges(activeStr);
-            return ranges.reduce((sum, r) => sum + (r.end - r.start + 1), 0);
-        }
-
         // ==================== localStorage 存取 ====================
         function getStorageKey(char, type) {
             return `${CONFIG.STORAGE_KEY}_${char}_${type}`;
@@ -543,25 +1237,6 @@
             localStorage.removeItem(getStorageKey(char, 'moves'));
         }
 
-        // ========== 折叠状态存储 ==========
-        function saveCollapseState(key, isOpen) {
-            try {
-                const states = JSON.parse(localStorage.getItem(getGlobalStorageKey('collapseStates')) || '{}');
-                states[key] = isOpen;
-                localStorage.setItem(getGlobalStorageKey('collapseStates'), JSON.stringify(states));
-            } catch (e) {
-                console.warn('保存折叠状态失败:', e);
-            }
-        }
-        
-        function loadCollapseStates() {
-            try {
-                return JSON.parse(localStorage.getItem(getGlobalStorageKey('collapseStates')) || '{}');
-            } catch (e) {
-                return {};
-            }
-        }
-
         // ========== Scenarios 存储 ==========
         // 保存角色的 scenarios 到 localStorage (用户自定义)
         function saveScenarios(char, scenarios) {
@@ -609,14 +1284,90 @@
             return getDefaultMoves(char);
         }
 
-        // ==================== 核心计算逻辑 ====================
-        // 检测是否为轻拳招式
-        function isLightPunch(move) {
-            if (!move || !move.name) return false;
-            const name = move.name.toUpperCase();
-            return name.includes('LP') || name.includes('LIGHT PUNCH');
+        // ========== 规则存储 ==========
+        // 保存角色专属规则
+        function saveCharacterRules(char, rules) {
+            try {
+                localStorage.setItem(getStorageKey(char, 'rules'), JSON.stringify(rules));
+            } catch (e) {
+                console.warn('保存规则失败:', e);
+            }
         }
         
+        // 加载角色专属规则
+        function loadCharacterRules(char) {
+            try {
+                const saved = localStorage.getItem(getStorageKey(char, 'rules'));
+                if (saved) {
+                    return JSON.parse(saved);
+                }
+            } catch (e) {
+                console.warn('读取规则失败:', e);
+            }
+            return [];
+        }
+        
+        // 获取当前角色的所有规则（全局 + 角色专属）
+        function getAllRulesForCharacter(char) {
+            const globalRules = CONFIG.GLOBAL_RULES.map(r => ({ ...r, isGlobal: true }));
+            const charRules = (state.characterRules[char] || []).map(r => ({ ...r, isGlobal: false }));
+            return [...globalRules, ...charRules];
+        }
+        
+        // 检查两个招式是否被规则禁止组合
+        function isComboForbidden(move1, move2, rules) {
+            if (!move1 || !move2) return false;
+            const name1 = (move1.name || '').toUpperCase();
+            const name2 = (move2.name || '').toUpperCase();
+            
+            for (const rule of rules) {
+                const p1 = rule.pattern1.toUpperCase();
+                const p2 = rule.pattern2.toUpperCase();
+                // 双向检查：move1匹配pattern1且move2匹配pattern2，或反过来
+                if ((name1.includes(p1) && name2.includes(p2)) ||
+                    (name1.includes(p2) && name2.includes(p1))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        // ========== 收藏/最小化状态存储 ==========
+        function saveFavorites() {
+            try {
+                localStorage.setItem(getGlobalStorageKey('favorites'), JSON.stringify(state.favorites));
+            } catch (e) {
+                console.warn('保存收藏状态失败:', e);
+            }
+        }
+        
+        function loadFavorites() {
+            try {
+                const saved = localStorage.getItem(getGlobalStorageKey('favorites'));
+                return saved ? JSON.parse(saved) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+        
+        function saveMinimized() {
+            try {
+                localStorage.setItem(getGlobalStorageKey('minimized'), JSON.stringify(state.minimized));
+            } catch (e) {
+                console.warn('保存最小化状态失败:', e);
+            }
+        }
+        
+        function loadMinimized() {
+            try {
+                const saved = localStorage.getItem(getGlobalStorageKey('minimized'));
+                return saved ? JSON.parse(saved) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        // ==================== 核心计算逻辑 ====================
         // 检测压制招式的攻击等级：heavy / medium / light / other
         function getMoveStrength(move) {
             if (!move || !move.name) return 'other';
@@ -637,6 +1388,8 @@
 
         function calculateBestPlan(adv) {
             const possiblePlans = [];
+            // 获取当前角色的所有规则
+            const rules = getAllRulesForCharacter(state.currentCharacter);
             
             // ========== 方案A: 直接压制（不需要卡帧）==========
             // 对方在 adv+1 帧起身，检查是否有招式的 active 能覆盖
@@ -718,8 +1471,8 @@
                         const hitInfo = checkActiveHit(meatyMove.active, targetFrame);
                         
                         if (hitInfo) {
-                            // 排除轻拳+轻拳的组合
-                            if (isLightPunch(killMove) && isLightPunch(meatyMove)) {
+                            // 使用规则系统检查是否禁止组合
+                            if (isComboForbidden(killMove, meatyMove, rules)) {
                                 return;
                             }
                             
@@ -774,8 +1527,8 @@
                     const remain2 = remain1 - killTotal2;
                     const targetFrame2 = remain2 + 1;
                     
-                    // 排除轻拳+轻拳（第一步+第二步）
-                    if (isLightPunch(killMove1) && isLightPunch(killMove2)) {
+                    // 使用规则系统检查第一步+第二步是否禁止组合
+                    if (isComboForbidden(killMove1, killMove2, rules)) {
                         return;
                     }
                     
@@ -786,8 +1539,8 @@
                             const hitInfo = checkActiveHit(meatyMove.active, targetFrame2);
                             
                             if (hitInfo) {
-                                // 排除轻拳+轻拳（第二步+压制）
-                                if (isLightPunch(killMove2) && isLightPunch(meatyMove)) {
+                                // 使用规则系统检查第二步+压制是否禁止组合
+                                if (isComboForbidden(killMove2, meatyMove, rules)) {
                                     return;
                                 }
                                 
@@ -884,8 +1637,7 @@
             // 应用角色主题
             applyTheme(char);
             
-            // 更新UI
-            document.getElementById('currentCharName').textContent = char;
+            // 更新UI - 只更新图标
             document.getElementById('currentCharIcon').textContent = getCharIcon(char);
             
             // 加载角色数据 (moves + scenarios)
@@ -894,6 +1646,12 @@
             // 加载 scenarios: localStorage优先，否则用JSON预设
             const userScenarios = loadScenariosFromStorage(char);
             state.notes = userScenarios !== null ? userScenarios : getDefaultScenarios(char);
+            
+            // 加载角色专属规则
+            state.characterRules[char] = loadCharacterRules(char);
+            
+            // 更新封条滚动内容
+            updateMarqueeTape();
             
             closeCharModal();
             renderAll();
@@ -936,8 +1694,7 @@
             if (!plan) return '';
             
             const planKey = getPlanKey(plan);
-            const stateKey = `${adv}:${planKey}`;
-            const isFavorite = state.favorites[stateKey];
+            const isFavorite = isPlanFavorite(adv, planKey);
             const isThrow = plan.isThrow;
             const accentColor = 'text-white';
             
@@ -951,7 +1708,7 @@
                 // 直接压制/投
                 stepsHtml = `<div class="text-center">
                        <div class="text-[9px] text-zinc-600 uppercase mb-1">直接${isThrow ? '投' : ''} (${plan.remain}F)</div>
-                       <div class="impact-text text-4xl sm:text-5xl font-black ${accentColor} leading-none">${plan.meatyMove.name}</div>
+                       <div class="impact-text text-4xl sm:text-5xl font-black ${accentColor} leading-none glitch-text">${plan.meatyMove.name}</div>
                        ${!isThrow ? `<div class="text-xs text-zinc-500 mt-1">偷${plan.stolen}F</div>` : ''}
                    </div>`;
             } else if (plan.killMove2) {
@@ -969,7 +1726,7 @@
                        </div>
                        <div class="text-zinc-600 text-lg">→</div>
                        <div class="text-center min-w-[55px]">
-                           <div class="impact-text text-xl sm:text-2xl font-black ${accentColor} leading-none">${plan.meatyMove.name}</div>
+                           <div class="impact-text text-xl sm:text-2xl font-black ${accentColor} leading-none glitch-text">${plan.meatyMove.name}</div>
                            ${!isThrow ? `<div class="text-[9px] text-zinc-500">偷${plan.stolen}F</div>` : ''}
                        </div>
                    </div>`;
@@ -985,7 +1742,7 @@
                            <div class="text-[9px] text-yellow-500">${plan.remain}F</div>
                        </div>
                        <div class="text-center min-w-[70px]">
-                           <div class="impact-text text-2xl sm:text-4xl font-black ${accentColor} leading-none">${plan.meatyMove.name}</div>
+                           <div class="impact-text text-2xl sm:text-4xl font-black ${accentColor} leading-none glitch-text">${plan.meatyMove.name}</div>
                            ${!isThrow ? `<div class="text-[10px] text-zinc-500">偷${plan.stolen}F</div>` : ''}
                        </div>
                    </div>`;
@@ -1000,12 +1757,16 @@
             // 收藏星和最小化按钮
             const starIcon = isFavorite ? '★' : '☆';
             const starClass = isFavorite ? 'text-yellow-400' : 'text-zinc-600 hover:text-yellow-400';
+            
+            // 收藏印章
+            const stampHtml = isFavorite ? '<div class="favorite-stamp">FAVE</div>' : '';
 
             return `
-                <div class="mb-3 p-4 border ${borderColor} ${bgColor} relative group">
-                    <div class="absolute top-2 right-2 flex gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
-                        <button onclick="toggleFavorite(${adv}, '${planKey}')" class="${starClass} text-lg transition-colors" title="收藏">${starIcon}</button>
-                        <button onclick="minimizePlan(${adv}, '${planKey}')" class="text-zinc-600 hover:text-zinc-400 text-sm transition-colors" title="最小化">▼</button>
+                <div class="mb-3 p-4 border ${borderColor} ${bgColor} relative group overflow-visible">
+                    ${stampHtml}
+                    <div class="absolute top-1 right-1 sm:top-2 sm:right-2 flex gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                        <button onclick="toggleFavorite(${adv}, '${planKey}')" class="${starClass} text-xl sm:text-lg p-2 sm:p-1 transition-colors" title="收藏">${starIcon}</button>
+                        <button onclick="minimizePlan(${adv}, '${planKey}')" class="text-zinc-600 hover:text-zinc-400 text-base sm:text-sm p-2 sm:p-1 transition-colors" title="最小化">▼</button>
                     </div>
                     <div class="mb-2">
                         ${stepsHtml}
@@ -1022,8 +1783,7 @@
             if (!plan) return '';
             
             const planKey = getPlanKey(plan);
-            const stateKey = `${adv}:${planKey}`;
-            const isFavorite = state.favorites[stateKey];
+            const isFavorite = isPlanFavorite(adv, planKey);
             
             let desc;
             if (plan.isDirect) {
@@ -1046,12 +1806,12 @@
                 <details class="border-b border-zinc-800/50 ${rowBg}">
                     <summary class="flex items-center justify-between py-2 cursor-pointer hover:bg-zinc-800/30 transition-colors group">
                         <span class="text-sm text-zinc-400">${desc}</span>
-                        <div class="flex gap-2 text-sm font-bold items-center">
-                            <span class="text-yellow-500 text-xs">偷${plan.stolen}F</span>
-                            <span class="text-cyan-400 text-xs">H+${plan.finalHit}</span>
-                            <span class="text-cyan-400 text-xs">B${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>
-                            <button onclick="event.stopPropagation(); toggleFavorite(${adv}, '${planKey}')" class="${starClass} transition-colors ml-1" title="收藏">${starIcon}</button>
-                            <button onclick="event.stopPropagation(); maximizePlan(${adv}, '${planKey}')" class="text-zinc-600 hover:text-zinc-400 transition-colors" title="置顶显示">▲</button>
+                        <div class="flex gap-1 sm:gap-2 text-sm font-bold items-center">
+                            <span class="text-yellow-500 text-[10px] sm:text-xs">偷${plan.stolen}F</span>
+                            <span class="text-cyan-400 text-[10px] sm:text-xs">H+${plan.finalHit}</span>
+                            <span class="text-cyan-400 text-[10px] sm:text-xs">B${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>
+                            <button onclick="event.stopPropagation(); toggleFavorite(${adv}, '${planKey}')" class="${starClass} transition-colors p-1.5 sm:p-1 text-base sm:text-sm" title="收藏">${starIcon}</button>
+                            <button onclick="event.stopPropagation(); maximizePlan(${adv}, '${planKey}')" class="text-zinc-600 hover:text-zinc-400 transition-colors p-1.5 sm:p-1 text-base sm:text-sm" title="置顶显示">▲</button>
                         </div>
                     </summary>
                     <div class="py-2 px-2 bg-zinc-800/20">
@@ -1147,8 +1907,7 @@
             if (!plan) return '';
             
             const planKey = getPlanKey(plan);
-            const stateKey = `${adv}:${planKey}`;
-            const isFavorite = state.favorites[stateKey];
+            const isFavorite = isPlanFavorite(adv, planKey);
             
             let desc;
             if (plan.isDirect) {
@@ -1169,10 +1928,10 @@
                 <details class="border-b border-zinc-800/50 ${rowBg}">
                     <summary class="flex items-center justify-between py-2 cursor-pointer hover:bg-zinc-800/30 transition-colors">
                         <span class="text-sm text-zinc-400">${desc}</span>
-                        <div class="flex gap-2 items-center">
-                            <span class="text-xs text-zinc-500">${plan.remain}F</span>
-                            <button onclick="event.stopPropagation(); toggleFavorite(${adv}, '${planKey}')" class="${starClass} transition-colors" title="收藏">${starIcon}</button>
-                            <button onclick="event.stopPropagation(); maximizePlan(${adv}, '${planKey}')" class="text-zinc-600 hover:text-zinc-400 transition-colors" title="置顶显示">▲</button>
+                        <div class="flex gap-1 sm:gap-2 items-center">
+                            <span class="text-[10px] sm:text-xs text-zinc-500">${plan.remain}F</span>
+                            <button onclick="event.stopPropagation(); toggleFavorite(${adv}, '${planKey}')" class="${starClass} transition-colors p-1.5 sm:p-1 text-base sm:text-sm" title="收藏">${starIcon}</button>
+                            <button onclick="event.stopPropagation(); maximizePlan(${adv}, '${planKey}')" class="text-zinc-600 hover:text-zinc-400 transition-colors p-1.5 sm:p-1 text-base sm:text-sm" title="置顶显示">▲</button>
                         </div>
                     </summary>
                     <div class="py-2 px-2 bg-zinc-800/20">
@@ -1209,28 +1968,37 @@
         
         // 切换收藏状态
         function toggleFavorite(adv, planKey) {
-            const stateKey = `${adv}:${planKey}`;
+            const stateKey = `${state.currentCharacter}:${adv}:${planKey}`;
             state.favorites[stateKey] = !state.favorites[stateKey];
+            if (!state.favorites[stateKey]) delete state.favorites[stateKey]; // 清理 false 值
+            saveFavorites();
             renderNotes();
         }
         
         // 最小化方案（移到备选列表）
         function minimizePlan(adv, planKey) {
-            const stateKey = `${adv}:${planKey}`;
+            const stateKey = `${state.currentCharacter}:${adv}:${planKey}`;
             state.minimized[stateKey] = true;
+            saveMinimized();
             renderNotes();
         }
         
         // 最大化方案（从备选移到主显示）
         function maximizePlan(adv, planKey) {
-            const stateKey = `${adv}:${planKey}`;
+            const stateKey = `${state.currentCharacter}:${adv}:${planKey}`;
             delete state.minimized[stateKey];
+            saveMinimized();
             renderNotes();
         }
         
         // 检查方案是否被最小化
         function isPlanMinimized(adv, planKey) {
-            return state.minimized[`${adv}:${planKey}`] === true;
+            return state.minimized[`${state.currentCharacter}:${adv}:${planKey}`] === true;
+        }
+        
+        // 检查方案是否被收藏
+        function isPlanFavorite(adv, planKey) {
+            return state.favorites[`${state.currentCharacter}:${adv}:${planKey}`] === true;
         }
         
         function renderNotes() {
@@ -1242,7 +2010,7 @@
                 container.innerHTML = `
                     <div class="trend-card p-8 text-center">
                         <div class="text-zinc-600 text-lg mb-2">📭 暂无 ${state.currentCharacter} 的帧数据</div>
-                        <div class="text-zinc-700 text-sm">请前往 FRAME DATA 页签导入数据</div>
+                        <div class="text-zinc-700 text-sm">请前往 DATA 页签导入数据</div>
                     </div>
                 `;
                 return;
@@ -1276,7 +2044,14 @@
             
             // 无匹配结果
             if (sortedGroups.length === 0) {
-                container.innerHTML = `
+                // 区分无数据和搜索无结果
+                const isEmptyNotes = state.notes.length === 0;
+                container.innerHTML = isEmptyNotes ? `
+                    <div class="trend-card p-8 text-center">
+                        <div class="text-zinc-600 text-lg mb-2">📋 暂无 Scenario</div>
+                        <div class="text-zinc-700 text-sm">点击 + 添加场景 添加有利帧情境</div>
+                    </div>
+                ` : `
                     <div class="trend-card p-8 text-center">
                         <div class="text-zinc-600 text-lg mb-2">🔍 未找到匹配的 Scenario</div>
                         <div class="text-zinc-700 text-sm">尝试其他搜索词，或清空搜索框查看全部</div>
@@ -1285,26 +2060,26 @@
                 return;
             }
 
-            container.innerHTML = sortedGroups.map(group => {
+            container.innerHTML = sortedGroups.map((group, cardIndex) => {
                 const allPlans = calculateBestPlan(group.adv);
                 
                 // 分离投技方案和普通方案
-                // 投技条件：只有剩余 2、3、4 帧有利时才能接投
-                const throwPlans = allPlans.filter(p => p.isThrow && p.remain >= 2 && p.remain <= 4);
+                // 投技条件：剩余 4-5 帧时投技 active 可覆盖（投技 startup=5, active=5-7）
+                const throwPlans = allPlans.filter(p => p.isThrow && p.remain >= 4 && p.remain <= 5);
                 const normalPlans = allPlans.filter(p => !p.isThrow && p.finalBlock > 0);
                 
                 // 渲染左侧有利帧信息区（合并多个 context，每个带删除按钮）
                 const contextsHtml = group.indices.map((idx, i) => {
                     const ctx = group.contexts[i];
                     return `<div class="flex items-center gap-2 group/ctx">
-                        <div class="text-sm font-black text-cyan-400 uppercase tracking-wide bg-cyan-400/10 px-2 py-1 border-l-2 border-cyan-400 flex-1">${ctx}</div>
-                        <button onclick="removeNote(${idx})" class="text-zinc-600 hover:text-red-500 text-xs sm:text-sm sm:opacity-0 sm:group-hover/ctx:opacity-100 transition-all px-1" title="删除此场景">✕</button>
+                        <div class="text-sm font-black text-cyan-400 uppercase tracking-wide bg-cyan-400/10 px-2 py-1 border-l-2 border-cyan-400 flex-1">${escapeHtml(ctx)}</div>
+                        <button onclick="removeNote(${idx})" class="text-zinc-600 hover:text-red-500 text-base sm:text-sm p-2 sm:p-1 sm:opacity-0 sm:group-hover/ctx:opacity-100 transition-all" title="删除此场景">✕</button>
                     </div>`;
                 }).join('');
                 
                 const leftPanel = `
                     <div class="flex flex-col min-w-[160px] items-start lg:border-r border-zinc-800 pr-6">
-                        <div class="impact-text text-4xl sm:text-5xl text-white leading-none">+${group.adv}F</div>
+                        <div class="impact-text text-4xl sm:text-5xl text-white leading-none frame-number">+${group.adv}F</div>
                         <div class="flex flex-col gap-1 mt-3">
                             ${contextsHtml}
                         </div>
@@ -1330,8 +2105,8 @@
                 
                 // 排序函数：收藏优先，然后按 finalBlock > finalHit 排序
                 const sortByBest = (a, b) => {
-                    const aFav = state.favorites[`${group.adv}:${getPlanKey(a)}`] ? 1 : 0;
-                    const bFav = state.favorites[`${group.adv}:${getPlanKey(b)}`] ? 1 : 0;
+                    const aFav = isPlanFavorite(group.adv, getPlanKey(a)) ? 1 : 0;
+                    const bFav = isPlanFavorite(group.adv, getPlanKey(b)) ? 1 : 0;
                     if (bFav !== aFav) return bFav - aFav;
                     if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
                     return b.finalHit - a.finalHit;
@@ -1361,13 +2136,13 @@
                     }
                 }
 
-                // ========== 3. 投技方案：只有 remain 2-4F 时显示 ==========
+                // ========== 3. 投技方案：只有 remain 4-5F 时显示（投技active=5-7）==========
                 const availableThrow = throwPlans.filter(p => !isMinimized(p));
                 if (availableThrow.length > 0) {
                     // 投技方案按收藏优先，直接优先，然后按 remain 越小越优先
                     const sortedThrow = [...availableThrow].sort((a, b) => {
-                        const aFav = state.favorites[`${group.adv}:${getPlanKey(a)}`] ? 1 : 0;
-                        const bFav = state.favorites[`${group.adv}:${getPlanKey(b)}`] ? 1 : 0;
+                        const aFav = isPlanFavorite(group.adv, getPlanKey(a)) ? 1 : 0;
+                        const bFav = isPlanFavorite(group.adv, getPlanKey(b)) ? 1 : 0;
                         if (bFav !== aFav) return bFav - aFav;
                         if (b.isDirect !== a.isDirect) return (b.isDirect ? 1 : 0) - (a.isDirect ? 1 : 0);
                         return a.remain - b.remain;
@@ -1417,7 +2192,7 @@
                 }
 
                 return `
-                    <div class="trend-card p-6">
+                    <div class="trend-card card-enter p-6" style="animation-delay: ${cardIndex * 0.05}s">
                         <div class="flex flex-col lg:flex-row gap-6">
                             ${leftPanel}
                             <div class="flex-1">
@@ -1454,7 +2229,7 @@
                             <td class="p-4 text-center font-mono text-zinc-600">-</td>
                             <td class="p-4 text-center font-mono text-zinc-600">-</td>
                             <td class="p-4 text-right">
-                                <button onclick="removeMove(${idx})" class="text-zinc-700 hover:text-red-500 transition-colors">✕</button>
+                                <button onclick="removeMove(${idx})" class="text-zinc-700 hover:text-red-500 transition-colors p-2 -m-1 text-base" title="删除">✕</button>
                             </td>
                         </tr>
                     `;
@@ -1471,7 +2246,7 @@
                             <td class="p-4 text-center font-mono text-zinc-600">-</td>
                             <td class="p-4 text-center font-mono text-zinc-600">-</td>
                             <td class="p-4 text-right">
-                                <button onclick="removeMove(${idx})" class="text-zinc-700 hover:text-red-500 transition-colors">✕</button>
+                                <button onclick="removeMove(${idx})" class="text-zinc-700 hover:text-red-500 transition-colors p-2 -m-1 text-base" title="删除">✕</button>
                             </td>
                         </tr>
                     `;
@@ -1491,7 +2266,7 @@
                         <td class="p-4 text-center font-mono text-cyan-500">${m.hit >= 0 ? '+' : ''}${m.hit}</td>
                         <td class="p-4 text-center font-mono text-pink-500">${m.block >= 0 ? '+' : ''}${m.block}</td>
                         <td class="p-4 text-right">
-                            <button onclick="removeMove(${idx})" class="text-zinc-700 hover:text-red-500 transition-colors">✕</button>
+                            <button onclick="removeMove(${idx})" class="text-zinc-700 hover:text-red-500 transition-colors p-2 -m-1 text-base" title="删除">✕</button>
                         </td>
                     </tr>
                 `;
@@ -1501,6 +2276,7 @@
         function renderAll() {
             renderNotes();
             renderLibrary();
+            renderRules();
         }
 
         // ==================== 事件处理 ====================
@@ -1521,20 +2297,435 @@
             document.getElementById('helpModal').classList.add('hidden');
         }
         
+        function openRuleModal() {
+            document.getElementById('ruleModal').classList.remove('hidden');
+            document.getElementById('inputPattern1').focus();
+        }
+        
+        function closeRuleModal() {
+            document.getElementById('ruleModal').classList.add('hidden');
+            document.getElementById('inputPattern1').value = '';
+            document.getElementById('inputPattern2').value = '';
+            document.getElementById('inputRuleDesc').value = '';
+        }
+        
+        function saveRule() {
+            const pattern1 = document.getElementById('inputPattern1').value.trim().toUpperCase();
+            const pattern2 = document.getElementById('inputPattern2').value.trim().toUpperCase();
+            const description = document.getElementById('inputRuleDesc').value.trim();
+            
+            if (!pattern1 || !pattern2) {
+                alert('请填写两个招式关键词');
+                return;
+            }
+            
+            // 检查是否与现有规则重复（包括全局规则）
+            const allRules = getAllRulesForCharacter(state.currentCharacter);
+            const isDuplicate = allRules.some(r => {
+                const p1 = r.pattern1.toUpperCase();
+                const p2 = r.pattern2.toUpperCase();
+                // 双向匹配检查
+                return (p1 === pattern1 && p2 === pattern2) || (p1 === pattern2 && p2 === pattern1);
+            });
+            
+            if (isDuplicate) {
+                alert('该规则已存在');
+                return;
+            }
+            
+            const newRule = {
+                id: `rule_${Date.now()}`,
+                pattern1,
+                pattern2,
+                description: description || `${pattern1} × ${pattern2} 禁止组合`
+            };
+            
+            // 添加到角色专属规则
+            if (!state.characterRules[state.currentCharacter]) {
+                state.characterRules[state.currentCharacter] = [];
+            }
+            state.characterRules[state.currentCharacter].push(newRule);
+            
+            // 保存到 localStorage
+            saveCharacterRules(state.currentCharacter, state.characterRules[state.currentCharacter]);
+            
+            closeRuleModal();
+            renderRules();
+            renderNotes(); // 重新计算方案
+            showToast('规则已添加');
+        }
+        
+        function removeRule(ruleId) {
+            const rules = state.characterRules[state.currentCharacter] || [];
+            const idx = rules.findIndex(r => r.id === ruleId);
+            if (idx !== -1) {
+                rules.splice(idx, 1);
+                saveCharacterRules(state.currentCharacter, rules);
+                renderRules();
+                renderNotes();
+            }
+        }
+        
+        function renderRules() {
+            const container = document.getElementById('rulesContainer');
+            if (!container) return;
+            
+            const allRules = getAllRulesForCharacter(state.currentCharacter);
+            
+            if (allRules.length === 0) {
+                container.innerHTML = '<div class="text-zinc-600 italic">暂无规则</div>';
+                return;
+            }
+            
+            container.innerHTML = allRules.map(rule => {
+                const isGlobal = rule.isGlobal;
+                const tagClass = isGlobal ? 'bg-zinc-700 text-zinc-400' : 'bg-cyan-900/50 text-cyan-400';
+                const tagText = isGlobal ? 'GLOBAL' : state.currentCharacter;
+                const deleteBtn = isGlobal ? '' : `<button onclick="removeRule('${rule.id}')" class="text-zinc-600 hover:text-red-500 transition-colors p-2 -m-1 text-base" title="删除规则">✕</button>`;
+                
+                return `
+                    <div class="flex items-center justify-between py-1.5 px-2 bg-zinc-800/30 border-l-2 ${isGlobal ? 'border-zinc-600' : 'border-cyan-600'}">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] px-1.5 py-0.5 ${tagClass} uppercase tracking-wide">${tagText}</span>
+                            <span class="text-zinc-300 font-mono">${escapeHtml(rule.pattern1)}</span>
+                            <span class="text-zinc-600">×</span>
+                            <span class="text-zinc-300 font-mono">${escapeHtml(rule.pattern2)}</span>
+                            <span class="text-zinc-500 ml-2">— ${escapeHtml(rule.description)}</span>
+                        </div>
+                        ${deleteBtn}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // ==================== 期望后续功能 ====================
+        // 当前期望模式：'remain' 或 'move'
+        let expectMode = 'remain';
+        // 当前计算出的期望方案
+        let currentExpectPlan = null;
+        
+        function setExpectMode(mode) {
+            expectMode = mode;
+            
+            // 更新按钮样式
+            const remainBtn = document.getElementById('expectModeRemain');
+            const moveBtn = document.getElementById('expectModeMove');
+            const remainPanel = document.getElementById('expectRemainPanel');
+            const movePanel = document.getElementById('expectMovePanel');
+            
+            if (mode === 'remain') {
+                remainBtn.className = 'flex-1 py-2 text-xs font-bold transition-all bg-cyan-600 text-white';
+                moveBtn.className = 'flex-1 py-2 text-xs font-bold transition-all bg-zinc-800 text-zinc-400 hover:text-white';
+                remainPanel.classList.remove('hidden');
+                movePanel.classList.add('hidden');
+            } else {
+                remainBtn.className = 'flex-1 py-2 text-xs font-bold transition-all bg-zinc-800 text-zinc-400 hover:text-white';
+                moveBtn.className = 'flex-1 py-2 text-xs font-bold transition-all bg-cyan-600 text-white';
+                remainPanel.classList.add('hidden');
+                movePanel.classList.remove('hidden');
+            }
+            
+            // 清除之前的结果
+            currentExpectPlan = null;
+            document.getElementById('expectResult').classList.add('hidden');
+            
+            // 重新计算
+            calculateExpectPlan();
+        }
+        
+        // 更新期望选项（当有利帧变化时）
+        function updateExpectOptions() {
+            // 更新招式下拉框选项
+            const select = document.getElementById('inputExpectMove');
+            select.innerHTML = '<option value="">-- 选择招式 --</option>';
+            
+            // 只显示有 active 且不是 dash/throw 的招式
+            const availableMoves = state.moveLibrary.filter(m => m.active && !m.isDash && !m.isThrow);
+            availableMoves.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.name;
+                opt.textContent = `${m.name} (startup ${m.startup}, active ${m.active})`;
+                select.appendChild(opt);
+            });
+            
+            // 重新计算期望方案
+            calculateExpectPlan();
+        }
+        
+        // 计算期望方案
+        function calculateExpectPlan() {
+            const adv = parseInt(document.getElementById('inputAdv').value);
+            const resultDiv = document.getElementById('expectResult');
+            const resultContent = document.getElementById('expectResultContent');
+            
+            if (!adv || adv <= 0) {
+                resultDiv.classList.add('hidden');
+                currentExpectPlan = null;
+                return;
+            }
+            
+            let plan = null;
+            
+            if (expectMode === 'remain') {
+                const targetRemain = parseInt(document.getElementById('inputExpectRemain').value);
+                if (!targetRemain || targetRemain <= 0 || targetRemain >= adv) {
+                    resultDiv.classList.add('hidden');
+                    currentExpectPlan = null;
+                    return;
+                }
+                plan = findFrameKillPlan(adv, targetRemain);
+            } else {
+                const moveName = document.getElementById('inputExpectMove').value;
+                if (!moveName) {
+                    resultDiv.classList.add('hidden');
+                    currentExpectPlan = null;
+                    return;
+                }
+                const move = state.moveLibrary.find(m => m.name === moveName);
+                if (!move) {
+                    resultDiv.classList.add('hidden');
+                    currentExpectPlan = null;
+                    return;
+                }
+                plan = findMoveKillPlan(adv, move);
+            }
+            
+            currentExpectPlan = plan;
+            resultDiv.classList.remove('hidden');
+            
+            if (plan) {
+                resultContent.innerHTML = renderExpectPlanPreview(plan);
+            } else {
+                resultContent.innerHTML = `<div class="text-red-400 font-bold">❌ 没有对应卡帧解决方案</div>
+                    <div class="text-zinc-500 text-xs mt-1">无论一步还是两步卡帧都无法达成此目标</div>`;
+            }
+        }
+        
+        // 查找能卡帧到指定剩余帧数的方案
+        function findFrameKillPlan(adv, targetRemain) {
+            const neededKill = adv - targetRemain;
+            if (neededKill <= 0) return null;
+            
+            const rules = getAllRulesForCharacter(state.currentCharacter);
+            
+            // 方案A：一步卡帧
+            for (const killMove of state.moveLibrary) {
+                let killTotal;
+                if (killMove.isDash) {
+                    killTotal = killMove.dashFrames || 19;
+                } else if (killMove.active) {
+                    const lastActive = getLastActiveFrame(killMove.active);
+                    killTotal = lastActive + killMove.recovery;
+                } else {
+                    continue;
+                }
+                
+                if (killTotal === neededKill) {
+                    return {
+                        type: 'single',
+                        killMove,
+                        killTotal,
+                        remain: targetRemain,
+                        displayMeaty: `+${targetRemain}F`
+                    };
+                }
+            }
+            
+            // 方案C：两步卡帧
+            for (const killMove1 of state.moveLibrary) {
+                let killTotal1;
+                if (killMove1.isDash) {
+                    killTotal1 = killMove1.dashFrames || 19;
+                } else if (killMove1.active) {
+                    const lastActive1 = getLastActiveFrame(killMove1.active);
+                    killTotal1 = lastActive1 + killMove1.recovery;
+                } else {
+                    continue;
+                }
+                
+                if (killTotal1 >= neededKill) continue;
+                
+                for (const killMove2 of state.moveLibrary) {
+                    // 检查规则禁止
+                    if (isComboForbidden(killMove1, killMove2, rules)) continue;
+                    
+                    let killTotal2;
+                    if (killMove2.isDash) {
+                        killTotal2 = killMove2.dashFrames || 19;
+                    } else if (killMove2.active) {
+                        const lastActive2 = getLastActiveFrame(killMove2.active);
+                        killTotal2 = lastActive2 + killMove2.recovery;
+                    } else {
+                        continue;
+                    }
+                    
+                    if (killTotal1 + killTotal2 === neededKill) {
+                        return {
+                            type: 'double',
+                            killMove: killMove1,
+                            killMove2,
+                            killTotal: killTotal1,
+                            killTotal2,
+                            remain: targetRemain,
+                            displayMeaty: `+${targetRemain}F`
+                        };
+                    }
+                }
+            }
+            
+            return null;
+        }
+        
+        // 查找能用指定招式压制（偷至少1帧）的卡帧方案
+        function findMoveKillPlan(adv, targetMove) {
+            const rules = getAllRulesForCharacter(state.currentCharacter);
+            const bestPlans = [];
+            
+            // 检查各种可能的剩余帧数，从大到小（偷帧越多越好）
+            const ranges = parseActiveRanges(targetMove.active);
+            const firstActiveStart = ranges[0].start;
+            const lastActiveEnd = ranges[ranges.length - 1].end;
+            
+            // 计算可能的剩余帧范围：让 remain+1 落在 active 范围内
+            // remain+1 >= firstActiveStart 且 remain+1 <= lastActiveEnd
+            // 即 remain >= firstActiveStart - 1 且 remain <= lastActiveEnd - 1
+            // 但我们要偷至少1帧，即 remain+1 > firstActiveStart，即 remain >= firstActiveStart
+            for (let remain = firstActiveStart; remain <= lastActiveEnd - 1; remain++) {
+                const targetFrame = remain + 1;
+                const hitInfo = checkActiveHit(targetMove.active, targetFrame);
+                
+                if (hitInfo && hitInfo.stolen >= 1) {
+                    const neededKill = adv - remain;
+                    
+                    // 特殊情况：不需要卡帧，直接压制
+                    if (neededKill === 0) {
+                        bestPlans.push({
+                            type: 'direct',
+                            remain: remain,
+                            meatyMove: targetMove,
+                            stolen: hitInfo.stolen,
+                            finalHit: (targetMove.hit || 0) + hitInfo.stolen,
+                            finalBlock: (targetMove.block || 0) + hitInfo.stolen,
+                            displayMeaty: targetMove.name
+                        });
+                        continue;
+                    }
+                    
+                    // 尝试找到卡帧方案
+                    const plan = findFrameKillPlan(adv, remain);
+                    if (plan) {
+                        bestPlans.push({
+                            ...plan,
+                            meatyMove: targetMove,
+                            stolen: hitInfo.stolen,
+                            finalHit: (targetMove.hit || 0) + hitInfo.stolen,
+                            finalBlock: (targetMove.block || 0) + hitInfo.stolen,
+                            displayMeaty: targetMove.name
+                        });
+                    }
+                }
+            }
+            
+            // 按偷帧数降序排序，返回最优方案
+            if (bestPlans.length === 0) return null;
+            bestPlans.sort((a, b) => b.stolen - a.stolen);
+            return bestPlans[0];
+        }
+        
+        // 渲染期望方案预览
+        function renderExpectPlanPreview(plan) {
+            let stepsHtml = '';
+            
+            if (plan.type === 'direct') {
+                stepsHtml = `<div class="text-center">
+                    <span class="text-zinc-500">直接</span>
+                    <span class="text-cyan-400 font-black text-xl ml-2">${plan.displayMeaty}</span>
+                </div>`;
+            } else if (plan.type === 'single') {
+                stepsHtml = `<div class="flex items-center justify-center gap-2">
+                    <span class="text-white font-bold">${plan.killMove.name}</span>
+                    <span class="text-zinc-600">(-${plan.killTotal}F)</span>
+                    <span class="text-zinc-500">→</span>
+                    <span class="text-cyan-400 font-black text-xl">${plan.displayMeaty}</span>
+                </div>`;
+            } else if (plan.type === 'double') {
+                stepsHtml = `<div class="flex items-center justify-center gap-2 flex-wrap">
+                    <span class="text-white font-bold">${plan.killMove.name}</span>
+                    <span class="text-zinc-600">(-${plan.killTotal}F)</span>
+                    <span class="text-zinc-500">→</span>
+                    <span class="text-white font-bold">${plan.killMove2.name}</span>
+                    <span class="text-zinc-600">(-${plan.killTotal2}F)</span>
+                    <span class="text-zinc-500">→</span>
+                    <span class="text-cyan-400 font-black text-xl">${plan.displayMeaty}</span>
+                </div>`;
+            }
+            
+            // 如果有招式信息，显示帧数优势
+            let statsHtml = '';
+            if (plan.meatyMove) {
+                statsHtml = `<div class="mt-2 pt-2 border-t border-zinc-700 text-center text-xs">
+                    <span class="text-zinc-500">偷</span><span class="text-yellow-500 font-bold ml-1">${plan.stolen}F</span>
+                    <span class="text-zinc-500 ml-3">H</span><span class="text-cyan-400 font-bold ml-1">+${plan.finalHit}</span>
+                    <span class="text-zinc-500 ml-3">B</span><span class="text-cyan-400 font-bold ml-1">${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>
+                </div>`;
+            }
+            
+            return `<div class="text-green-400 font-bold mb-2">✓ 找到可行方案</div>${stepsHtml}${statsHtml}`;
+        }
+        
         function openNoteModal() { 
+            // 重置期望后续状态
+            expectMode = 'remain';
+            currentExpectPlan = null;
+            document.getElementById('expectDetails').removeAttribute('open');
+            document.getElementById('inputExpectRemain').value = '';
+            document.getElementById('inputExpectMove').value = '';
+            document.getElementById('expectResult').classList.add('hidden');
+            setExpectMode('remain');
+            
+            // 更新招式下拉框
+            updateExpectOptions();
+            
             document.getElementById('noteModal').classList.remove('hidden'); 
             document.getElementById('inputAdv').focus();
         }
         
         function closeModal() { 
-            document.getElementById('noteModal').classList.add('hidden'); 
+            document.getElementById('noteModal').classList.add('hidden');
+            // 清理状态
+            currentExpectPlan = null;
         }
 
         function switchTab(tab) {
-            document.getElementById('view-notes').classList.toggle('hidden', tab !== 'notes');
-            document.getElementById('view-library').classList.toggle('hidden', tab !== 'library');
+            const viewNotes = document.getElementById('view-notes');
+            const viewLibrary = document.getElementById('view-library');
+            
+            // 移除之前的动画类
+            viewNotes.classList.remove('view-transition');
+            viewLibrary.classList.remove('view-transition');
+            
+            viewNotes.classList.toggle('hidden', tab !== 'notes');
+            viewLibrary.classList.toggle('hidden', tab !== 'library');
             document.getElementById('tab-notes').classList.toggle('active', tab === 'notes');
             document.getElementById('tab-library').classList.toggle('active', tab === 'library');
+            
+            // 添加入场动画
+            requestAnimationFrame(() => {
+                if (tab === 'notes') viewNotes.classList.add('view-transition');
+                else viewLibrary.classList.add('view-transition');
+            });
+            
+            // 更新滑动指示器位置
+            updateTabIndicator(tab);
+        }
+        
+        function updateTabIndicator(tab) {
+            const indicator = document.getElementById('tabIndicator');
+            const activeTab = document.getElementById(`tab-${tab}`);
+            if (indicator && activeTab) {
+                indicator.style.left = activeTab.offsetLeft + 'px';
+                indicator.style.width = activeTab.offsetWidth + 'px';
+            }
         }
 
         function saveNote() {
@@ -1546,12 +2737,38 @@
                 return;
             }
             
+            // 合理范围检查（超过69帧的有利很少见）
+            if (adv > 69) {
+                if (!confirm(`+${adv}F 是一个非常大的有利帧数，确定要添加吗？`)) {
+                    return;
+                }
+            }
+            
+            // 检查是否启用了期望后续功能
+            const expectDetailsOpen = document.getElementById('expectDetails').hasAttribute('open');
+            if (expectDetailsOpen) {
+                // 检查用户是否输入了期望
+                let hasExpectInput = false;
+                if (expectMode === 'remain') {
+                    hasExpectInput = !!document.getElementById('inputExpectRemain').value;
+                } else {
+                    hasExpectInput = !!document.getElementById('inputExpectMove').value;
+                }
+                
+                // 如果用户输入了期望但没有可行方案，阻止添加
+                if (hasExpectInput && !currentExpectPlan) {
+                    alert('期望后续没有可行的卡帧方案，请修改期望或折叠期望后续选项后再添加');
+                    return;
+                }
+            }
+            
             state.notes.push({ adv, context: ctx || "自定义场景" });
             saveScenarios(state.currentCharacter, state.notes); // 保存到 localStorage
             document.getElementById('inputAdv').value = '';
             document.getElementById('inputContext').value = '';
             closeModal();
             renderNotes();
+            showToast(`已添加 +${adv}F 场景`);
         }
 
         function removeNote(idx) { 
@@ -1647,8 +2864,10 @@
                 
                 document.getElementById('rawPaste').value = '';
                 renderAll();
+                showToast(`已导入 ${newMoves.length} 个招式`);
             } catch (e) {
-                alert('JSON 格式错误: ' + e.message);
+                showToast('JSON 格式错误', 'error');
+                console.error('JSON 解析错误:', e);
             }
         }
 
@@ -1658,9 +2877,15 @@
                 closeModal();
                 closeCharModal();
                 closeHelpModal();
+                closeRuleModal();
             }
-            if (e.key === 'Enter' && !document.getElementById('noteModal').classList.contains('hidden')) {
-                saveNote();
+            // Enter 键保存
+            if (e.key === 'Enter') {
+                if (!document.getElementById('noteModal').classList.contains('hidden')) {
+                    saveNote();
+                } else if (!document.getElementById('ruleModal').classList.contains('hidden')) {
+                    saveRule();
+                }
             }
         });
 
@@ -1675,7 +2900,6 @@
                 savedCharacter = 'RYU';
             }
             state.currentCharacter = savedCharacter;
-            document.getElementById('currentCharName').textContent = savedCharacter;
             document.getElementById('currentCharIcon').textContent = getCharIcon(savedCharacter);
             
             // 应用角色主题
@@ -1698,12 +2922,47 @@
                 console.log(`[Scenarios] 使用预设: ${state.notes.length} 个`);
             }
             
+            // 3. 加载角色专属规则
+            state.characterRules[state.currentCharacter] = loadCharacterRules(state.currentCharacter);
+            console.log(`[Rules] 加载 ${state.characterRules[state.currentCharacter].length} 个角色规则`);
+            
+            // 4. 加载收藏和最小化状态
+            state.favorites = loadFavorites();
+            state.minimized = loadMinimized();
+            console.log(`[UI] 加载 ${Object.keys(state.favorites).length} 个收藏, ${Object.keys(state.minimized).length} 个最小化`);
+            
             console.log(`最终状态: ${state.moveLibrary.length} 招式, ${state.notes.length} 场景`);
             console.log('=== 初始化完成 ===');
             
             updateSortOrderUI();
             renderAll();
+            
+            // 初始化 Tab 指示器位置
+            setTimeout(() => updateTabIndicator('notes'), 100);
+            
+            // 初始化封条滚动内容
+            updateMarqueeTape();
+            
+            // 标记加载完成，启用页面过渡
+            requestAnimationFrame(() => {
+                document.documentElement.classList.add('loaded');
+            });
         };
+        
+        // 初始化/更新封条滚动效果
+        function updateMarqueeTape() {
+            const charName = state.currentCharacter;
+            const charIcon = getCharIcon(charName);
+            
+            // 封条内容：emoji + 角色名，交替显示
+            const repeatCount = 12;
+            const content = Array(repeatCount).fill(`<span>${charIcon} ${charName}</span>`).join('');
+            
+            document.getElementById('marqueeContent1').innerHTML = content;
+            document.getElementById('marqueeContent1Clone').innerHTML = content;
+            document.getElementById('marqueeContent2').innerHTML = content;
+            document.getElementById('marqueeContent2Clone').innerHTML = content;
+        }
     </script>
 </body>
 </html>
