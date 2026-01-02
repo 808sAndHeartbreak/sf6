@@ -35,28 +35,54 @@
         }
         
         /* ========== 阶段A：Glitch 动态效果 ========== */
-        /* 主标题悬停 Glitch - 持续但不规律 */
+        /* 主标题 - 常驻发光 + 呼吸效果 */
         .glitch-hover {
             position: relative;
             cursor: default;
             user-select: none;
             display: inline-block;
+            /* 常驻柔和发光 */
+            text-shadow: 
+                0 0 10px var(--theme-primary),
+                0 0 20px color-mix(in srgb, var(--theme-primary) 60%, transparent),
+                0 0 30px color-mix(in srgb, var(--theme-primary) 30%, transparent);
+            animation: glow-breathe 3s ease-in-out infinite;
         }
         
-        /* 悬停时抖动 */
-        html.loaded .glitch-hover:hover {
+        /* 呼吸发光动画 */
+        @keyframes glow-breathe {
+            0%, 100% {
+                text-shadow: 
+                    0 0 8px var(--theme-primary),
+                    0 0 16px color-mix(in srgb, var(--theme-primary) 50%, transparent),
+                    0 0 24px color-mix(in srgb, var(--theme-primary) 25%, transparent);
+            }
+            50% {
+                text-shadow: 
+                    0 0 12px var(--theme-primary),
+                    0 0 25px color-mix(in srgb, var(--theme-primary) 70%, transparent),
+                    0 0 40px color-mix(in srgb, var(--theme-primary) 40%, transparent);
+            }
+        }
+        
+        /* 悬停/切换时：抖动 + 强化发光 */
+        html.loaded .glitch-hover:hover,
+        html.loaded .glitch-hover.glitch-active {
             animation: glitch-chaotic 1.1s steps(1) infinite !important;
             text-shadow: 
-                3px 0 var(--theme-primary), 
-                -3px 0 var(--theme-secondary),
-                0 0 10px var(--theme-primary) !important;
+                4px 0 var(--theme-primary), 
+                -4px 0 var(--theme-secondary),
+                0 0 30px var(--theme-primary),
+                0 0 60px var(--theme-primary),
+                0 0 100px color-mix(in srgb, var(--theme-primary) 70%, transparent),
+                0 0 150px color-mix(in srgb, var(--theme-primary) 40%, transparent) !important;
         }
         
-        /* 悬停离开后立即静止，无动画 */
-        html.loaded .glitch-hover:not(:hover) {
+        /* 悬停离开后立即静止，恢复常驻发光 */
+        html.loaded .glitch-hover:not(:hover):not(.glitch-active) {
             animation: none !important;
             transform: none;
-            text-shadow: none;
+            /* 保留常驻发光，通过继承 .glitch-hover 的 text-shadow */
         }
         
         @keyframes glitch-chaotic {
@@ -122,14 +148,14 @@
         
         /* ========== 第一阶段：New-Brutalism 结构强化 ========== */
         .trend-card { 
-            background: color-mix(in srgb, var(--theme-primary) 8%, #0a0a0c);
-            border: 3px solid color-mix(in srgb, var(--theme-primary) 30%, #222);
+            background: color-mix(in srgb, var(--theme-primary) 10%, #0a0a0c);
+            border: 3px solid color-mix(in srgb, var(--theme-primary) 40%, #333);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .trend-card:hover { 
             border-color: var(--theme-primary); 
-            background: color-mix(in srgb, var(--theme-primary) 12%, #0a0a0c);
+            background: color-mix(in srgb, var(--theme-primary) 15%, #0a0a0c);
             /* New-Brutalism 半硬阴影：有位移 + 轻微模糊 */
             box-shadow: 6px 6px 0 color-mix(in srgb, var(--theme-primary) 60%, transparent);
             transform: translate(-2px, -2px);
@@ -141,17 +167,34 @@
         }
 
         .btn-hype {
-            background: #fff;
+            background: var(--theme-secondary);
             color: #000;
             transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 900;
-            clip-path: polygon(8% 0, 100% 0, 92% 100%, 0% 100%);
         }
 
         .btn-hype:hover {
             background: var(--theme-primary);
             color: #fff;
             box-shadow: 0 0 25px var(--theme-primary), 0 0 50px color-mix(in srgb, var(--theme-primary) 50%, transparent);
+        }
+        
+        /* 次要按钮 - 暗色主题色 */
+        .btn-secondary {
+            background: color-mix(in srgb, var(--theme-primary) 70%, #000);
+            color: #fff;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 900;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--theme-primary);
+            box-shadow: 0 0 15px color-mix(in srgb, var(--theme-primary) 50%, transparent);
+        }
+        
+        .btn-secondary:active {
+            transform: translateY(2px);
+            filter: brightness(0.9);
         }
         
         /* ========== 第三阶段：物理点击反馈 ========== */
@@ -179,25 +222,52 @@
             pointer-events: none;
         }
 
+        /* Tab 矩形开关按钮组 */
         .tab-btn {
             font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
             font-style: italic;
-            font-size: 1.25rem;
-            color: #666;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s;
+            font-size: 0.9rem;
+            color: #555;
+            background: transparent;
+            border: none;
+            padding: 0.55rem 1.4rem;
+            transition: color 0.25s, transform 0.15s;
+            position: relative;
         }
         
-        .tab-btn:hover {
-            color: var(--theme-primary);
-            text-shadow: 0 0 15px var(--theme-primary);
+        /* 下划线展开效果 */
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--theme-secondary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-50%);
+        }
+        
+        .tab-btn:hover:not(.active)::after {
+            width: 70%;
+        }
+        
+        .tab-btn:hover:not(.active) {
+            color: #aaa;
         }
         
         .tab-btn:active {
-            transform: translateY(2px);
+            transform: scale(0.96);
         }
 
-        .tab-btn.active { color: #fff; border-bottom-color: var(--theme-primary); }
+        .tab-btn.active { 
+            color: #000;
+            font-weight: 900;
+        }
+        
+        .tab-btn.active::after {
+            width: 0;
+        }
 
         /* JSON 提示区 */
         .json-hint {
@@ -208,45 +278,45 @@
             color: var(--theme-secondary);
         }
 
-        /* 角色选择按钮 - 类似 Tab 样式 + 下划线效果 */
+        /* 角色选择按钮 - Opium/Trap 菱形风格 */
         .champion-btn {
             font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
             font-style: italic;
-            font-size: 1.25rem;
-            color: #666;
+            font-size: 1.4rem;
+            color: #fff;
             transition: all 0.3s;
-            background: transparent;
-            border: none;
-            padding-bottom: 0.5rem;
+            background: color-mix(in srgb, var(--theme-primary) 20%, #000);
+            border: 2px solid var(--theme-primary);
+            padding: 0.7rem 1.8rem;
             position: relative;
             cursor: pointer;
+            /* 菱形斜切 */
+            clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+            margin-right: auto;
         }
         
-        /* 下划线效果 */
-        .champion-btn::after {
+        /* 内发光边框效果 */
+        .champion-btn::before {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: var(--theme-primary);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform: translateX(-50%);
-            box-shadow: 0 0 10px var(--theme-primary);
-        }
-        
-        .champion-btn:hover::after {
-            width: 100%;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(0,0,0,0.2) 100%);
+            pointer-events: none;
         }
         
         .champion-btn:hover {
-            color: var(--theme-primary);
-            text-shadow: 0 0 20px var(--theme-primary);
+            background: color-mix(in srgb, var(--theme-primary) 40%, #000);
+            border-color: var(--theme-primary);
+            box-shadow: 
+                0 0 20px color-mix(in srgb, var(--theme-primary) 50%, transparent),
+                inset 0 0 15px color-mix(in srgb, var(--theme-primary) 30%, transparent);
+            color: #fff;
+            text-shadow: 0 0 10px var(--theme-primary);
         }
         
         .champion-btn:active {
             transform: translateY(2px);
+            box-shadow: none;
         }
         
         .champion-btn .char-icon {
@@ -254,7 +324,7 @@
         }
         
         .champion-btn:hover .char-icon {
-            transform: scale(1.2);
+            transform: scale(1.15);
         }
 
         /* 角色选择网格 - 响应式 */
@@ -322,7 +392,8 @@
         @media (hover: none) {
             .char-item:hover { transform: none; }
             .trend-card:hover { 
-                border-color: var(--theme-card-border); 
+                border-color: color-mix(in srgb, var(--theme-primary) 40%, #333); 
+                background: color-mix(in srgb, var(--theme-primary) 10%, #0a0a0c);
                 box-shadow: none;
                 transform: none;
             }
@@ -399,6 +470,77 @@
             transform: scale(0.97);
         }
         
+        /* 主题色 Modal 按钮 */
+        .modal-btn-primary {
+            background-color: var(--theme-btn-primary);
+        }
+        .modal-btn-primary:hover {
+            background-color: var(--theme-btn-primary-hover);
+        }
+        .modal-btn-active {
+            background-color: var(--theme-btn-primary);
+        }
+        
+        /* 排序按钮样式 */
+        .sort-btn {
+            background: #18181b;
+            border-color: color-mix(in srgb, var(--theme-secondary) 60%, #333);
+            color: var(--theme-secondary);
+        }
+        .sort-btn:hover {
+            background: color-mix(in srgb, var(--theme-primary) 20%, #18181b);
+            border-color: var(--theme-primary);
+            color: var(--theme-primary);
+        }
+        
+        /* Context 标签样式 */
+        .context-tag {
+            color: var(--theme-primary);
+            background: color-mix(in srgb, var(--theme-secondary) 15%, transparent);
+            border-color: var(--theme-secondary);
+        }
+        
+        /* 帧数输入组件 */
+        .adv-input-group {
+            display: flex;
+            border: 1px solid var(--theme-card-border);
+        }
+        .adv-input-group .adv-btn {
+            width: 56px;
+            background: #27272a;
+            color: #a1a1aa;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.15s;
+            user-select: none;
+            border: none;
+        }
+        .adv-input-group .adv-btn:hover {
+            background: #3f3f46;
+            color: white;
+        }
+        .adv-input-group .adv-btn:first-child {
+            border-right: 1px solid var(--theme-card-border);
+        }
+        .adv-input-group .adv-btn:last-child {
+            border-left: 1px solid var(--theme-card-border);
+        }
+        .adv-input-group .adv-input {
+            flex: 1;
+            min-width: 0;
+            background: black;
+            padding: 1rem;
+            font-size: 2.25rem;
+            font-weight: 900;
+            text-align: center;
+            color: var(--theme-input-accent);
+            border: none;
+            outline: none;
+        }
+        .adv-input-group .adv-input::placeholder {
+            color: #52525b;
+        }
+        
         /* iPhone 安全区域适配 */
         body {
             padding-left: env(safe-area-inset-left);
@@ -456,18 +598,27 @@
             opacity: 0;
         }
         
-        /* ========== Tab 滑动下划线 ========== */
+        /* ========== Tab 矩形开关容器 ========== */
         .tab-container {
             position: relative;
+            display: flex;
+            gap: 0;
+            background: #111;
+            padding: 4px;
+            border: 2px solid #333;
         }
         
+        /* 滑动高亮指示器 - 矩形 */
         .tab-indicator {
             position: absolute;
-            bottom: 0;
-            height: 2px;
+            top: 4px;
+            bottom: 4px;
             background: var(--theme-primary);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 0 10px var(--theme-primary);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 0;
+            box-shadow: 
+                0 0 20px color-mix(in srgb, var(--theme-primary) 60%, transparent),
+                0 0 40px color-mix(in srgb, var(--theme-primary) 30%, transparent);
         }
         
         .tab-btn {
@@ -476,7 +627,7 @@
         }
         
         .tab-btn.active {
-            text-shadow: 0 0 20px var(--theme-primary);
+            z-index: 2;
         }
         
         /* ========== 封条胶带滚动效果 (Marquee Tape) ========== */
@@ -687,12 +838,12 @@
                 </div>
                 <span class="text-zinc-500 font-bold text-xs tracking-widest mt-1">made by Yuetian</span>
             </div>
-            <nav class="flex items-center gap-4">
+            <nav class="flex items-end gap-6 sm:gap-8 w-full sm:w-auto">
                 <button onclick="openCharacterModal()" class="champion-btn tracking-widest uppercase flex items-center gap-2">
-                    <span class="char-icon text-xl" id="currentCharIcon">🥋</span>
+                    <span class="char-icon text-lg" id="currentCharIcon">🥋</span>
                     <span>CHAMPION</span>
                 </button>
-                <div class="flex gap-4 sm:gap-8 tab-container relative" id="tabContainer">
+                <div class="flex gap-4 sm:gap-8 tab-container relative ml-auto sm:ml-0" id="tabContainer">
                     <button onclick="switchTab('notes')" id="tab-notes" class="tab-btn active uppercase tracking-widest text-base sm:text-xl pb-2">SOLUTION</button>
                     <button onclick="switchTab('library')" id="tab-library" class="tab-btn uppercase tracking-widest text-base sm:text-xl pb-2">DATA</button>
                     <div class="tab-indicator" id="tabIndicator"></div>
@@ -701,23 +852,28 @@
         </header>
 
         <!-- VIEW: SOLUTION -->
-        <div id="view-notes" class="space-y-6">
+        <div id="view-notes" class="space-y-6 pt-4">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                <h2 class="impact-text text-2xl sm:text-3xl text-zinc-400">卡帧策略</h2>
+                <h2 class="impact-text text-3xl sm:text-4xl font-black" style="color: var(--theme-secondary);">卡帧策略</h2>
                 <div class="flex gap-2">
                     <button onclick="resetToDefault()" class="px-4 py-3 text-xs bg-zinc-800 text-zinc-500 hover:bg-zinc-700 hover:text-white transition-all font-bold">重置</button>
-                    <button onclick="openNoteModal()" class="btn-hype px-6 sm:px-8 py-3 text-sm font-bold">+ 添加场景</button>
+                    <button onclick="openNoteModal()" class="btn-hype px-6 sm:px-8 py-3 text-sm font-bold">+ 新增场景</button>
                 </div>
             </div>
             <!-- 搜索框和排序按钮 -->
             <div class="mb-6 flex gap-3">
-                <input type="text" id="solutionSearch" 
-                    class="flex-1 bg-black border border-zinc-700 p-3 text-sm text-white placeholder-zinc-600 focus:border-cyan-500 focus:outline-none transition-colors"
-                    placeholder="搜索帧数 (如 32) 或情境 (如 升龙)..."
-                    aria-label="搜索场景"
-                    oninput="debounce(filterSolutions)()">
+                <div class="flex-1 relative">
+                    <input type="text" id="solutionSearch" 
+                        class="w-full bg-black border border-zinc-700 p-3 pr-10 text-sm text-white placeholder-zinc-600 focus:border-cyan-500 focus:outline-none transition-colors"
+                        placeholder="搜索帧数 (如 32) 或情境 (如 升龙)..."
+                        aria-label="搜索场景"
+                        oninput="debounce(filterSolutions)(); updateClearBtn()">
+                    <button id="clearSearchBtn" onclick="clearSearch()" 
+                        class="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-white text-xl p-1 hidden transition-colors"
+                        title="清除搜索">×</button>
+                </div>
                 <button onclick="toggleSortOrder()" id="sortOrderBtn" 
-                    class="px-4 py-3 bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:border-cyan-500 transition-all flex items-center gap-2 text-sm font-bold"
+                    class="sort-btn px-4 py-3 border transition-all flex items-center gap-2 text-sm font-bold"
                     title="切换排序方向">
                     <span id="sortOrderIcon">↑</span>
                     <span id="sortOrderText" class="hidden sm:inline">帧数</span>
@@ -730,20 +886,21 @@
         <div id="view-library" class="hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div class="lg:col-span-4 bg-zinc-900 p-6 border border-zinc-800">
-                    <h3 class="impact-text text-xl mb-4 text-pink-500">数据导入</h3>
+                    <!-- 新增招式按钮 -->
+                    <button onclick="openAddMoveModal()" class="btn-secondary w-full py-2 mb-4 text-sm font-bold">
+                        + 新增招式
+                    </button>
                     
-                    <div class="json-hint mb-4">
-                        <button onclick="loadTemplate()" class="font-bold text-cyan-400 hover:text-cyan-300 underline transition-colors">
-                            JSON 格式 (点击查看)
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="impact-text text-2xl font-black" style="color: var(--theme-primary);">批量导入</h3>
+                        <button onclick="loadTemplate()" class="text-xs text-zinc-500 hover:text-cyan-400 underline transition-colors">
+                            JSON 格式
                         </button>
                     </div>
 
                     <textarea id="rawPaste" class="w-full h-40 bg-black border border-zinc-700 p-4 text-xs font-mono text-cyan-500 resize-none" placeholder='粘贴 JSON 数据...'></textarea>
-                    <button onclick="importJson()" class="w-full mt-4 py-3 bg-white text-black font-black hover:bg-pink-600 hover:text-white transition-all">导入数据</button>
-                    <div class="flex gap-2 mt-2">
-                        <button onclick="resetMovesToDefault()" class="flex-1 py-2 bg-zinc-800 text-zinc-500 text-xs font-bold hover:bg-blue-900 hover:text-white transition-all">重置预设</button>
-                        <button onclick="clearLibrary()" class="flex-1 py-2 bg-zinc-800 text-zinc-500 text-xs font-bold hover:bg-red-900 hover:text-white transition-all">清空全部</button>
-                    </div>
+                    <button onclick="importJson()" class="btn-secondary w-full mt-4 py-2 text-sm font-bold">批量导入</button>
+                    <button onclick="resetMovesToDefault()" class="w-full mt-2 py-2 bg-zinc-800 text-zinc-500 text-xs font-bold hover:bg-blue-900 hover:text-white transition-all">重置预设</button>
                 </div>
                 <div class="lg:col-span-8 overflow-x-auto relative">
                     <!-- 移动端滚动提示 -->
@@ -778,30 +935,36 @@
 
     <!-- MODAL: Add Scenario -->
     <div id="noteModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="noteModalTitle">
-        <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+        <div class="bg-zinc-900 border w-full max-w-md p-6 sm:p-8 max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-card-border);">
             <div class="flex justify-between items-center mb-6">
-                <h2 id="noteModalTitle" class="impact-text text-2xl text-pink-500">添加场景</h2>
+                <h2 id="noteModalTitle" class="impact-text text-3xl sm:text-4xl font-black" style="color: var(--theme-modal-title);">新增场景</h2>
                 <button onclick="closeModal()" class="text-zinc-500 hover:text-white text-3xl sm:text-2xl p-2 -m-2" title="关闭">&times;</button>
             </div>
             <div class="space-y-6">
                 <div>
                     <label class="block text-[10px] font-black uppercase mb-2 text-zinc-500">Advantage Frames (初始有利帧)</label>
-                    <input type="number" id="inputAdv" class="w-full bg-black border border-zinc-700 p-4 text-4xl font-black text-pink-500" placeholder="40" oninput="updateExpectOptions()">
+                    <div class="adv-input-group">
+                        <button type="button" onclick="adjustAdv(-1)" class="adv-btn">−</button>
+                        <input type="text" id="inputAdv" inputmode="numeric" pattern="[0-9]*" maxlength="2"
+                            class="adv-input" placeholder="40" oninput="sanitizeAdvInput(); updateExpectOptions()">
+                        <button type="button" onclick="adjustAdv(1)" class="adv-btn">+</button>
+                    </div>
+                    <p class="text-[10px] text-zinc-600 mt-1">范围 1~99</p>
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase mb-2 text-zinc-500">Scenario Context (情境说明)</label>
-                    <input type="text" id="inputContext" class="w-full bg-black border border-zinc-700 p-4 font-bold" placeholder="例如：2HK放倒">
+                    <input type="text" id="inputContext" class="w-full bg-black border p-4 font-bold text-white" style="border-color: var(--theme-card-border);" placeholder="例如：2HK放倒">
                 </div>
                 
                 <!-- 期望后续 - 进阶选项 -->
-                <details id="expectDetails" class="border border-zinc-800 bg-zinc-900/50">
+                <details id="expectDetails" class="border bg-zinc-900/50" style="border-color: var(--theme-card-border);">
                     <summary class="px-4 py-3 cursor-pointer text-zinc-500 hover:text-zinc-300 text-sm font-bold transition-colors select-none">
                         ▶ 期望后续 (进阶)
                     </summary>
-                    <div class="p-4 border-t border-zinc-800 space-y-4">
+                    <div class="p-4 border-t space-y-4" style="border-color: var(--theme-card-border);">
                         <!-- 模式选择 -->
                         <div class="flex gap-2">
-                            <button type="button" onclick="setExpectMode('remain')" id="expectModeRemain" class="flex-1 py-2 text-xs font-bold transition-all bg-cyan-600 text-white">指定剩余帧数</button>
+                            <button type="button" onclick="setExpectMode('remain')" id="expectModeRemain" class="flex-1 py-2 text-xs font-bold transition-all text-white" style="background-color: var(--theme-btn-primary);">指定剩余帧数</button>
                             <button type="button" onclick="setExpectMode('move')" id="expectModeMove" class="flex-1 py-2 text-xs font-bold transition-all bg-zinc-800 text-zinc-400 hover:text-white">指定压制招式</button>
                         </div>
                         
@@ -809,7 +972,7 @@
                         <div id="expectRemainPanel" class="space-y-3">
                             <div>
                                 <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">期望剩余帧数</label>
-                                <input type="number" id="inputExpectRemain" class="w-full bg-black border border-zinc-700 p-3 text-xl font-black text-cyan-400" placeholder="如 5" oninput="calculateExpectPlan()">
+                                <input type="number" id="inputExpectRemain" class="w-full bg-black border p-3 text-xl font-black" style="border-color: var(--theme-card-border); color: var(--theme-input-accent);" placeholder="如 5" oninput="calculateExpectPlan()">
                                 <p class="text-[10px] text-zinc-600 mt-1">系统将计算如何卡帧到剩余这个帧数</p>
                             </div>
                         </div>
@@ -818,7 +981,7 @@
                         <div id="expectMovePanel" class="space-y-3 hidden">
                             <div>
                                 <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">选择压制招式</label>
-                                <select id="inputExpectMove" class="w-full bg-black border border-zinc-700 p-3 text-sm font-bold text-cyan-400" onchange="calculateExpectPlan()">
+                                <select id="inputExpectMove" class="w-full bg-black border p-3 text-sm font-bold" style="border-color: var(--theme-card-border); color: var(--theme-input-accent);" onchange="calculateExpectPlan()">
                                     <option value="">-- 选择招式 --</option>
                                 </select>
                                 <p class="text-[10px] text-zinc-600 mt-1">系统将计算如何卡帧使该招式能偷至少 1 帧</p>
@@ -828,13 +991,13 @@
                         <!-- 计算结果预览 -->
                         <div id="expectResult" class="hidden">
                             <div class="text-[10px] font-black uppercase mb-2 text-zinc-500">计算结果</div>
-                            <div id="expectResultContent" class="bg-black/50 border border-zinc-700 p-3 text-sm"></div>
+                            <div id="expectResultContent" class="bg-black/50 border p-3 text-sm" style="border-color: var(--theme-card-border);"></div>
                         </div>
                     </div>
                 </details>
                 
                 <div class="flex gap-2">
-                    <button onclick="saveNote()" class="flex-1 bg-pink-600 text-white py-3 font-bold text-sm hover:bg-pink-500 transition-all">计算方案</button>
+                    <button onclick="saveNote()" class="flex-1 text-white py-3 font-bold text-sm transition-all modal-btn-primary">计算方案</button>
                     <button onclick="closeModal()" class="px-4 py-3 bg-zinc-800 text-zinc-400 font-bold text-sm hover:text-white transition-all">取消</button>
                 </div>
             </div>
@@ -843,9 +1006,9 @@
 
     <!-- MODAL: Character Select -->
     <div id="charModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="charModalTitle">
-        <div class="bg-zinc-900 border border-zinc-700 w-full max-w-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+        <div class="bg-zinc-900 border w-full max-w-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-card-border);">
             <div class="flex justify-between items-center mb-6">
-                <h2 id="charModalTitle" class="impact-text text-2xl sm:text-3xl text-yellow-400">选择角色</h2>
+                <h2 id="charModalTitle" class="impact-text text-2xl sm:text-3xl font-black" style="color: var(--theme-modal-title);">选择角色</h2>
                 <button onclick="closeCharModal()" class="text-zinc-500 hover:text-white text-3xl sm:text-2xl p-2 -m-2" title="关闭">&times;</button>
             </div>
             <div class="char-grid" id="charGrid"></div>
@@ -860,29 +1023,103 @@
 
     <!-- MODAL: Add Rule -->
     <div id="ruleModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="ruleModalTitle">
-        <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
+        <div class="bg-zinc-900 border w-full max-w-md p-6 max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-card-border);">
             <div class="flex justify-between items-center mb-4">
-                <h2 id="ruleModalTitle" class="impact-text text-xl text-cyan-400">添加规则</h2>
+                <h2 id="ruleModalTitle" class="impact-text text-2xl sm:text-3xl font-black" style="color: var(--theme-modal-title);">添加规则</h2>
                 <button onclick="closeRuleModal()" class="text-zinc-500 hover:text-white text-3xl sm:text-2xl p-2 -m-2" title="关闭">&times;</button>
             </div>
             <p class="text-zinc-500 text-xs mb-4">添加角色专属的组合过滤规则，匹配的招式组合将不会出现在方案中。</p>
             <div class="space-y-4">
                 <div>
                     <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">Pattern 1 (招式关键词)</label>
-                    <input type="text" id="inputPattern1" class="w-full bg-black border border-zinc-700 p-3 text-sm font-bold text-white uppercase" placeholder="例如: LP, 5MP, HK">
+                    <input type="text" id="inputPattern1" class="w-full bg-black border p-3 text-sm font-bold text-white uppercase" style="border-color: var(--theme-card-border);" placeholder="例如: LP, 5MP, HK">
                 </div>
                 <div class="text-center text-zinc-600 text-xs">× 禁止组合 ×</div>
                 <div>
                     <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">Pattern 2 (招式关键词)</label>
-                    <input type="text" id="inputPattern2" class="w-full bg-black border border-zinc-700 p-3 text-sm font-bold text-white uppercase" placeholder="例如: LP, 2MK, 投">
+                    <input type="text" id="inputPattern2" class="w-full bg-black border p-3 text-sm font-bold text-white uppercase" style="border-color: var(--theme-card-border);" placeholder="例如: LP, 2MK, 投">
                 </div>
                 <div>
                     <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">说明 (可选)</label>
-                    <input type="text" id="inputRuleDesc" class="w-full bg-black border border-zinc-700 p-3 text-sm text-zinc-400" placeholder="例如: 连招不稳定">
+                    <input type="text" id="inputRuleDesc" class="w-full bg-black border p-3 text-sm text-zinc-400" style="border-color: var(--theme-card-border);" placeholder="例如: 连招不稳定">
                 </div>
                 <div class="flex gap-2 pt-2">
-                    <button onclick="saveRule()" class="flex-1 bg-cyan-600 text-white py-3 font-bold text-sm hover:bg-cyan-500 transition-all">保存规则</button>
+                    <button onclick="saveRule()" class="flex-1 text-white py-3 font-bold text-sm transition-all modal-btn-primary">保存规则</button>
                     <button onclick="closeRuleModal()" class="px-4 py-3 bg-zinc-800 text-zinc-400 font-bold text-sm hover:text-white transition-all">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Add Move -->
+    <div id="addMoveModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="addMoveModalTitle">
+        <div class="bg-zinc-900 border w-full max-w-md p-6 sm:p-8 max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-card-border);">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="addMoveModalTitle" class="impact-text text-3xl sm:text-4xl font-black" style="color: var(--theme-modal-title);">新增招式</h2>
+                <button onclick="closeAddMoveModal()" class="text-zinc-500 hover:text-white text-3xl sm:text-2xl p-2 -m-2" title="关闭">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <!-- 招式类型选择 -->
+                <div>
+                    <label class="block text-[10px] font-black uppercase mb-2 text-zinc-500">招式类型</label>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="setMoveType('normal')" id="moveTypeNormal" class="flex-1 py-2 text-xs font-bold transition-all text-white" style="background-color: var(--theme-btn-primary);">普通招式</button>
+                        <button type="button" onclick="setMoveType('throw')" id="moveTypeThrow" class="flex-1 py-2 text-xs font-bold transition-all bg-zinc-800 text-zinc-400 hover:text-white">投技</button>
+                        <button type="button" onclick="setMoveType('dash')" id="moveTypeDash" class="flex-1 py-2 text-xs font-bold transition-all bg-zinc-800 text-zinc-400 hover:text-white">Dash</button>
+                    </div>
+                </div>
+                
+                <!-- 招式名称 -->
+                <div>
+                    <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">招式名称</label>
+                    <input type="text" id="inputMoveName" class="w-full bg-black border p-3 text-lg font-bold text-white uppercase" style="border-color: var(--theme-card-border);" placeholder="例如: 5HP, 2MK">
+                </div>
+                
+                <!-- 普通招式/投技的帧数据 -->
+                <div id="moveFrameFields" class="space-y-3">
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">Startup</label>
+                            <input type="number" id="inputMoveStartup" class="w-full bg-black border p-2 text-center font-mono text-white" style="border-color: var(--theme-card-border);" placeholder="7">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">Active</label>
+                            <input type="text" id="inputMoveActive" class="w-full bg-black border p-2 text-center font-mono text-white" style="border-color: var(--theme-card-border);" placeholder="7-9">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">Recovery</label>
+                            <input type="number" id="inputMoveRecovery" class="w-full bg-black border p-2 text-center font-mono text-white" style="border-color: var(--theme-card-border);" placeholder="15">
+                        </div>
+                    </div>
+                    <div id="moveHitBlockFields" class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">Hit (命中)</label>
+                            <input type="number" id="inputMoveHit" class="w-full bg-black border p-2 text-center font-mono text-cyan-400" style="border-color: var(--theme-card-border);" placeholder="+5">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">Block (防御)</label>
+                            <input type="number" id="inputMoveBlock" class="w-full bg-black border p-2 text-center font-mono text-pink-400" style="border-color: var(--theme-card-border);" placeholder="-2">
+                        </div>
+                    </div>
+                    <div id="moveKnockdownField">
+                        <label class="flex items-center gap-2 text-sm text-zinc-400 cursor-pointer">
+                            <input type="checkbox" id="inputMoveKnockdown" class="w-4 h-4 accent-red-500">
+                            <span>击倒技 (Knockdown)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Dash 的帧数据 -->
+                <div id="moveDashFields" class="hidden">
+                    <div>
+                        <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">Dash 总帧数</label>
+                        <input type="number" id="inputMoveDashFrames" class="w-full bg-black border p-3 text-center font-mono text-white text-lg" style="border-color: var(--theme-card-border);" placeholder="19">
+                    </div>
+                </div>
+                
+                <div class="flex gap-2 pt-3">
+                    <button onclick="saveNewMove()" class="flex-1 text-white py-3 font-bold text-sm transition-all modal-btn-primary">添加招式</button>
+                    <button onclick="closeAddMoveModal()" class="px-4 py-3 bg-zinc-800 text-zinc-400 font-bold text-sm hover:text-white transition-all">取消</button>
                 </div>
             </div>
         </div>
@@ -890,9 +1127,9 @@
 
     <!-- MODAL: Help -->
     <div id="helpModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
-        <div class="bg-zinc-900 border border-zinc-700 w-full max-w-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+        <div class="bg-zinc-900 border w-full max-w-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-card-border);">
             <div class="flex justify-between items-center mb-6">
-                <h2 id="helpModalTitle" class="impact-text text-2xl sm:text-3xl text-cyan-400">使用说明</h2>
+                <h2 id="helpModalTitle" class="impact-text text-2xl sm:text-3xl font-black" style="color: var(--theme-modal-title);">使用说明</h2>
                 <button onclick="closeHelpModal()" class="text-zinc-500 hover:text-white text-3xl sm:text-2xl p-2 -m-2" title="关闭">&times;</button>
             </div>
             <div class="space-y-6 text-zinc-300 text-sm leading-relaxed">
@@ -903,11 +1140,17 @@
                 
                 <section>
                     <h3 class="text-lg font-bold text-white mb-2">🎮 如何使用</h3>
-                    <ol class="list-decimal list-inside space-y-2 text-zinc-400">
-                        <li><strong class="text-white">选择角色</strong> - 点击右上角角色按钮切换</li>
-                        <li><strong class="text-white">查看卡帧策略</strong> - SOLUTION 页签展示各种击倒情境下的最优方案</li>
-                        <li><strong class="text-white">添加场景</strong> - 点击 <span class="text-cyan-400">+ 添加场景</span> 输入有利帧数，系统自动计算</li>
-                        <li><strong class="text-white">管理帧数据</strong> - DATA 页签可查看/导入角色招式数据</li>
+                    <ol class="list-decimal list-inside space-y-3 text-zinc-400">
+                        <li><strong class="text-white">选择角色</strong> - 点击 <span class="text-cyan-400">CHAMPION</span> 按钮切换角色</li>
+                        <li><strong class="text-white">查看卡帧策略</strong> - <span class="text-cyan-400">SOLUTION</span> 页签展示各种击倒情境下的最优方案</li>
+                        <li>
+                            <strong class="text-white">新增场景</strong> - 点击 <span class="text-cyan-400">+ 新增场景</span> 输入有利帧数，系统自动计算
+                            <p class="text-zinc-500 text-xs mt-1 ml-5">*可展开「期望后续」指定剩余帧数或压制招式，系统验证可行性</p>
+                        </li>
+                        <li>
+                            <strong class="text-white">管理帧数据</strong> - <span class="text-cyan-400">DATA</span> 页签可查看/导入角色招式数据
+                            <p class="text-zinc-500 text-xs mt-1 ml-5">*管理组合规则：<span class="text-zinc-400">GLOBAL</span> 规则全角色生效，其他规则仅当前角色</p>
+                        </li>
                     </ol>
                 </section>
                 
@@ -916,42 +1159,16 @@
                     <ul class="space-y-2 text-zinc-400">
                         <li><span class="text-yellow-500">卡帧招式</span> → 用来消耗多余的有利帧</li>
                         <li><span class="text-white">压制招式</span> → 对手起身时攻击命中的招式</li>
-                        <li><span class="text-cyan-400">H +X</span> → 命中时的帧数优势</li>
-                        <li><span class="text-pink-400">B +X/-X</span> → 防御时的帧数优势</li>
-                        <li><span class="text-zinc-500">偷 XF</span> → 比正常更早命中，多偷的帧数</li>
-                    </ul>
-                </section>
-                
-                <section>
-                    <h3 class="text-lg font-bold text-white mb-2">⭐ 收藏功能</h3>
-                    <p class="text-zinc-400">点击方案旁的 <span class="text-yellow-400">☆</span> 可收藏个人喜欢的方案，收藏后会优先显示并高亮。</p>
-                </section>
-                
-                <section>
-                    <h3 class="text-lg font-bold text-white mb-2">🎯 期望后续 (进阶)</h3>
-                    <p class="text-zinc-400">添加场景时可展开"期望后续"选项，支持两种模式：</p>
-                    <ul class="mt-2 space-y-1 text-zinc-500 text-xs">
-                        <li>• <span class="text-cyan-400">指定剩余帧数</span> - 输入期望卡帧后剩余的帧数，验证是否有可行方案</li>
-                        <li>• <span class="text-cyan-400">指定压制招式</span> - 选择想用的压制招式，系统计算如何卡帧（需偷至少1帧）</li>
-                        <li>• 若无可行方案，将提示并阻止添加</li>
-                    </ul>
-                </section>
-                
-                <section>
-                    <h3 class="text-lg font-bold text-white mb-2">🚫 组合规则</h3>
-                    <p class="text-zinc-400">在 DATA 页签底部可以管理组合过滤规则：</p>
-                    <ul class="mt-2 space-y-1 text-zinc-500 text-xs">
-                        <li>• <span class="text-zinc-400">GLOBAL</span> 规则对所有角色生效（如轻拳+轻拳禁止）</li>
-                        <li>• <span class="text-cyan-400">角色专属</span> 规则只对当前角色生效</li>
-                        <li>• 点击 <span class="text-cyan-400">+ 添加规则</span> 可添加自定义规则</li>
+                        <li><span class="text-cyan-400">H +X</span> / <span class="text-white">H 0</span> / <span class="text-rose-400">H -X</span> → 命中时的帧数优势</li>
+                        <li><span class="text-cyan-400">B +X</span> / <span class="text-white">B 0</span> / <span class="text-rose-400">B -X</span> → 防御时的帧数优势</li>
+                        <li><span class="text-emerald-400">偷 XF</span> → 比正常更早命中，多偷的帧数</li>
                     </ul>
                 </section>
                 
                 <section>
                     <h3 class="text-lg font-bold text-white mb-2">⌨️ 快捷键</h3>
-                    <ul class="space-y-1 text-zinc-500 text-xs">
-                        <li>• <kbd class="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-300">Esc</kbd> 关闭弹窗</li>
-                        <li>• <kbd class="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-300">Enter</kbd> 确认保存</li>
+                    <ul class="space-y-1 text-zinc-400">
+                        <li><kbd class="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-300">Esc</kbd> 关闭弹窗　　<kbd class="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-300">Enter</kbd> 确认保存</li>
                     </ul>
                 </section>
                 
@@ -1026,17 +1243,25 @@
             // 角色主题配色方案
             CHAR_THEMES: {
                 "RYU": {
-                    primary: "#8b2500",      // 深咖啡红
-                    secondary: "#d4a574",    // 米棕色
-                    accent: "#1a1a1a",       // 黑色
-                    cardBg: "#1c1412",       // 深棕红背景
-                    cardBorder: "#4a2c20",   // 棕红边框
+                    primary: "#6b2020",      // 暗棕红/深咖啡红
+                    secondary: "#d4a574",    // 道服米色（副主题色）
+                    accent: "#1a1a1a",       // 水墨黑
+                    modalTitle: "#a04040",   // Modal 标题（暗棕红）
+                    btnPrimary: "#6b2020",   // 主按钮暗棕红
+                    btnPrimaryHover: "#4a1515",
+                    inputAccent: "#a04040",  // 输入框强调暗棕红
+                    cardBg: "#1a1210",       // 深棕红背景
+                    cardBorder: "#3d2218",   // 棕红边框
                     bgImage: "asset/ryu_ss01.jpg"
                 },
                 "BLANKA": {
-                    primary: "#d4a017",      // 暗金色
-                    secondary: "#2d8b57",    // 森林绿
-                    accent: "#1a4a1a",       // 深绿
+                    primary: "#228b22",      // 丛林绿（森林绿）
+                    secondary: "#ffd700",    // 闪电黄（金黄色）
+                    accent: "#f97316",       // 毛发橙
+                    modalTitle: "#32cd32",   // Modal 标题酸橙绿
+                    btnPrimary: "#228b22",   // 主按钮丛林绿
+                    btnPrimaryHover: "#1a6b1a",
+                    inputAccent: "#32cd32",   // 输入框强调绿
                     cardBg: "#141c14",       // 深绿背景
                     cardBorder: "#2a4a2a",   // 绿色边框
                     bgImage: "asset/blanka_ss01.jpg"
@@ -1046,6 +1271,10 @@
                     primary: "#ff007a",
                     secondary: "#00f2ff",
                     accent: "#ffd700",
+                    modalTitle: "#ec4899",   // Modal 标题粉
+                    btnPrimary: "#db2777",   // 主按钮粉
+                    btnPrimaryHover: "#be185d",
+                    inputAccent: "#f472b6",  // 输入框强调粉
                     cardBg: "#141416",
                     cardBorder: "#2a2a2e",
                     bgImage: null
@@ -1135,6 +1364,10 @@
             root.style.setProperty('--theme-accent', theme.accent);
             root.style.setProperty('--theme-card-bg', theme.cardBg);
             root.style.setProperty('--theme-card-border', theme.cardBorder);
+            root.style.setProperty('--theme-modal-title', theme.modalTitle);
+            root.style.setProperty('--theme-btn-primary', theme.btnPrimary);
+            root.style.setProperty('--theme-btn-primary-hover', theme.btnPrimaryHover);
+            root.style.setProperty('--theme-input-accent', theme.inputAccent);
             
             // 应用背景图
             const bgOverlay = document.getElementById('bgOverlay');
@@ -1368,6 +1601,20 @@
         }
 
         // ==================== 核心计算逻辑 ====================
+        // 获取偷帧数的颜色类（与 Hit/Block 帧数一致）
+        function getStolenColorClass(stolen) {
+            if (stolen >= 3) return 'text-green-400';      // 偷3帧以上，深绿
+            if (stolen >= 1) return 'text-emerald-400';    // 偷1-2帧，浅绿
+            return 'text-yellow-400';                       // 偷0帧，黄色
+        }
+        
+        // 获取帧数优势的颜色类
+        function getFrameColorClass(frames) {
+            if (frames > 0) return 'text-cyan-400';         // 正帧，浅蓝
+            if (frames === 0) return 'text-white';          // 0帧，白色
+            return 'text-rose-400';                         // 负帧，玫瑰红
+        }
+        
         // 检测压制招式的攻击等级：heavy / medium / light / other
         function getMoveStrength(move) {
             if (!move || !move.name) return 'other';
@@ -1655,6 +1902,20 @@
             
             closeCharModal();
             renderAll();
+            
+            // 自动触发标题 Glitch 效果 0.5 秒
+            triggerTitleGlitch();
+        }
+        
+        // 触发标题 Glitch 效果
+        function triggerTitleGlitch() {
+            const title = document.querySelector('.glitch-hover');
+            if (title) {
+                title.classList.add('glitch-active');
+                setTimeout(() => {
+                    title.classList.remove('glitch-active');
+                }, 500);
+            }
         }
 
         function initCharacterGrid() {
@@ -1704,12 +1965,14 @@
             
             let stepsHtml;
             
+            const stolenColor = getStolenColorClass(plan.stolen);
+            
             if (plan.isDirect) {
                 // 直接压制/投
                 stepsHtml = `<div class="text-center">
                        <div class="text-[9px] text-zinc-600 uppercase mb-1">直接${isThrow ? '投' : ''} (${plan.remain}F)</div>
                        <div class="impact-text text-4xl sm:text-5xl font-black ${accentColor} leading-none glitch-text">${plan.meatyMove.name}</div>
-                       ${!isThrow ? `<div class="text-xs text-zinc-500 mt-1">偷${plan.stolen}F</div>` : ''}
+                       ${!isThrow ? `<div class="text-xs mt-1"><span class="text-zinc-500">偷</span><span class="${stolenColor} font-bold">${plan.stolen}F</span></div>` : ''}
                    </div>`;
             } else if (plan.killMove2) {
                 // 两步卡帧
@@ -1727,7 +1990,7 @@
                        <div class="text-zinc-600 text-lg">→</div>
                        <div class="text-center min-w-[55px]">
                            <div class="impact-text text-xl sm:text-2xl font-black ${accentColor} leading-none glitch-text">${plan.meatyMove.name}</div>
-                           ${!isThrow ? `<div class="text-[9px] text-zinc-500">偷${plan.stolen}F</div>` : ''}
+                           ${!isThrow ? `<div class="text-[9px]"><span class="text-zinc-500">偷</span><span class="${stolenColor} font-bold">${plan.stolen}F</span></div>` : ''}
                        </div>
                    </div>`;
             } else {
@@ -1743,16 +2006,18 @@
                        </div>
                        <div class="text-center min-w-[70px]">
                            <div class="impact-text text-2xl sm:text-4xl font-black ${accentColor} leading-none glitch-text">${plan.meatyMove.name}</div>
-                           ${!isThrow ? `<div class="text-[10px] text-zinc-500">偷${plan.stolen}F</div>` : ''}
+                           ${!isThrow ? `<div class="text-[10px]"><span class="text-zinc-500">偷</span><span class="${stolenColor} font-bold">${plan.stolen}F</span></div>` : ''}
                        </div>
                    </div>`;
             }
 
             // 投技显示"放倒"，普通招式显示 Hit/Block
+            const hitColor = getFrameColorClass(plan.finalHit);
+            const blockColor = getFrameColorClass(plan.finalBlock);
             const statsHtml = isThrow 
                 ? `<span class="text-zinc-400 text-xs">放倒</span>`
-                : `<span class="text-xs text-zinc-500">H</span><span class="text-sm font-bold text-cyan-400 ml-1">+${plan.finalHit}</span>
-                   <span class="text-xs text-zinc-500 ml-3">B</span><span class="text-sm font-bold text-cyan-400 ml-1">${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>`;
+                : `<span class="text-sm text-zinc-500">H</span><span class="text-lg font-bold ${hitColor} ml-1">${plan.finalHit >= 0 ? '+' : ''}${plan.finalHit}</span>
+                   <span class="text-sm text-zinc-500 ml-3">B</span><span class="text-lg font-bold ${blockColor} ml-1">${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>`;
 
             // 收藏星和最小化按钮
             const starIcon = isFavorite ? '★' : '☆';
@@ -1760,10 +2025,14 @@
             
             // 收藏印章
             const stampHtml = isFavorite ? '<div class="favorite-stamp">FAVE</div>' : '';
+            
+            // 方案标签（如"打投择"）
+            const labelHtml = label ? `<div class="absolute top-1 left-1 sm:top-2 sm:left-2 text-[9px] font-bold px-1.5 py-0.5 bg-amber-600/80 text-white uppercase">${label}</div>` : '';
 
             return `
                 <div class="mb-3 p-4 border ${borderColor} ${bgColor} relative group overflow-visible">
                     ${stampHtml}
+                    ${labelHtml}
                     <div class="absolute top-1 right-1 sm:top-2 sm:right-2 flex gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
                         <button onclick="toggleFavorite(${adv}, '${planKey}')" class="${starClass} text-xl sm:text-lg p-2 sm:p-1 transition-colors" title="收藏">${starIcon}</button>
                         <button onclick="minimizePlan(${adv}, '${planKey}')" class="text-zinc-600 hover:text-zinc-400 text-base sm:text-sm p-2 sm:p-1 transition-colors" title="最小化">▼</button>
@@ -1802,14 +2071,16 @@
             const starClass = isFavorite ? 'text-yellow-400' : 'text-zinc-600 hover:text-yellow-400';
             const rowBg = isFavorite ? 'bg-yellow-900/10' : '';
 
+            const stolenColorAlt = getStolenColorClass(plan.stolen);
+            
             return `
                 <details class="border-b border-zinc-800/50 ${rowBg}">
                     <summary class="flex items-center justify-between py-2 cursor-pointer hover:bg-zinc-800/30 transition-colors group">
                         <span class="text-sm text-zinc-400">${desc}</span>
                         <div class="flex gap-1 sm:gap-2 text-sm font-bold items-center">
-                            <span class="text-yellow-500 text-[10px] sm:text-xs">偷${plan.stolen}F</span>
-                            <span class="text-cyan-400 text-[10px] sm:text-xs">H+${plan.finalHit}</span>
-                            <span class="text-cyan-400 text-[10px] sm:text-xs">B${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>
+                            <span class="${stolenColorAlt} text-xs sm:text-sm">偷${plan.stolen}F</span>
+                            <span class="${getFrameColorClass(plan.finalHit)} text-xs sm:text-sm">H${plan.finalHit >= 0 ? '+' : ''}${plan.finalHit}</span>
+                            <span class="${getFrameColorClass(plan.finalBlock)} text-xs sm:text-sm">B${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>
                             <button onclick="event.stopPropagation(); toggleFavorite(${adv}, '${planKey}')" class="${starClass} transition-colors p-1.5 sm:p-1 text-base sm:text-sm" title="收藏">${starIcon}</button>
                             <button onclick="event.stopPropagation(); maximizePlan(${adv}, '${planKey}')" class="text-zinc-600 hover:text-zinc-400 transition-colors p-1.5 sm:p-1 text-base sm:text-sm" title="置顶显示">▲</button>
                         </div>
@@ -1824,6 +2095,7 @@
         // 渲染备选方案展开详情
         function renderAltPlanDetail(plan, adv) {
             const isThrow = plan.isThrow;
+            const stolenColorDetail = getStolenColorClass(plan.stolen);
             
             let stepsHtml;
             
@@ -1831,7 +2103,7 @@
                 stepsHtml = `<div class="text-center">
                        <div class="text-[10px] text-zinc-600 uppercase mb-2">直接${isThrow ? '投' : '压制'} (剩余 ${plan.remain}F)</div>
                        <div class="impact-text text-3xl sm:text-4xl font-black text-white leading-none">${plan.meatyMove.name}</div>
-                       ${!isThrow ? `<div class="text-sm text-zinc-500 mt-2">偷 ${plan.stolen}F</div>` : ''}
+                       ${!isThrow ? `<div class="text-sm mt-2"><span class="text-zinc-500">偷</span><span class="${stolenColorDetail} font-bold">${plan.stolen}F</span></div>` : ''}
                    </div>`;
             } else if (plan.killMove2) {
                 const remain1 = adv - plan.killTotal;
@@ -1857,7 +2129,7 @@
                        <div class="text-center min-w-[60px]">
                            <div class="text-[9px] text-zinc-500 uppercase mb-1">${isThrow ? '投' : '压制'}</div>
                            <div class="impact-text text-xl sm:text-2xl font-black text-white leading-none">${plan.meatyMove.name}</div>
-                           ${!isThrow ? `<div class="text-[10px] text-zinc-500 mt-1">偷${plan.stolen}F</div>` : ''}
+                           ${!isThrow ? `<div class="text-[10px] mt-1"><span class="text-zinc-500">偷</span><span class="${stolenColorDetail} font-bold">${plan.stolen}F</span></div>` : ''}
                        </div>
                    </div>`;
             } else {
@@ -1874,7 +2146,7 @@
                        <div class="text-center min-w-[70px]">
                            <div class="text-[9px] text-zinc-500 uppercase mb-1">${isThrow ? '投' : '压制'}</div>
                            <div class="impact-text text-2xl sm:text-3xl font-black text-white leading-none">${plan.meatyMove.name}</div>
-                           ${!isThrow ? `<div class="text-xs text-zinc-500 mt-1">偷 ${plan.stolen}F</div>` : ''}
+                           ${!isThrow ? `<div class="text-xs mt-1"><span class="text-zinc-500">偷</span><span class="${stolenColorDetail} font-bold">${plan.stolen}F</span></div>` : ''}
                        </div>
                    </div>`;
             }
@@ -1885,12 +2157,12 @@
                    </div>`
                 : `<div class="flex justify-center gap-6 mt-3">
                        <div class="text-center">
-                           <span class="text-[10px] text-zinc-600 uppercase">Hit</span>
-                           <span class="text-lg font-black text-cyan-400 ml-1">+${plan.finalHit}</span>
+                           <span class="text-xs text-zinc-600 uppercase">Hit</span>
+                           <span class="text-xl font-black ${getFrameColorClass(plan.finalHit)} ml-1">${plan.finalHit >= 0 ? '+' : ''}${plan.finalHit}</span>
                        </div>
                        <div class="text-center">
-                           <span class="text-[10px] text-zinc-600 uppercase">Block</span>
-                           <span class="text-lg font-black text-cyan-400 ml-1">${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>
+                           <span class="text-xs text-zinc-600 uppercase">Block</span>
+                           <span class="text-xl font-black ${getFrameColorClass(plan.finalBlock)} ml-1">${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>
                        </div>
                    </div>`;
 
@@ -1944,6 +2216,25 @@
         // 搜索过滤函数
         function filterSolutions() {
             renderNotes();
+        }
+        
+        // 清除搜索
+        function clearSearch() {
+            const input = document.getElementById('solutionSearch');
+            input.value = '';
+            updateClearBtn();
+            filterSolutions();
+        }
+        
+        // 更新清除按钮显示状态
+        function updateClearBtn() {
+            const input = document.getElementById('solutionSearch');
+            const btn = document.getElementById('clearSearchBtn');
+            if (input.value.trim()) {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden');
+            }
         }
         
         // 切换排序方向
@@ -2049,7 +2340,7 @@
                 container.innerHTML = isEmptyNotes ? `
                     <div class="trend-card p-8 text-center">
                         <div class="text-zinc-600 text-lg mb-2">📋 暂无 Scenario</div>
-                        <div class="text-zinc-700 text-sm">点击 + 添加场景 添加有利帧情境</div>
+                        <div class="text-zinc-700 text-sm">点击 + 新增场景 添加有利帧情境</div>
                     </div>
                 ` : `
                     <div class="trend-card p-8 text-center">
@@ -2072,14 +2363,14 @@
                 const contextsHtml = group.indices.map((idx, i) => {
                     const ctx = group.contexts[i];
                     return `<div class="flex items-center gap-2 group/ctx">
-                        <div class="text-sm font-black text-cyan-400 uppercase tracking-wide bg-cyan-400/10 px-2 py-1 border-l-2 border-cyan-400 flex-1">${escapeHtml(ctx)}</div>
+                        <div class="text-sm font-black uppercase tracking-wide px-2 py-1 border-l-2 flex-1 context-tag">${escapeHtml(ctx)}</div>
                         <button onclick="removeNote(${idx})" class="text-zinc-600 hover:text-red-500 text-base sm:text-sm p-2 sm:p-1 sm:opacity-0 sm:group-hover/ctx:opacity-100 transition-all" title="删除此场景">✕</button>
                     </div>`;
                 }).join('');
                 
                 const leftPanel = `
                     <div class="flex flex-col min-w-[160px] items-start lg:border-r border-zinc-800 pr-6">
-                        <div class="impact-text text-4xl sm:text-5xl text-white leading-none frame-number">+${group.adv}F</div>
+                        <div class="impact-text text-4xl sm:text-5xl leading-none frame-number" style="color: var(--theme-secondary);">+${group.adv}F</div>
                         <div class="flex flex-col gap-1 mt-3">
                             ${contextsHtml}
                         </div>
@@ -2102,6 +2393,7 @@
                 // 按攻击等级分类方案
                 const heavyPlans = normalPlans.filter(p => getPlanStrength(p) === 'heavy');
                 const mediumPlans = normalPlans.filter(p => getPlanStrength(p) === 'medium');
+                const lightPlans = normalPlans.filter(p => getPlanStrength(p) === 'light');
                 
                 // 排序函数：收藏优先，然后按 finalBlock > finalHit 排序
                 const sortByBest = (a, b) => {
@@ -2126,6 +2418,7 @@
 
                 // ========== 2. 中攻击最优方案 (MP/MK) ==========
                 const availableMedium = mediumPlans.filter(p => !isMinimized(p));
+                let hasShownMedium = false;
                 if (availableMedium.length > 0) {
                     const sortedMedium = [...availableMedium].sort(sortByBest);
                     const bestMedium = sortedMedium[0];
@@ -2133,11 +2426,27 @@
                     if (!mainKeys.has(getPlanKey(bestMedium))) {
                         mainKeys.add(getPlanKey(bestMedium));
                         mainHtml += renderMainPlan(bestMedium, '', group.adv);
+                        hasShownMedium = true;
+                    }
+                }
+
+                // ========== 2'. 轻攻击递补方案 (LP/LK) - 仅当没有中攻击时显示 ==========
+                if (!hasShownMedium) {
+                    const availableLight = lightPlans.filter(p => !isMinimized(p));
+                    if (availableLight.length > 0) {
+                        const sortedLight = [...availableLight].sort(sortByBest);
+                        const bestLight = sortedLight[0];
+                        // 只有和重攻击不同才显示
+                        if (!mainKeys.has(getPlanKey(bestLight))) {
+                            mainKeys.add(getPlanKey(bestLight));
+                            mainHtml += renderMainPlan(bestLight, '', group.adv);
+                        }
                     }
                 }
 
                 // ========== 3. 投技方案：只有 remain 4-5F 时显示（投技active=5-7）==========
                 const availableThrow = throwPlans.filter(p => !isMinimized(p));
+                let hasShownThrow = false;
                 if (availableThrow.length > 0) {
                     // 投技方案按收藏优先，直接优先，然后按 remain 越小越优先
                     const sortedThrow = [...availableThrow].sort((a, b) => {
@@ -2151,6 +2460,33 @@
                     const bestThrow = sortedThrow[0];
                     mainKeys.add(getPlanKey(bestThrow));
                     mainHtml += renderMainPlan(bestThrow, '', group.adv);
+                    hasShownThrow = true;
+                }
+
+                // ========== 3'. 零帧方案：当重/中/轻都没有正收益方案，但有投技时，显示 Block=0 的方案形成打投择 ==========
+                const hasNormalMainPlan = normalPlans.some(p => mainKeys.has(getPlanKey(p)));
+                if (!hasNormalMainPlan && hasShownThrow) {
+                    // 从 allPlans 中找出所有 finalBlock === 0 的非投技方案
+                    const zeroBlockPlans = allPlans.filter(p => !p.isThrow && p.finalBlock === 0);
+                    if (zeroBlockPlans.length > 0) {
+                        // 按攻击等级排序：重 > 中 > 轻
+                        const strengthOrder = { heavy: 0, medium: 1, light: 2, other: 3 };
+                        const sortedZeroPlans = [...zeroBlockPlans].sort((a, b) => {
+                            const aStrength = strengthOrder[getPlanStrength(a)] ?? 3;
+                            const bStrength = strengthOrder[getPlanStrength(b)] ?? 3;
+                            if (aStrength !== bStrength) return aStrength - bStrength;
+                            // 同等级按 finalHit 排序
+                            return b.finalHit - a.finalHit;
+                        });
+                        
+                        // 显示所有 0 帧方案（打投择配合）
+                        sortedZeroPlans.forEach(plan => {
+                            if (!mainKeys.has(getPlanKey(plan))) {
+                                mainKeys.add(getPlanKey(plan));
+                                mainHtml += renderMainPlan(plan, '打投择', group.adv);
+                            }
+                        });
+                    }
                 }
 
                 // ========== 4. 备选方案折叠区 ==========
@@ -2218,19 +2554,30 @@
                 `;
                 return;
             }
+            
+            // 获取原始预设数据的招式名称列表，用于判断是否可删除
+            const defaultMoves = getDefaultMoves(state.currentCharacter);
+            const defaultMoveNames = new Set(defaultMoves.map(m => m.name.toUpperCase()));
 
             body.innerHTML = state.moveLibrary.map((m, idx) => {
+                // 判断是否为用户添加的招式（可删除）
+                const isUserAdded = m.isUserAdded || !defaultMoveNames.has(m.name.toUpperCase());
+                const deleteBtn = isUserAdded 
+                    ? `<button onclick="removeMove(${idx})" class="text-zinc-700 hover:text-red-500 transition-colors p-2 -m-1 text-base" title="删除">✕</button>`
+                    : '';
+                const userBadge = isUserAdded 
+                    ? '<span class="ml-1 text-[9px] px-1 py-0.5 bg-emerald-900/50 text-emerald-400 rounded">NEW</span>' 
+                    : '';
+                
                 // 特殊处理 Dash 招式
                 if (m.isDash) {
                     return `
                         <tr class="border-b border-zinc-900 hover:bg-zinc-800/20">
-                            <td class="p-4 text-zinc-300">${m.name} <span class="text-[10px] text-zinc-500">DASH</span></td>
+                            <td class="p-4 text-zinc-300">${m.name}${userBadge} <span class="text-[10px] text-zinc-500">DASH</span></td>
                             <td class="p-4 text-center font-mono text-zinc-500" colspan="3">${m.dashFrames || 19}F 总帧数 (仅卡帧用)</td>
                             <td class="p-4 text-center font-mono text-zinc-600">-</td>
                             <td class="p-4 text-center font-mono text-zinc-600">-</td>
-                            <td class="p-4 text-right">
-                                <button onclick="removeMove(${idx})" class="text-zinc-700 hover:text-red-500 transition-colors p-2 -m-1 text-base" title="删除">✕</button>
-                            </td>
+                            <td class="p-4 text-right">${deleteBtn}</td>
                         </tr>
                     `;
                 }
@@ -2239,15 +2586,13 @@
                 if (m.isThrow) {
                     return `
                         <tr class="border-b border-zinc-900 hover:bg-zinc-800/20">
-                            <td class="p-4 text-zinc-300">${m.name} <span class="text-[10px] text-zinc-500">THROW</span></td>
+                            <td class="p-4 text-zinc-300">${m.name}${userBadge} <span class="text-[10px] text-zinc-500">THROW</span></td>
                             <td class="p-4 text-center font-mono text-zinc-500">${m.startup}</td>
                             <td class="p-4 text-center font-mono text-zinc-500">${m.active}</td>
                             <td class="p-4 text-center font-mono text-zinc-500">${m.recovery}</td>
                             <td class="p-4 text-center font-mono text-zinc-600">-</td>
                             <td class="p-4 text-center font-mono text-zinc-600">-</td>
-                            <td class="p-4 text-right">
-                                <button onclick="removeMove(${idx})" class="text-zinc-700 hover:text-red-500 transition-colors p-2 -m-1 text-base" title="删除">✕</button>
-                            </td>
+                            <td class="p-4 text-right">${deleteBtn}</td>
                         </tr>
                     `;
                 }
@@ -2259,15 +2604,13 @@
                     
                 return `
                     <tr class="border-b border-zinc-900 hover:bg-zinc-800/20">
-                        <td class="p-4 text-zinc-300">${m.name}${knockdownBadge}</td>
+                        <td class="p-4 text-zinc-300">${m.name}${userBadge}${knockdownBadge}</td>
                         <td class="p-4 text-center font-mono text-zinc-500">${m.startup}</td>
                         <td class="p-4 text-center font-mono text-zinc-500">${m.active}</td>
                         <td class="p-4 text-center font-mono text-zinc-500">${m.recovery}</td>
-                        <td class="p-4 text-center font-mono text-cyan-500">${m.hit >= 0 ? '+' : ''}${m.hit}</td>
-                        <td class="p-4 text-center font-mono text-pink-500">${m.block >= 0 ? '+' : ''}${m.block}</td>
-                        <td class="p-4 text-right">
-                            <button onclick="removeMove(${idx})" class="text-zinc-700 hover:text-red-500 transition-colors p-2 -m-1 text-base" title="删除">✕</button>
-                        </td>
+                        <td class="p-4 text-center font-mono ${getFrameColorClass(m.hit)}">${m.hit >= 0 ? '+' : ''}${m.hit}</td>
+                        <td class="p-4 text-center font-mono ${getFrameColorClass(m.block)}">${m.block >= 0 ? '+' : ''}${m.block}</td>
+                        <td class="p-4 text-right">${deleteBtn}</td>
                     </tr>
                 `;
             }).join('');
@@ -2366,6 +2709,172 @@
             }
         }
         
+        // ==================== 新增招式弹窗 ====================
+        let currentMoveType = 'normal';  // normal, throw, dash
+        
+        function openAddMoveModal() {
+            currentMoveType = 'normal';
+            updateMoveTypeUI();
+            document.getElementById('addMoveModal').classList.remove('hidden');
+            document.getElementById('inputMoveName').focus();
+        }
+        
+        function closeAddMoveModal() {
+            document.getElementById('addMoveModal').classList.add('hidden');
+            // 清空所有输入
+            document.getElementById('inputMoveName').value = '';
+            document.getElementById('inputMoveStartup').value = '';
+            document.getElementById('inputMoveActive').value = '';
+            document.getElementById('inputMoveRecovery').value = '';
+            document.getElementById('inputMoveHit').value = '';
+            document.getElementById('inputMoveBlock').value = '';
+            document.getElementById('inputMoveKnockdown').checked = false;
+            document.getElementById('inputMoveDashFrames').value = '';
+        }
+        
+        function setMoveType(type) {
+            currentMoveType = type;
+            updateMoveTypeUI();
+        }
+        
+        function updateMoveTypeUI() {
+            const normalBtn = document.getElementById('moveTypeNormal');
+            const throwBtn = document.getElementById('moveTypeThrow');
+            const dashBtn = document.getElementById('moveTypeDash');
+            const frameFields = document.getElementById('moveFrameFields');
+            const dashFields = document.getElementById('moveDashFields');
+            const hitBlockFields = document.getElementById('moveHitBlockFields');
+            const knockdownField = document.getElementById('moveKnockdownField');
+            
+            // 重置按钮样式
+            [normalBtn, throwBtn, dashBtn].forEach(btn => {
+                btn.style.backgroundColor = '';
+                btn.className = 'flex-1 py-2 text-xs font-bold transition-all bg-zinc-800 text-zinc-400 hover:text-white';
+            });
+            
+            // 设置选中按钮样式
+            const selectedBtn = currentMoveType === 'normal' ? normalBtn : 
+                               currentMoveType === 'throw' ? throwBtn : dashBtn;
+            selectedBtn.style.backgroundColor = 'var(--theme-btn-primary)';
+            selectedBtn.className = 'flex-1 py-2 text-xs font-bold transition-all text-white';
+            
+            // 显示/隐藏字段
+            if (currentMoveType === 'dash') {
+                frameFields.classList.add('hidden');
+                dashFields.classList.remove('hidden');
+            } else {
+                frameFields.classList.remove('hidden');
+                dashFields.classList.add('hidden');
+                
+                // 投技隐藏 Hit/Block 和 Knockdown 选项
+                if (currentMoveType === 'throw') {
+                    hitBlockFields.classList.add('hidden');
+                    knockdownField.classList.add('hidden');
+                } else {
+                    hitBlockFields.classList.remove('hidden');
+                    knockdownField.classList.remove('hidden');
+                }
+            }
+        }
+        
+        function saveNewMove() {
+            const name = document.getElementById('inputMoveName').value.trim().toUpperCase();
+            
+            if (!name) {
+                alert('请输入招式名称');
+                return;
+            }
+            
+            // 检查是否重复
+            const exists = state.moveLibrary.some(m => m.name.toUpperCase() === name);
+            if (exists) {
+                alert('该招式已存在');
+                return;
+            }
+            
+            let newMove;
+            
+            if (currentMoveType === 'dash') {
+                const dashFrames = parseInt(document.getElementById('inputMoveDashFrames').value);
+                if (!dashFrames || dashFrames <= 0) {
+                    alert('请输入有效的 Dash 帧数');
+                    return;
+                }
+                newMove = {
+                    name,
+                    isDash: true,
+                    dashFrames,
+                    isUserAdded: true  // 标记为用户添加
+                };
+            } else {
+                const startup = parseInt(document.getElementById('inputMoveStartup').value);
+                const active = document.getElementById('inputMoveActive').value.trim();
+                const recovery = parseInt(document.getElementById('inputMoveRecovery').value);
+                
+                if (!startup || startup <= 0) {
+                    alert('请输入有效的 Startup');
+                    return;
+                }
+                if (!active) {
+                    alert('请输入 Active 帧（如: 7-9 或 5-7,12-14）');
+                    return;
+                }
+                if (!recovery || recovery < 0) {
+                    alert('请输入有效的 Recovery');
+                    return;
+                }
+                
+                // 验证 active 格式
+                const activeRegex = /^\d+(-\d+)?(,\d+(-\d+)?)*$/;
+                if (!activeRegex.test(active)) {
+                    alert('Active 格式不正确，请使用如 7-9 或 5-7,12-14 的格式');
+                    return;
+                }
+                
+                if (currentMoveType === 'throw') {
+                    newMove = {
+                        name,
+                        startup,
+                        active,
+                        recovery,
+                        isThrow: true,
+                        isKnockdown: true,
+                        isUserAdded: true
+                    };
+                } else {
+                    const hit = parseInt(document.getElementById('inputMoveHit').value) || 0;
+                    const block = parseInt(document.getElementById('inputMoveBlock').value) || 0;
+                    const isKnockdown = document.getElementById('inputMoveKnockdown').checked;
+                    
+                    newMove = {
+                        name,
+                        startup,
+                        active,
+                        recovery,
+                        hit,
+                        block,
+                        isKnockdown,
+                        isUserAdded: true
+                    };
+                }
+            }
+            
+            // 添加到招式库
+            state.moveLibrary.push(newMove);
+            
+            // 更新缓存
+            if (state.characterCache[state.currentCharacter]) {
+                state.characterCache[state.currentCharacter].moves = [...state.moveLibrary];
+            }
+            
+            // 保存到 localStorage
+            saveMoves(state.currentCharacter, state.moveLibrary);
+            
+            closeAddMoveModal();
+            renderAll();
+            showToast(`已添加 ${name}`);
+        }
+        
         function renderRules() {
             const container = document.getElementById('rulesContainer');
             if (!container) return;
@@ -2414,13 +2923,13 @@
             const movePanel = document.getElementById('expectMovePanel');
             
             if (mode === 'remain') {
-                remainBtn.className = 'flex-1 py-2 text-xs font-bold transition-all bg-cyan-600 text-white';
+                remainBtn.className = 'flex-1 py-2 text-xs font-bold transition-all modal-btn-active text-white';
                 moveBtn.className = 'flex-1 py-2 text-xs font-bold transition-all bg-zinc-800 text-zinc-400 hover:text-white';
                 remainPanel.classList.remove('hidden');
                 movePanel.classList.add('hidden');
             } else {
                 remainBtn.className = 'flex-1 py-2 text-xs font-bold transition-all bg-zinc-800 text-zinc-400 hover:text-white';
-                moveBtn.className = 'flex-1 py-2 text-xs font-bold transition-all bg-cyan-600 text-white';
+                moveBtn.className = 'flex-1 py-2 text-xs font-bold transition-all modal-btn-active text-white';
                 remainPanel.classList.add('hidden');
                 movePanel.classList.remove('hidden');
             }
@@ -2431,6 +2940,51 @@
             
             // 重新计算
             calculateExpectPlan();
+        }
+        
+        // 调整有利帧数值（+/- 按钮）
+        function adjustAdv(delta) {
+            const input = document.getElementById('inputAdv');
+            let currentVal = parseInt(input.value);
+            
+            // 如果输入框为空，从 placeholder 值开始
+            if (isNaN(currentVal) || input.value === '') {
+                currentVal = 40; // placeholder 默认值
+            }
+            
+            const newVal = currentVal + delta;
+            
+            // 范围限制：1~99
+            if (newVal < 1 || newVal > 99) {
+                return; // 超出范围，不执行
+            }
+            
+            input.value = newVal;
+            updateExpectOptions();
+        }
+        
+        // 清理输入，只允许数字且范围 1~99
+        function sanitizeAdvInput() {
+            const input = document.getElementById('inputAdv');
+            // 移除非数字字符
+            let val = input.value.replace(/[^0-9]/g, '');
+            
+            // 限制最大两位数
+            if (val.length > 2) {
+                val = val.slice(0, 2);
+            }
+            
+            // 如果输入的数字超过99，截断为99
+            if (parseInt(val) > 99) {
+                val = '99';
+            }
+            
+            // 移除前导零（但保留单独的 0 以便继续输入）
+            if (val.length > 1 && val.startsWith('0')) {
+                val = val.replace(/^0+/, '');
+            }
+            
+            input.value = val;
         }
         
         // 更新期望选项（当有利帧变化时）
@@ -2663,10 +3217,13 @@
             // 如果有招式信息，显示帧数优势
             let statsHtml = '';
             if (plan.meatyMove) {
+                const stolenColorPreview = getStolenColorClass(plan.stolen);
+                const hitColorPreview = getFrameColorClass(plan.finalHit);
+                const blockColorPreview = getFrameColorClass(plan.finalBlock);
                 statsHtml = `<div class="mt-2 pt-2 border-t border-zinc-700 text-center text-xs">
-                    <span class="text-zinc-500">偷</span><span class="text-yellow-500 font-bold ml-1">${plan.stolen}F</span>
-                    <span class="text-zinc-500 ml-3">H</span><span class="text-cyan-400 font-bold ml-1">+${plan.finalHit}</span>
-                    <span class="text-zinc-500 ml-3">B</span><span class="text-cyan-400 font-bold ml-1">${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>
+                    <span class="text-zinc-500">偷</span><span class="${stolenColorPreview} font-bold ml-1">${plan.stolen}F</span>
+                    <span class="text-zinc-500 ml-3">H</span><span class="${hitColorPreview} font-bold ml-1">${plan.finalHit >= 0 ? '+' : ''}${plan.finalHit}</span>
+                    <span class="text-zinc-500 ml-3">B</span><span class="${blockColorPreview} font-bold ml-1">${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>
                 </div>`;
             }
             
@@ -2732,13 +3289,13 @@
             const adv = parseInt(document.getElementById('inputAdv').value);
             const ctx = document.getElementById('inputContext').value.trim();
             
-            if (!adv || adv <= 0) {
-                alert('请输入有效的有利帧数');
+            if (!adv || adv < 1 || adv > 99) {
+                alert('请输入有效的有利帧数 (1~99)');
                 return;
             }
             
-            // 合理范围检查（超过69帧的有利很少见）
-            if (adv > 69) {
+            // 合理范围检查（超过70帧的有利很少见）
+            if (adv > 70) {
                 if (!confirm(`+${adv}F 是一个非常大的有利帧数，确定要添加吗？`)) {
                     return;
                 }
@@ -2878,6 +3435,7 @@
                 closeCharModal();
                 closeHelpModal();
                 closeRuleModal();
+                closeAddMoveModal();
             }
             // Enter 键保存
             if (e.key === 'Enter') {
@@ -2885,6 +3443,8 @@
                     saveNote();
                 } else if (!document.getElementById('ruleModal').classList.contains('hidden')) {
                     saveRule();
+                } else if (!document.getElementById('addMoveModal').classList.contains('hidden')) {
+                    saveNewMove();
                 }
             }
         });
