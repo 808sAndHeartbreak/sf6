@@ -36,6 +36,6 @@ CHARACTER_DATA["BLANKA"] = {
     { "adv": 25, "context": "下重脚" },
     { "adv": 16, "context": "民工连滑铲+前前" },
     { "adv": 13, "context": "民工连升龙+轻滚接近" },
-    { "adv": 11, "context": "投完前前" }
+    { "adv": 11, "context": "投+前前" }
   ]
 };

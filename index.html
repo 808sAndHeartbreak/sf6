@@ -1301,15 +1301,19 @@
                 <section>
                     <h3 class="text-lg font-bold text-white mb-2">🎮 如何使用</h3>
                     <ol class="list-decimal list-inside space-y-3 text-zinc-400">
-                        <li><strong class="text-white">选择角色</strong> - 点击 <span class="text-cyan-400">角色</span> 按钮切换角色</li>
-                        <li><strong class="text-white">查看卡帧策略</strong> - <span class="text-cyan-400">方案</span> 页签展示各种击倒情境下的最优方案</li>
+                        <li><strong class="text-white">选择角色</strong> - 点击 <span class="text-cyan-400">CHAMPION</span> 按钮切换角色</li>
+                        <li>
+                            <strong class="text-white">查看卡帧策略</strong> - <span class="text-cyan-400">方案</span> 页签展示各种击倒情境下的最优方案
+                            <p class="text-zinc-500 text-xs mt-1 ml-5">*使用搜索框查找特定帧数或场景，点击排序按钮切换排序方向</p>
+                            <p class="text-zinc-500 text-xs ml-5">*点击 <span class="text-yellow-400">☆</span> 收藏喜欢的方案，点击 <span class="text-zinc-400">_</span> 最小化到备选区</p>
+                        </li>
                         <li>
                             <strong class="text-white">新增场景</strong> - 点击 <span class="text-cyan-400">+ 新增场景</span> 输入有利帧数，系统自动计算
                             <p class="text-zinc-500 text-xs mt-1 ml-5">*可展开「期望后续」指定剩余帧数或压制招式，系统验证可行性</p>
                         </li>
                         <li>
                             <strong class="text-white">管理帧数据</strong> - <span class="text-cyan-400">数据</span> 页签可查看/导入角色招式数据
-                            <p class="text-zinc-500 text-xs mt-1 ml-5">*管理组合禁用规则：<span class="text-zinc-400">全局</span> 规则全角色生效，其他规则仅当前角色</p>
+                            <p class="text-zinc-500 text-xs mt-1 ml-5">*管理组合规则：<span class="text-zinc-400">全局</span> 规则全角色生效，其他规则仅当前角色</p>
                         </li>
                     </ol>
                 </section>
@@ -1326,10 +1330,14 @@
                 </section>
                 
                 <section>
-                    <h3 class="text-lg font-bold text-white mb-2">⌨️ 快捷键</h3>
-                    <ul class="space-y-1 text-zinc-400">
-                        <li><kbd class="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-300">Esc</kbd> 关闭弹窗　　<kbd class="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-300">Enter</kbd> 确认保存</li>
+                    <h3 class="text-lg font-bold text-white mb-2">⚙️ 规则管理</h3>
+                    <p class="text-zinc-400 mb-2">在<span class="text-cyan-400">数据</span>页签可添加自定义规则：</p>
+                    <ul class="space-y-2 text-zinc-400 text-sm">
+                        <li><span class="text-red-400">禁用招式</span> → 禁止某招式用于卡帧、压制或直接压制</li>
+                        <li><span class="text-red-400">禁止组合</span> → 禁止两个招式连续使用（如 5LP × 5LP）</li>
+                        <li><span class="text-green-400">偏好压制</span> → 优先推荐某招式作为压制招式</li>
                     </ul>
+                    <p class="text-zinc-500 text-xs mt-2">*<span class="text-zinc-400">全局</span>规则（如 LP+LP）对所有角色生效且不可删除</p>
                 </section>
                 
                 <section>
@@ -2849,7 +2857,7 @@
                     altHtml += `
                         <details class="mt-2">
                             <summary class="text-[11px] text-zinc-600 cursor-pointer hover:text-zinc-400 transition-colors py-2">
-                                ▶ ${altNormalPlans.length} 个备选方案 (Block > 0)
+                                ▶ ${altNormalPlans.length} 个备选打击方案 (Block > 0)
                             </summary>
                             <div class="mt-2 bg-zinc-900/50 p-3 border border-zinc-800">
                                 ${altContent}
