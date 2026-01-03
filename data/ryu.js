@@ -18,6 +18,7 @@ CHARACTER_DATA["RYU"] = {
     { "name": "4HP", "startup": 7, "active": "7-10", "recovery": 25, "hit": 1, "block": -13 },
     { "name": "4HK", "startup": 10, "active": "10-14,20-22", "recovery": 21, "hit": 0, "block": -4 },
     { "name": "6HK", "startup": 16, "active": "16-19", "recovery": 20, "hit": 2, "block": -4 },
+    { "name": "轻波掌击", "startup": 12, "active": "12-17", "recovery": 18, "hit": 2, "block": -3 },
     { "name": "投", "startup": 5, "active": "5-7", "recovery": 23, "isThrow": true, "isKnockdown": true },
     { "name": "66", "isDash": true, "dashFrames": 19 }
   ],
@@ -30,6 +31,8 @@ CHARACTER_DATA["RYU"] = {
     { "adv": 34, "context": "中升龙" },
     { "adv": 37, "context": "重升龙" },
     { "adv": 38, "context": "轻升龙" },
+    { "adv": 39, "context": "浮空绿冲重升龙" },
+    { "adv": 39, "context": "浮空轻波掌-下重脚" },
     { "adv": 38, "context": "前重脚-旋风脚" },
     { "adv": 40, "context": "下重脚 (2HK)" },
     { "adv": 40, "context": "中驴踢" },
