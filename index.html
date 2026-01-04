@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMOBOI | ℮ <3</title>
-    <meta name="description" content="EMOBOI - A collaborative multimedia archive for the disconnected.">
+    <title>EMOBOI <333*</title>
+    <meta name="description" content="EMOBOI - 天的QQ空间.">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -183,7 +183,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 2.8rem 8%;
+            padding: 3.2rem 18%;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             position: relative;
             overflow: hidden;
@@ -198,7 +198,7 @@
         }
 
         .nav-item:hover {
-            padding: 3.2rem 10%;
+            padding: 3.6rem 20%;
         }
 
         /* 切片背景填充 */
@@ -223,11 +223,11 @@
             align-items: center;
             width: 100%;
             justify-content: space-between;
-            gap: 2rem;
+            gap: 3rem;
         }
 
         .nav-item h2 {
-            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-size: clamp(2.2rem, 6vw, 4.5rem);
             font-weight: 900;
             line-height: 1;
             letter-spacing: -0.04em;
@@ -242,12 +242,12 @@
         }
 
         .pinyin {
-            font-size: 0.85rem;
+            font-size: 1.1rem;
             letter-spacing: 0.2em;
-            opacity: 0.6;
+            opacity: 0.7;
             text-transform: uppercase;
             font-family: 'Syne', sans-serif;
-            font-weight: 700;
+            font-weight: 800;
             white-space: nowrap;
         }
 
@@ -260,7 +260,7 @@
             }
             .nav-item h2 { font-size: 1.5rem; }
             .pinyin { font-size: 0.65rem; }
-            .main-title { 
+            .corner-logo { 
                 font-size: 0.6rem; 
                 right: 0.8rem;
                 top: 1rem;
@@ -294,8 +294,8 @@
             z-index: 1;
         }
 
-        /* ========== 主标题 (右上角) ========== */
-        .main-title {
+        /* ========== 右上角 Logo ========== */
+        .corner-logo {
             font-size: clamp(0.7rem, 1.5vw, 1rem);
             line-height: 0.9;
             filter: drop-shadow(0 0 10px rgba(188, 254, 45, 0.3));
@@ -382,6 +382,8 @@
             <span class="px-8">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
             <span class="px-8">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
             <span class="px-8">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
+            <span class="px-8">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
+            <span class="px-8">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
         </div>
     </div>
 
@@ -409,10 +411,10 @@
         </div>
     </div>
 
-    <!-- 主标题 (右上角) -->
-    <h1 class="main-title glitch-text select-none" id="main-logo">
+    <!-- 右上角 Logo -->
+    <div class="corner-logo glitch-text select-none" id="corner-logo">
         EMO<br>BOI
-    </h1>
+    </div>
 
     <!-- ========== 拼贴装饰图片 (12张，优化布局) ========== -->
     
@@ -506,9 +508,9 @@
 
         <!-- 底部版权信息 -->
         <footer class="fixed bottom-10 w-full px-8 z-10" style="font-family: 'Syne', sans-serif;">
-            <div class="text-[10px] uppercase tracking-widest text-gray-500">
-                Design by 天 // ℮ <br>
-                © 2026 emoboi.com
+            <div class="text-[10px] tracking-widest text-gray-500">
+                <span class="uppercase">Design by 天 // ℮</span> <br>
+                天的QQ空间 <span style="font-family: 'Space Mono', 'Courier New', monospace;">^^</span>
             </div>
         </footer>
     </section>
@@ -569,13 +571,13 @@
             fullscreenMenu.style.display = 'none';
         }
 
-        // ==================== 主标题随机抖动 ====================
-        const mainLogo = document.getElementById('main-logo');
+        // ==================== 右上角 Logo 随机抖动效果 ====================
+        const cornerLogo = document.getElementById('corner-logo');
         setInterval(() => {
             if (Math.random() > 0.96) {
-                mainLogo.style.transform = `translate(${Math.random()*8-4}px, ${Math.random()*8-4}px) skew(${Math.random()*6-3}deg)`;
+                cornerLogo.style.transform = `translate(${Math.random()*8-4}px, ${Math.random()*8-4}px) skew(${Math.random()*6-3}deg)`;
                 setTimeout(() => {
-                    mainLogo.style.transform = 'none';
+                    cornerLogo.style.transform = 'none';
                 }, 60);
             }
         }, 120);
