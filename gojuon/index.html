@@ -6,6 +6,8 @@
     <meta name="description" content="日语五十音图学习工具 - 包含平假名、片假名、罗马字及字源对照">
     <meta name="theme-color" content="#080808">
     <title>五十音 | Gojūon</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
             --bg-deep: #080808;
@@ -55,7 +57,7 @@
             body {
                 cursor: url('defaultcursor.png') 16 16, crosshair;
             }
-            .toggle-btn, .char-unit, .header-title {
+            .toggle-btn, .char-unit, .header-title, .nav-btn, .menu-link, .menu-close-btn {
                 cursor: url('cursor_hover.png') 16 16, pointer;
             }
         }
@@ -75,19 +77,11 @@
             z-index: 9999;
         }
 
-        /* ========== Header ========== */
-        .header-bar {
-            padding: 8px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-
+        /* ========== Header Title ========== */
         .header-title {
             font-weight: 900;
             letter-spacing: -0.02em;
-            font-size: clamp(28px, 6vw, 48px);
+            font-size: clamp(20px, 4vw, 28px);
             color: #fff;
             line-height: 1;
             margin: 0;
@@ -99,15 +93,128 @@
             color: var(--toxic-cyan);
         }
 
-        /* ========== Controls ========== */
-        .control-panel {
+        /* ========== 顶部导航栏 ========== */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 8px 12px;
             display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
+            background: rgba(8, 8, 8, 0.85);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--grid-line);
         }
 
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--ui-border);
+            color: #777;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            color: var(--toxic-cyan);
+            border-color: var(--toxic-cyan);
+            background: rgba(170, 255, 240, 0.08);
+            box-shadow: 0 0 12px rgba(170, 255, 240, 0.3);
+        }
+
+        .nav-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ========== 全屏菜单 ========== */
+        .fullscreen-menu {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.97);
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .fullscreen-menu.active {
+            display: flex;
+        }
+
+        .menu-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            background: transparent;
+            border: 1px solid var(--ui-border);
+            color: #777;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .menu-close-btn:hover {
+            color: var(--toxic-cyan);
+            border-color: var(--toxic-cyan);
+            background: rgba(170, 255, 240, 0.08);
+        }
+
+        .menu-close-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .menu-link {
+            font-family: "Impact", "Arial Black", sans-serif;
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -0.02em;
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .menu-link:hover {
+            color: var(--toxic-cyan);
+            text-shadow: 0 0 20px var(--toxic-cyan);
+            animation: glitch-text var(--glitch-speed) infinite linear;
+        }
+
+        /* ========== 主内容区域 ========== */
+        #main-grid {
+            margin-top: 54px; /* 为固定导航留空间 */
+        }
+
+        /* ========== Controls ========== */
         .toggle-btn {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--ui-border);
@@ -286,16 +393,30 @@
         
         /* 平板竖屏 */
         @media (max-width: 768px) {
-            .header-bar {
+            .top-nav {
                 padding: 6px 10px;
             }
+            .nav-center {
+                gap: 8px;
+            }
+            .nav-btn {
+                width: 32px;
+                height: 32px;
+            }
+            .nav-btn svg {
+                width: 16px;
+                height: 16px;
+            }
             .header-title {
-                font-size: clamp(24px, 5vw, 36px);
+                font-size: clamp(16px, 3.5vw, 22px);
+            }
+            #main-grid {
+                margin-top: 48px;
             }
             .toggle-btn {
-                font-size: 10px;
-                padding: 4px 8px;
-                min-width: 50px;
+                font-size: 9px;
+                padding: 4px 6px;
+                min-width: 42px;
             }
             .kana-cell {
                 max-height: 100px;
@@ -304,19 +425,34 @@
 
         /* 手机竖屏 - 改为3列布局 */
         @media (max-width: 480px) {
+            .top-nav {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .nav-center {
+                order: 2;
+                width: 100%;
+                justify-content: center;
+                gap: 5px;
+            }
+            .nav-right {
+                order: 1;
+                margin-left: auto;
+            }
+            .header-title {
+                display: none;
+            }
             #main-grid {
                 grid-template-columns: repeat(3, 1fr);
+                margin-top: 70px;
             }
             .kana-cell {
                 max-height: 110px;
                 padding: 5px 8px 4px;
             }
-            .control-panel {
-                gap: 4px;
-            }
             .toggle-btn {
-                min-width: 45px;
-                padding: 5px 6px;
+                min-width: 50px;
+                padding: 5px 8px;
                 font-size: 9px;
                 letter-spacing: 0.05em;
             }
@@ -324,14 +460,19 @@
 
         /* 小手机 */
         @media (max-width: 360px) {
-            .header-bar {
-                padding: 5px 8px;
+            .nav-btn {
+                width: 28px;
+                height: 28px;
             }
-            .header-title {
-                font-size: 22px;
+            .nav-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+            #main-grid {
+                margin-top: 65px;
             }
             .toggle-btn {
-                min-width: 40px;
+                min-width: 42px;
                 padding: 4px 5px;
                 font-size: 8px;
             }
@@ -342,21 +483,69 @@
     </style>
 </head>
 <body>
-    <header class="header-bar">
-        <h1 class="header-title">五十音</h1>
-        <div class="control-panel">
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <div class="nav-center">
+            <h1 class="header-title">五十音</h1>
             <button class="toggle-btn active" data-target="cell-romaji">ROMAN</button>
             <button class="toggle-btn active" data-target="hira">HIRA</button>
             <button class="toggle-btn active" data-target="kata">KATA</button>
             <button class="toggle-btn active" data-target="cell-origin">ORIGIN</button>
         </div>
-    </header>
+        <div class="nav-right">
+            <a href="../" class="nav-btn" title="返回主页">
+                <i data-lucide="home"></i>
+            </a>
+            <button class="nav-btn" id="menu-btn" title="菜单">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 全屏菜单 -->
+    <div class="fullscreen-menu" id="fullscreen-menu">
+        <button class="menu-close-btn" id="close-menu">
+            <i data-lucide="x"></i>
+        </button>
+        <a href="../" class="menu-link">HOME</a>
+        <a href="../sf6/" class="menu-link">SF6 FRAME LAB</a>
+        <a href="./" class="menu-link" style="color: var(--toxic-cyan);">GOJUON</a>
+        <a href="../gallery/" class="menu-link">MY GALLERY</a>
+        <a href="javascript:void(0)" onclick="closeMenu(); alert('开发中')" class="menu-link">I AM MUSIC</a>
+    </div>
 
     <main id="main-grid"></main>
 
     <footer></footer>
 
     <script>
+    // 初始化 Lucide Icons
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+    });
+
+    // ==================== 菜单控制 ====================
+    const menuBtn = document.getElementById('menu-btn');
+    const closeMenuBtn = document.getElementById('close-menu');
+    const fullscreenMenu = document.getElementById('fullscreen-menu');
+
+    menuBtn.addEventListener('click', () => {
+        fullscreenMenu.classList.add('active');
+    });
+
+    closeMenuBtn.addEventListener('click', closeMenu);
+
+    function closeMenu() {
+        fullscreenMenu.classList.remove('active');
+    }
+
+    // ESC 键关闭菜单
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && fullscreenMenu.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+
     // 五十音图数据 - 完整11行 (a~n)
     // 布局: 5列 × 11行 = 55格
     const kanaData = [
@@ -431,7 +620,7 @@
     // 页面初始化
     document.addEventListener('DOMContentLoaded', () => {
         // 绑定控制按钮点击
-        document.querySelectorAll('.control-panel .toggle-btn').forEach(btn => {
+        document.querySelectorAll('.nav-center .toggle-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 btn.classList.toggle('active');
                 syncDisplay();
@@ -506,7 +695,7 @@
     }
 
     function syncDisplay() {
-        const buttons = document.querySelectorAll('.control-panel .toggle-btn');
+        const buttons = document.querySelectorAll('.nav-center .toggle-btn');
         buttons.forEach(btn => {
             const targetClass = btn.getAttribute('data-target');
             const isActive = btn.classList.contains('active');

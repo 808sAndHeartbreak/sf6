@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -168,24 +168,26 @@
             50%, 99% { text-shadow: 0.025em 0.05em 0 rgba(255,0,85,0.7), 0.05em 0 0 rgba(188,254,45,0.7), 0 -0.05em 0 rgba(0,170,255,0.7); }
         }
 
-        /* ========== 纵向切片导航 (参考 样式参考.html) ========== */
+        /* ========== 纵向切片导航 ========== */
         .nav-container {
             display: flex;
             flex-direction: column;
-            width: 90vw;
-            max-width: 1400px;
+            width: 100vw;
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .nav-item {
-            flex: 1;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.2rem 6%;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2.8rem 8%;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             position: relative;
             overflow: hidden;
-            transition: flex 0.6s cubic-bezier(0.16, 1, 0.3, 1), padding 0.4s ease;
+            transition: padding 0.4s ease, background-color 0.3s ease;
             text-decoration: none;
             color: white;
             white-space: nowrap;
@@ -196,8 +198,7 @@
         }
 
         .nav-item:hover {
-            flex: 1.5;
-            padding: 1.8rem 8%;
+            padding: 3.2rem 10%;
         }
 
         /* 切片背景填充 */
@@ -226,48 +227,54 @@
         }
 
         .nav-item h2 {
-            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
             font-weight: 900;
             line-height: 1;
-            letter-spacing: -0.05em;
+            letter-spacing: -0.04em;
             transition: transform 0.5s ease, font-style 0.5s ease;
             font-family: 'Syne', sans-serif;
             white-space: nowrap;
-            flex-shrink: 0;
         }
 
         .nav-item:hover h2 {
             font-style: italic;
-            transform: translateX(15px) scale(1.02);
+            transform: translateX(20px) scale(1.02);
         }
 
         .pinyin {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             letter-spacing: 0.2em;
-            opacity: 0.8;
+            opacity: 0.6;
             text-transform: uppercase;
             font-family: 'Syne', sans-serif;
-            font-weight: 800;
+            font-weight: 700;
             white-space: nowrap;
-            flex-shrink: 0;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            .nav-item {
+                padding: 1.8rem 5%;
+            }
+            .nav-item:hover {
+                padding: 2rem 6%;
+            }
             .nav-item h2 { font-size: 1.5rem; }
-            .nav-item { padding: 1rem 5%; }
+            .pinyin { font-size: 0.65rem; }
+            .main-title { 
+                font-size: 0.6rem; 
+                right: 0.8rem;
+                top: 1rem;
+            }
+            .collage-img {
+                opacity: 0.25;
+            }
         }
 
-        /* ========== 跑马灯 (加速) ========== */
+        /* ========== 跑马灯 ========== */
         .marquee-track {
             display: flex;
             white-space: nowrap;
             animation: marqueeScroll 12s linear infinite;
-        }
-
-        .marquee-track-bottom {
-            display: flex;
-            white-space: nowrap;
-            animation: marqueeScroll 10s linear infinite;
         }
 
         @keyframes marqueeScroll {
@@ -287,11 +294,51 @@
             z-index: 1;
         }
 
-        /* ========== 主标题 (缩小) ========== */
+        /* ========== 主标题 (右上角) ========== */
         .main-title {
-            font-size: clamp(2rem, 8vw, 5rem);
+            font-size: clamp(0.7rem, 1.5vw, 1rem);
             line-height: 0.9;
-            filter: drop-shadow(0 0 20px rgba(188, 254, 45, 0.2));
+            filter: drop-shadow(0 0 10px rgba(188, 254, 45, 0.3));
+            position: fixed;
+            top: 1.0rem;
+            right: 4.5rem;
+            z-index: 50;
+            text-align: right;
+            letter-spacing: 0.05em;
+        }
+
+        /* ========== 拼贴装饰图片 ========== */
+        .collage-img {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.85;
+            filter: grayscale(0%) contrast(1.1);
+            mix-blend-mode: normal;
+            transition: transform 0.5s ease, opacity 0.5s ease, filter 0.5s ease;
+            animation: floatCollage 8s ease-in-out infinite;
+            /* 边缘羽化效果 - 柔和融入背景 */
+            -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 75%);
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 75%);
+        }
+
+        .collage-img:nth-child(odd) {
+            animation-delay: -2s;
+            animation-duration: 10s;
+        }
+
+        .collage-img:nth-child(3n) {
+            animation-delay: -4s;
+            animation-duration: 12s;
+        }
+
+        @keyframes floatCollage {
+            0%, 100% { transform: translateY(0) rotate(var(--rotate, 0deg)); }
+            50% { transform: translateY(-8px) rotate(var(--rotate, 0deg)); }
+        }
+
+        .collage-img.invert {
+            filter: invert(1) contrast(1.2);
         }
 
         /* ========== 工具类 ========== */
@@ -339,12 +386,12 @@
     </div>
 
     <!-- 导航栏 -->
-    <nav class="fixed top-8 left-0 w-full z-40 px-6 flex justify-between items-center" style="mix-blend-mode: difference;">
-        <div class="flex items-center gap-3">
-            <img src="Ecco2k-E.jpg" alt="E" class="w-9 h-9 object-contain">
-            <span class="font-black tracking-tighter text-xl hidden sm:block">EMOBOI.COM</span>
+    <nav class="fixed top-0 left-0 w-full z-40 px-4 md:px-6 py-3 flex justify-between items-center bg-black/90 backdrop-blur-sm border-b border-zinc-900/50">
+        <div class="flex items-center gap-2 md:gap-3">
+            <img src="asset/Ecco2k-E.jpg" alt="E" class="w-7 h-7 md:w-8 md:h-8 object-contain">
+            <span class="font-black tracking-tighter text-base md:text-lg">EMOBOI</span>
         </div>
-        <button id="menu-btn" class="p-2 border border-zinc-700 hover:bg-white hover:text-black transition-all">
+        <button id="menu-btn" class="p-2 border border-zinc-800 hover:bg-white hover:text-black transition-all">
             <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
     </nav>
@@ -357,49 +404,91 @@
         <div class="flex flex-col gap-6 text-center">
             <a href="sf6/" onclick="closeMenu()" class="text-4xl md:text-7xl font-black italic tracking-tighter hover:text-lime-400 transition-colors uppercase">SF6 FRAME LAB</a>
             <a href="gojuon/" onclick="closeMenu()" class="text-4xl md:text-7xl font-black italic tracking-tighter hover:text-lime-400 transition-colors uppercase">GOJUON</a>
-            <a href="javascript:void(0)" onclick="closeMenu(); alert('开发中')" class="text-4xl md:text-7xl font-black italic tracking-tighter hover:text-lime-400 transition-colors uppercase">MY GALLERY</a>
+            <a href="gallery/" onclick="closeMenu()" class="text-4xl md:text-7xl font-black italic tracking-tighter hover:text-lime-400 transition-colors uppercase">MY GALLERY</a>
             <a href="javascript:void(0)" onclick="closeMenu(); alert('开发中')" class="text-4xl md:text-7xl font-black italic tracking-tighter hover:text-lime-400 transition-colors uppercase">I AM MUSIC</a>
         </div>
     </div>
 
-    <!-- ==================== HERO SECTION (全屏) ==================== -->
+    <!-- 主标题 (右上角) -->
+    <h1 class="main-title glitch-text select-none" id="main-logo">
+        EMO<br>BOI
+    </h1>
+
+    <!-- ========== 拼贴装饰图片 (12张，优化布局) ========== -->
+    
+    <!-- 上方偏右 - 哥特吊灯横幅 -->
+    <img src="asset/goth-banner.jpg" alt="goth-banner" class="collage-img" 
+         style="top: 8%; right: 16%; width: 260px; transform: rotate(1deg); opacity: 0.4;">
+    
+    <!-- 右侧中间 - 哥特猫 -->
+    <img src="asset/goth-cat.jpg" alt="goth-cat" class="collage-img invert" 
+         style="top: 45%; right: 2%; width: 65px; transform: rotate(-8deg); opacity: 0.42;">
+    
+    <!-- 中上偏左 - 眼中人 -->
+    <img src="asset/eye-soul.jpg" alt="eye-soul" class="collage-img" 
+         style="top: 15%; left: 26%; width: 60px; transform: rotate(-5deg); opacity: 0.3; filter: invert(1);">
+    
+    <!-- 右下角 - 故障夜神月 -->
+    <img src="asset/drained-yagami.jpg" alt="drained-yagami" class="collage-img" 
+         style="bottom: 4%; right: 8%; width: 85px; transform: rotate(6deg); opacity: 0.5;">
+    
+    <!-- 左侧中间 - L头发 -->
+    <img src="asset/L-hair.jpg" alt="L-hair" class="collage-img" 
+         style="top: 38%; left: 3%; width: 50px; transform: rotate(-12deg); opacity: 0.35; filter: invert(1);">
+    
+    <!-- 中心偏左 - 我爱罗愛字 -->
+    <img src="asset/gaara-ai.jpg" alt="gaara-ai" class="collage-img" 
+         style="top: 48%; left: 40%; width: 42px; transform: rotate(18deg); opacity: 0.28; filter: invert(1);">
+    
+    <!-- 右上区域 - 小猫剪影 -->
+    <img src="asset/kitten.jpg" alt="kitten" class="collage-img" 
+         style="top: 28%; right: 42%; width: 70px; transform: rotate(-8deg); opacity: 0.32; filter: invert(1);">
+    
+    <!-- 中下偏左 - 双猫 -->
+    <img src="asset/twin-cats.jpg" alt="twin-cats" class="collage-img" 
+         style="bottom: 32%; left: 28%; width: 55px; transform: rotate(3deg); opacity: 0.28; filter: invert(1);">
+    
+    <!-- 中下偏右 - 祈祷男孩 -->
+    <img src="asset/drained-pray.jpg" alt="drained-pray" class="collage-img" 
+         style="bottom: 28%; right: 22%; width: 80px; transform: rotate(-3deg); opacity: 0.38;">
+    
+    <!-- 右上区域偏下 - 夜神月 -->
+    <img src="asset/light-yagami.jpg" alt="light-yagami" class="collage-img" 
+         style="top: 38%; right: 22%; width: 105px; transform: rotate(4deg); opacity: 0.45;">
+    
+    <!-- 左下角 - Lil Peep -->
+    <img src="asset/lil-peep.jpg" alt="lil-peep" class="collage-img" 
+         style="bottom: 8%; left: 2%; width: 100px; transform: rotate(-6deg); opacity: 0.55; filter: grayscale(100%) contrast(1.3);">
+    
+    <!-- 中心偏右 - 故障天使 -->
+    <img src="asset/glitch-angel.jpg" alt="glitch-angel" class="collage-img" 
+         style="bottom: 22%; right: 32%; width: 140px; transform: rotate(3deg); opacity: 0.55;">
+
+    <!-- ==================== HERO SECTION ==================== -->
     <section id="hero" class="relative h-screen flex flex-col items-center justify-center px-6">
         <!-- 背景圆环装饰 -->
         <div class="absolute inset-0 z-0 overflow-hidden opacity-10 pointer-events-none">
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] border border-white/30 rounded-full" style="animation: pulse 4s ease-in-out infinite;"></div>
         </div>
 
-        <!-- SVG 星形装饰 (增强可见性) -->
-        <div class="fixed top-1/2 left-0 -translate-y-1/2 opacity-20 pointer-events-none hidden lg:block">
-            <svg width="120" height="240" viewBox="0 0 100 200">
-                <path d="M50 0 L55 40 L90 45 L55 55 L50 90 L45 55 L10 45 L45 40 Z" fill="white" />
-                <path d="M50 110 L55 150 L90 155 L55 165 L50 200 L45 165 L10 155 L45 150 Z" fill="white" />
-            </svg>
-        </div>
-
-        <div class="relative z-10 text-center flex flex-col items-center" style="margin-top: -5vh;">
-            <!-- 主标题 -->
-            <h1 class="main-title glitch-text mb-6 select-none" id="main-logo">
-                EMO<br>BOI
-            </h1>
-
-            <!-- 4个核心入口 - 纵向切片导航 -->
+        <div class="relative z-10 text-center flex flex-col items-center">
+            <!-- 4个核心入口 -->
             <nav class="nav-container">
                 <a href="sf6/" class="nav-item">
                     <div class="nav-bg"></div>
                     <div class="nav-content">
-                        <h2>街霸6</h2>
+                        <h2>街霸</h2>
                         <div class="pinyin">SF6 Frame Lab</div>
                     </div>
                 </a>
                 <a href="gojuon/" class="nav-item">
                     <div class="nav-bg"></div>
                     <div class="nav-content">
-                        <h2>五十音</h2>
+                        <h2>日语</h2>
                         <div class="pinyin">Gojuon</div>
                     </div>
                 </a>
-                <a href="javascript:void(0)" onclick="alert('开发中')" class="nav-item">
+                <a href="gallery/" class="nav-item">
                     <div class="nav-bg"></div>
                     <div class="nav-content">
                         <h2>画廊</h2>
@@ -414,13 +503,11 @@
                     </div>
                 </a>
             </nav>
-        </div>
 
-
-        <!-- 底部版权信息 (参考 shouye.html 样式: Syne 字体) -->
+        <!-- 底部版权信息 -->
         <footer class="fixed bottom-10 w-full px-8 z-10" style="font-family: 'Syne', sans-serif;">
             <div class="text-[10px] uppercase tracking-widest text-gray-500">
-                Design by Chaos // ℮ <br>
+                Design by 天 // ℮ <br>
                 © 2026 emoboi.com
             </div>
         </footer>
