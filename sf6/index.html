@@ -24,6 +24,10 @@
             --theme-card-border: #222;
         }
 
+        html {
+            scrollbar-gutter: stable;
+        }
+
         body { 
             background-color: var(--theme-bg); 
             color: #fff; 
@@ -803,8 +807,13 @@
                 0 4px 20px rgba(0,0,0,0.4),
                 inset 0 1px 0 rgba(255,255,255,0.1),
                 inset 0 -1px 0 rgba(0,0,0,0.2);
-            pointer-events: none;
+            pointer-events: auto;
+            cursor: pointer;
             border-bottom: 2px solid rgba(0,0,0,0.3);
+        }
+        
+        .marquee-tape:hover {
+            filter: brightness(1.1);
         }
         
         @media (min-width: 768px) {
@@ -815,14 +824,16 @@
         
         .marquee-track {
             display: flex;
-            animation: marquee-scroll 14s linear infinite;
+            animation: marquee-scroll 50s linear infinite;
             white-space: nowrap;
+            width: fit-content;
         }
         
         .marquee-content {
             display: flex;
             align-items: center;
             height: 52px;
+            flex-shrink: 0;
         }
         
         .marquee-content span {
@@ -1557,7 +1568,7 @@
                 <section>
                     <h3 class="text-lg font-bold text-white mb-2">🎮 如何使用</h3>
                     <ol class="list-decimal list-inside space-y-3 text-zinc-400">
-                        <li><strong class="text-white">选择角色</strong> - 点击 <span class="text-cyan-400">CHAMPION</span> 按钮切换角色</li>
+                        <li><strong class="text-white">选择角色</strong> - 点击 <span class="text-cyan-400">角色</span> 按钮切换角色</li>
                         <li>
                             <strong class="text-white">查看卡帧策略</strong> - <span class="text-cyan-400">方案</span> 页签展示各种击倒情境下的最优方案
                             <p class="text-zinc-500 text-xs mt-1 ml-5">*使用搜索框查找特定帧数或场景，点击排序按钮切换排序方向</p>
@@ -4756,7 +4767,8 @@
             const charIcon = getCharIcon(charName);
             
             // 封条内容：emoji + 角色名，交替显示
-            const repeatCount = 12;
+            // 增加重复次数确保内容足够长，避免滚动时出现空白
+            const repeatCount = 20;
             const content = Array(repeatCount).fill(`<span>${charIcon} ${charName}</span>`).join('');
             
             document.getElementById('marqueeContent1').innerHTML = content;

@@ -6,8 +6,6 @@
     <title>EMOBOI <333*</title>
     <meta name="description" content="EMOBOI - 天的QQ空间.">
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Fonts -->
@@ -28,6 +26,7 @@
         html, body {
             height: 100%;
             overflow: hidden;
+            scrollbar-gutter: stable;
         }
 
         body {
@@ -68,16 +67,45 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100px;
-            background: linear-gradient(to bottom, transparent, rgba(188, 254, 45, 0.02), transparent);
+            height: 120px;
+            background: linear-gradient(to bottom, transparent, rgba(188, 254, 45, 0.04), transparent);
             pointer-events: none;
             z-index: 9989;
-            animation: scanline 6s linear infinite;
+            animation: scanline 5s linear infinite;
         }
 
         @keyframes scanline {
-            0% { transform: translateY(-100px); }
+            0% { transform: translateY(-120px); }
             100% { transform: translateY(100vh); }
+        }
+
+        /* ========== 背景呼吸效果 ========== */
+        .bg-overlay {
+            animation: bgBreathe 6s ease-in-out infinite;
+        }
+
+        @keyframes bgBreathe {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.85; }
+        }
+
+        /* ========== 光晕脉动 ========== */
+        .ambient-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 80vw;
+            height: 80vh;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(ellipse at center, rgba(188, 254, 45, 0.03) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 1;
+            animation: glowPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.1); }
         }
 
         /* ========== 自定义光标 ========== */
@@ -183,22 +211,33 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 3.2rem 18%;
+            padding: 3.2rem 24%;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             position: relative;
             overflow: hidden;
-            transition: padding 0.4s ease, background-color 0.3s ease;
+            transition: padding 0.4s ease, background-color 0.3s ease, border-color 0.5s ease;
             text-decoration: none;
             color: white;
             white-space: nowrap;
+            animation: navBorderBreathe 4s ease-in-out infinite;
+        }
+
+        .nav-item:nth-child(2) { animation-delay: -1s; }
+        .nav-item:nth-child(3) { animation-delay: -2s; }
+        .nav-item:nth-child(4) { animation-delay: -3s; }
+
+        @keyframes navBorderBreathe {
+            0%, 100% { border-bottom-color: rgba(255, 255, 255, 0.04); }
+            50% { border-bottom-color: rgba(188, 254, 45, 0.12); }
         }
 
         .nav-item:last-child {
             border-bottom: none;
+            animation: none;
         }
 
         .nav-item:hover {
-            padding: 3.6rem 20%;
+            padding: 3.6rem 26%;
         }
 
         /* 切片背景填充 */
@@ -223,15 +262,15 @@
             align-items: center;
             width: 100%;
             justify-content: space-between;
-            gap: 3rem;
+            gap: 1.5rem;
         }
 
         .nav-item h2 {
-            font-size: clamp(2.2rem, 6vw, 4.5rem);
+            font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 900;
             line-height: 1;
             letter-spacing: -0.04em;
-            transition: transform 0.5s ease, font-style 0.5s ease;
+            transition: transform 0.5s ease, font-style 0.3s ease;
             font-family: 'Syne', sans-serif;
             white-space: nowrap;
         }
@@ -242,13 +281,18 @@
         }
 
         .pinyin {
-            font-size: 1.1rem;
+            font-size: 1.8rem;
             letter-spacing: 0.2em;
             opacity: 0.7;
             text-transform: uppercase;
             font-family: 'Syne', sans-serif;
             font-weight: 800;
             white-space: nowrap;
+            transition: font-style 0.3s ease;
+        }
+
+        .nav-item:hover .pinyin {
+            font-style: italic;
         }
 
         @media (max-width: 768px) {
@@ -274,7 +318,13 @@
         .marquee-track {
             display: flex;
             white-space: nowrap;
-            animation: marqueeScroll 12s linear infinite;
+            width: max-content;
+            animation: marqueeScroll 30s linear infinite;
+        }
+
+        .marquee-content {
+            padding: 0 0;
+            flex-shrink: 0;
         }
 
         @keyframes marqueeScroll {
@@ -292,6 +342,15 @@
             color: #888;
             font-family: 'Space Mono', monospace;
             z-index: 1;
+            animation: asciiBreathe 6s ease-in-out infinite;
+        }
+
+        .floating-ascii:nth-of-type(2) { animation-delay: -2s; }
+        .floating-ascii:nth-of-type(3) { animation-delay: -4s; }
+
+        @keyframes asciiBreathe {
+            0%, 100% { opacity: 0.1; transform: translateY(0); }
+            50% { opacity: 0.22; transform: translateY(-3px); }
         }
 
         /* ========== 右上角 Logo ========== */
@@ -300,11 +359,23 @@
             line-height: 0.9;
             filter: drop-shadow(0 0 10px rgba(188, 254, 45, 0.3));
             position: fixed;
-            top: 1.0rem;
-            right: 4.5rem;
+            top: 0.8rem;
+            right: 2rem;
             z-index: 50;
             text-align: right;
             letter-spacing: 0.05em;
+            animation: logoBreathe 5s ease-in-out infinite;
+        }
+
+        @keyframes logoBreathe {
+            0%, 100% { 
+                filter: drop-shadow(0 0 8px rgba(188, 254, 45, 0.2));
+                opacity: 0.85;
+            }
+            50% { 
+                filter: drop-shadow(0 0 15px rgba(188, 254, 45, 0.5));
+                opacity: 1;
+            }
         }
 
         /* ========== 拼贴装饰图片 ========== */
@@ -316,25 +387,81 @@
             filter: grayscale(0%) contrast(1.1);
             mix-blend-mode: normal;
             transition: transform 0.5s ease, opacity 0.5s ease, filter 0.5s ease;
-            animation: floatCollage 8s ease-in-out infinite;
+            animation: floatCollage 7s ease-in-out infinite;
             /* 边缘羽化效果 - 柔和融入背景 */
             -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 75%);
             mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 75%);
         }
 
         .collage-img:nth-child(odd) {
-            animation-delay: -2s;
-            animation-duration: 10s;
+            animation: floatCollageAlt 9s ease-in-out infinite;
+            animation-delay: -3s;
         }
 
         .collage-img:nth-child(3n) {
-            animation-delay: -4s;
-            animation-duration: 12s;
+            animation: floatCollageSlow 11s ease-in-out infinite;
+            animation-delay: -5s;
+        }
+
+        .collage-img:nth-child(5n) {
+            animation: floatCollageDrift 13s ease-in-out infinite;
+            animation-delay: -2s;
         }
 
         @keyframes floatCollage {
-            0%, 100% { transform: translateY(0) rotate(var(--rotate, 0deg)); }
-            50% { transform: translateY(-8px) rotate(var(--rotate, 0deg)); }
+            0%, 100% { 
+                transform: translateY(0) rotate(var(--rotate, 0deg)) scale(1); 
+                opacity: 0.85;
+            }
+            50% { 
+                transform: translateY(-12px) rotate(var(--rotate, 0deg)) scale(1.02); 
+                opacity: 0.95;
+            }
+        }
+
+        @keyframes floatCollageAlt {
+            0%, 100% { 
+                transform: translateY(0) translateX(0) rotate(var(--rotate, 0deg)) scale(1); 
+                opacity: 0.8;
+            }
+            33% { 
+                transform: translateY(-8px) translateX(5px) rotate(var(--rotate, 0deg)) scale(1.03); 
+                opacity: 0.9;
+            }
+            66% { 
+                transform: translateY(-15px) translateX(-3px) rotate(var(--rotate, 0deg)) scale(1.01); 
+                opacity: 0.95;
+            }
+        }
+
+        @keyframes floatCollageSlow {
+            0%, 100% { 
+                transform: translateY(0) rotate(var(--rotate, 0deg)) scale(1); 
+                opacity: 0.75;
+            }
+            50% { 
+                transform: translateY(-18px) rotate(var(--rotate, 0deg)) scale(1.04); 
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes floatCollageDrift {
+            0%, 100% { 
+                transform: translateY(0) translateX(0) rotate(var(--rotate, 0deg)); 
+                opacity: 0.8;
+            }
+            25% { 
+                transform: translateY(-6px) translateX(8px) rotate(var(--rotate, 0deg)); 
+                opacity: 0.85;
+            }
+            50% { 
+                transform: translateY(-14px) translateX(4px) rotate(var(--rotate, 0deg)); 
+                opacity: 0.95;
+            }
+            75% { 
+                transform: translateY(-8px) translateX(-4px) rotate(var(--rotate, 0deg)); 
+                opacity: 0.88;
+            }
         }
 
         .collage-img.invert {
@@ -343,6 +470,103 @@
 
         /* ========== 工具类 ========== */
         .mono { font-family: 'Space Mono', monospace; }
+
+        /* ========== Tailwind 替代样式 ========== */
+        .fixed { position: fixed; }
+        .absolute { position: absolute; }
+        .relative { position: relative; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .top-0 { top: 0; }
+        .left-0 { left: 0; }
+        .bottom-0 { bottom: 0; }
+        .top-6 { top: 1.5rem; }
+        .right-6 { right: 1.5rem; }
+        .bottom-10 { bottom: 2.5rem; }
+        .top-1\/2 { top: 50%; }
+        .left-1\/2 { left: 50%; }
+        .-translate-x-1\/2 { transform: translateX(-50%); }
+        .-translate-y-1\/2 { transform: translateY(-50%); }
+        .w-full { width: 100%; }
+        .w-5 { width: 1.25rem; }
+        .w-6 { width: 1.5rem; }
+        .w-7 { width: 1.75rem; }
+        .h-5 { height: 1.25rem; }
+        .h-6 { height: 1.5rem; }
+        .h-7 { height: 1.75rem; }
+        .h-screen { height: 100vh; }
+        .z-0 { z-index: 0; }
+        .z-10 { z-index: 10; }
+        .z-40 { z-index: 40; }
+        .z-50 { z-index: 50; }
+        .z-\[45\] { z-index: 45; }
+        .flex { display: flex; }
+        .hidden { display: none; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-6 { gap: 1.5rem; }
+        .text-center { text-align: center; }
+        .overflow-hidden { overflow: hidden; }
+        .object-contain { object-fit: contain; }
+        .pointer-events-none { pointer-events: none; }
+        .rounded-full { border-radius: 9999px; }
+        .border { border-width: 1px; border-style: solid; }
+        .border-b { border-bottom-width: 1px; border-bottom-style: solid; }
+        .border-zinc-700 { border-color: #3f3f46; }
+        .border-zinc-800 { border-color: #27272a; }
+        .border-zinc-900\/50 { border-color: rgba(24, 24, 27, 0.5); }
+        .border-white\/30 { border-color: rgba(255, 255, 255, 0.3); }
+        .bg-black { background-color: #000; }
+        .bg-black\/90 { background-color: rgba(0, 0, 0, 0.9); }
+        .bg-white { background-color: #fff; }
+        .text-black { color: #000; }
+        .text-zinc-500 { color: #71717a; }
+        .text-gray-500 { color: #6b7280; }
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .text-base { font-size: 1rem; line-height: 1.5rem; }
+        .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+        .text-\[10px\] { font-size: 10px; }
+        .font-bold { font-weight: 700; }
+        .font-black { font-weight: 900; }
+        .italic { font-style: italic; }
+        .uppercase { text-transform: uppercase; }
+        .tracking-tighter { letter-spacing: -0.05em; }
+        .tracking-wider { letter-spacing: 0.05em; }
+        .tracking-widest { letter-spacing: 0.1em; }
+        .tracking-\[0\.4em\] { letter-spacing: 0.4em; }
+        .p-2 { padding: 0.5rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .px-8 { padding-left: 2rem; padding-right: 2rem; }
+        .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .opacity-10 { opacity: 0.1; }
+        .backdrop-blur-sm { backdrop-filter: blur(4px); }
+        .select-none { user-select: none; }
+        .transition-all { transition: all 0.15s ease; }
+        .transition-colors { transition: color 0.15s ease; }
+        .animate-pulse { animation: tw-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes tw-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .text-white { color: #fff; }
+        .text-lime-400 { color: #a3e635; }
+        .hover\:bg-white:hover { background-color: #fff; }
+        .hover\:text-black:hover { color: #000; }
+        .hover\:text-lime-400:hover { color: #a3e635; }
+        .w-\[120vw\] { width: 120vw; }
+        .h-\[120vw\] { height: 120vw; }
+
+        /* 响应式 */
+        @media (min-width: 768px) {
+            .md\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .md\:gap-3 { gap: 0.75rem; }
+            .md\:w-8 { width: 2rem; }
+            .md\:h-8 { height: 2rem; }
+            .md\:text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+            .md\:text-7xl { font-size: 4.5rem; line-height: 1; }
+        }
     </style>
 </head>
 <body>
@@ -353,6 +577,7 @@
 
     <!-- 背景层 -->
     <div class="bg-overlay"></div>
+    <div class="ambient-glow"></div>
     <div class="noise-overlay"></div>
     <div class="scanline"></div>
 
@@ -378,23 +603,19 @@
     <!-- 底部跑马灯 -->
     <div class="fixed bottom-0 w-full bg-white text-black py-1.5 overflow-hidden z-50 text-xs font-bold uppercase tracking-wider">
         <div class="marquee-track">
-            <span class="px-8">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
-            <span class="px-8">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
-            <span class="px-8">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
-            <span class="px-8">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
-            <span class="px-8">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
-            <span class="px-8">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
+            <span class="marquee-content">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
+            <span class="marquee-content">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
         </div>
     </div>
 
     <!-- 导航栏 -->
-    <nav class="fixed top-0 left-0 w-full z-40 px-4 md:px-6 py-3 flex justify-between items-center bg-black/90 backdrop-blur-sm border-b border-zinc-900/50">
+    <nav class="fixed top-0 left-0 w-full z-40 px-5 md:px-8 flex justify-between items-center backdrop-blur-md" style="height: 52px; background: linear-gradient(180deg, rgba(10,10,10,0.98) 0%, rgba(5,5,5,0.95) 100%); border-bottom: 1px solid rgba(188,254,45,0.15); box-shadow: 0 1px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(188,254,45,0.08);">
         <div class="flex items-center gap-2 md:gap-3">
             <img src="asset/Ecco2k-E.jpg" alt="E" class="w-7 h-7 md:w-8 md:h-8 object-contain">
             <span class="font-black tracking-tighter text-base md:text-lg">EMOBOI</span>
         </div>
-        <button id="menu-btn" class="p-2 border border-zinc-800 hover:bg-white hover:text-black transition-all">
-            <i data-lucide="menu" class="w-5 h-5"></i>
+        <button id="menu-btn" class="p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all">
+            <i data-lucide="menu" class="w-6 h-6"></i>
         </button>
     </nav>
 
@@ -419,58 +640,58 @@
     <!-- ========== 拼贴装饰图片 (12张，优化布局) ========== -->
     
     <!-- 上方偏右 - 哥特吊灯横幅 -->
-    <img src="asset/goth-banner.jpg" alt="goth-banner" class="collage-img" 
-         style="top: 8%; right: 16%; width: 260px; transform: rotate(1deg); opacity: 0.4;">
+    <img src="asset/goth-banner.jpg" alt="goth-banner" class="collage-img" loading="lazy"
+         style="top: 56px; right: 12%; width: 320px; transform: rotate(1deg); opacity: 0.4;">
     
     <!-- 右侧中间 - 哥特猫 -->
-    <img src="asset/goth-cat.jpg" alt="goth-cat" class="collage-img invert" 
-         style="top: 45%; right: 2%; width: 65px; transform: rotate(-8deg); opacity: 0.42;">
+    <img src="asset/goth-cat.jpg" alt="goth-cat" class="collage-img invert" loading="lazy"
+         style="top: 45%; right: 2%; width: 100px; transform: rotate(-8deg); opacity: 0.42;">
     
     <!-- 中上偏左 - 眼中人 -->
-    <img src="asset/eye-soul.jpg" alt="eye-soul" class="collage-img" 
-         style="top: 15%; left: 26%; width: 60px; transform: rotate(-5deg); opacity: 0.3; filter: invert(1);">
+    <img src="asset/eye-soul.jpg" alt="eye-soul" class="collage-img" loading="lazy"
+         style="top: 12%; left: 24%; width: 95px; transform: rotate(-5deg); opacity: 0.3; filter: invert(1);">
     
     <!-- 右下角 - 故障夜神月 -->
-    <img src="asset/drained-yagami.jpg" alt="drained-yagami" class="collage-img" 
-         style="bottom: 4%; right: 8%; width: 85px; transform: rotate(6deg); opacity: 0.5;">
+    <img src="asset/drained-yagami.jpg" alt="drained-yagami" class="collage-img" loading="lazy"
+         style="bottom: 4%; right: 6%; width: 130px; transform: rotate(6deg); opacity: 0.5;">
     
     <!-- 左侧中间 - L头发 -->
-    <img src="asset/L-hair.jpg" alt="L-hair" class="collage-img" 
-         style="top: 38%; left: 3%; width: 50px; transform: rotate(-12deg); opacity: 0.35; filter: invert(1);">
+    <img src="asset/L-hair.jpg" alt="L-hair" class="collage-img" loading="lazy"
+         style="top: 38%; left: 2%; width: 85px; transform: rotate(-12deg); opacity: 0.35; filter: invert(1);">
     
     <!-- 中心偏左 - 我爱罗愛字 -->
-    <img src="asset/gaara-ai.jpg" alt="gaara-ai" class="collage-img" 
-         style="top: 48%; left: 40%; width: 42px; transform: rotate(18deg); opacity: 0.28; filter: invert(1);">
+    <img src="asset/gaara-ai.jpg" alt="gaara-ai" class="collage-img" loading="lazy"
+         style="top: 48%; left: 38%; width: 100px; transform: rotate(18deg); opacity: 0.28; filter: invert(1);">
     
     <!-- 右上区域 - 小猫剪影 -->
-    <img src="asset/kitten.jpg" alt="kitten" class="collage-img" 
-         style="top: 28%; right: 42%; width: 70px; transform: rotate(-8deg); opacity: 0.32; filter: invert(1);">
+    <img src="asset/kitten.jpg" alt="kitten" class="collage-img" loading="lazy"
+         style="top: 25%; right: 40%; width: 110px; transform: rotate(-8deg); opacity: 0.32; filter: invert(1);">
     
     <!-- 中下偏左 - 双猫 -->
-    <img src="asset/twin-cats.jpg" alt="twin-cats" class="collage-img" 
-         style="bottom: 32%; left: 28%; width: 55px; transform: rotate(3deg); opacity: 0.28; filter: invert(1);">
+    <img src="asset/twin-cats.jpg" alt="twin-cats" class="collage-img" loading="lazy"
+         style="bottom: 30%; left: 26%; width: 90px; transform: rotate(3deg); opacity: 0.28; filter: invert(1);">
     
     <!-- 中下偏右 - 祈祷男孩 -->
-    <img src="asset/drained-pray.jpg" alt="drained-pray" class="collage-img" 
-         style="bottom: 28%; right: 22%; width: 80px; transform: rotate(-3deg); opacity: 0.38;">
+    <img src="asset/drained-pray.jpg" alt="drained-pray" class="collage-img" loading="lazy"
+         style="bottom: 26%; right: 20%; width: 120px; transform: rotate(-3deg); opacity: 0.38;">
     
     <!-- 右上区域偏下 - 夜神月 -->
-    <img src="asset/light-yagami.jpg" alt="light-yagami" class="collage-img" 
-         style="top: 38%; right: 22%; width: 105px; transform: rotate(4deg); opacity: 0.45;">
+    <img src="asset/light-yagami.jpg" alt="light-yagami" class="collage-img" loading="lazy"
+         style="top: 36%; right: 18%; width: 150px; transform: rotate(4deg); opacity: 0.45;">
     
     <!-- 左下角 - Lil Peep -->
-    <img src="asset/lil-peep.jpg" alt="lil-peep" class="collage-img" 
+    <img src="asset/lil-peep.jpg" alt="lil-peep" class="collage-img" loading="lazy"
          style="bottom: 8%; left: 2%; width: 100px; transform: rotate(-6deg); opacity: 0.55; filter: grayscale(100%) contrast(1.3);">
     
     <!-- 中心偏右 - 故障天使 -->
-    <img src="asset/glitch-angel.jpg" alt="glitch-angel" class="collage-img" 
-         style="bottom: 22%; right: 32%; width: 140px; transform: rotate(3deg); opacity: 0.55;">
+    <img src="asset/glitch-angel.jpg" alt="glitch-angel" class="collage-img" loading="lazy"
+         style="bottom: 20%; right: 30%; width: 180px; transform: rotate(3deg); opacity: 0.55;">
 
     <!-- ==================== HERO SECTION ==================== -->
     <section id="hero" class="relative h-screen flex flex-col items-center justify-center px-6">
         <!-- 背景圆环装饰 -->
         <div class="absolute inset-0 z-0 overflow-hidden opacity-10 pointer-events-none">
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] border border-white/30 rounded-full" style="animation: pulse 4s ease-in-out infinite;"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] border border-white/30 rounded-full" style="animation: tw-pulse 4s ease-in-out infinite;"></div>
         </div>
 
         <div class="relative z-10 text-center flex flex-col items-center">
@@ -548,12 +769,16 @@
             el.addEventListener('mouseleave', () => cursorRing.classList.remove('hover'));
         });
 
+        // ==================== 初始化 Lucide 图标 ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+
         // ==================== 预加载器 ====================
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('preloader').classList.add('hidden');
-                lucide.createIcons();
-            }, 800);
+            }, 300);
         });
 
         // ==================== 菜单 ====================

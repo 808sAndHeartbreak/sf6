@@ -6,8 +6,12 @@
     <meta name="description" content="日语五十音图学习工具 - 包含平假名、片假名、罗马字及字源对照">
     <meta name="theme-color" content="#080808">
     <title>五十音 | Gojūon</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Archivo+Black&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-deep: #080808;
@@ -27,6 +31,51 @@
             box-sizing: border-box;
         }
 
+        /* ========== 自定义光标 ========== */
+        body {
+            cursor: none;
+        }
+
+        #cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            will-change: transform;
+        }
+
+        #cursor-ring {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            will-change: transform;
+            transition: width 0.2s, height 0.2s, border-color 0.2s, background-color 0.2s;
+        }
+
+        #cursor-ring.hover {
+            width: 60px;
+            height: 60px;
+            border-color: var(--toxic-cyan);
+            background-color: rgba(170, 255, 240, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            #cursor-dot, #cursor-ring { display: none; }
+            body { cursor: auto; }
+        }
+
         @keyframes glitch-text {
             0% { text-shadow: 2px 0 var(--acid-purple), -2px 0 var(--toxic-cyan); }
             25% { text-shadow: -2px 0 var(--acid-purple), 2px 0 var(--toxic-cyan); }
@@ -40,6 +89,10 @@
             100% { transform: translateY(0); }
         }
 
+        html {
+            scrollbar-gutter: stable;
+        }
+
         body {
             background-color: var(--bg-deep);
             background-image: 
@@ -50,16 +103,6 @@
             min-height: 100vh;
             margin: 0;
             overflow-x: hidden;
-        }
-
-        /* 桌面端自定义光标 */
-        @media (hover: hover) and (pointer: fine) {
-            body {
-                cursor: url('defaultcursor.png') 16 16, crosshair;
-            }
-            .toggle-btn, .char-unit, .header-title, .nav-btn, .menu-link, .menu-close-btn {
-                cursor: url('cursor_hover.png') 16 16, pointer;
-            }
         }
 
         /* CRT扫描线效果 */
@@ -93,59 +136,13 @@
             color: var(--toxic-cyan);
         }
 
-        /* ========== 顶部导航栏 ========== */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            padding: 8px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(8, 8, 8, 0.85);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid var(--grid-line);
-        }
-
+        /* ========== 顶部导航栏控制区 ========== */
         .nav-center {
             display: flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .nav-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px;
-            height: 38px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--ui-border);
-            color: #777;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .nav-btn:hover {
-            color: var(--toxic-cyan);
-            border-color: var(--toxic-cyan);
-            background: rgba(170, 255, 240, 0.08);
-            box-shadow: 0 0 12px rgba(170, 255, 240, 0.3);
-        }
-
-        .nav-btn svg {
-            width: 20px;
-            height: 20px;
         }
 
         /* ========== 全屏菜单 ========== */
@@ -211,7 +208,7 @@
 
         /* ========== 主内容区域 ========== */
         #main-grid {
-            margin-top: 54px; /* 为固定导航留空间 */
+            margin-top: 60px; /* 为固定导航留空间 (52px header + 8px spacing) */
         }
 
         /* ========== Controls ========== */
@@ -220,12 +217,12 @@
             border: 1px solid var(--ui-border);
             color: #777;
             font-family: monospace;
-            font-size: 11px;
-            padding: 5px 10px;
+            font-size: 13px;
+            padding: 8px 14px;
             letter-spacing: 0.1em;
             transition: all 0.3s ease;
             position: relative;
-            min-width: 60px;
+            min-width: 72px;
             text-align: center;
             white-space: nowrap;
         }
@@ -253,8 +250,8 @@
         /* 触摸设备按钮优化 */
         @media (hover: none) {
             .toggle-btn {
-                padding: 8px 12px;
-                min-width: 55px;
+                padding: 10px 14px;
+                min-width: 65px;
             }
             .toggle-btn:active {
                 transform: scale(0.95);
@@ -352,12 +349,14 @@
 
         .cell-origin {
             font-family: "Hiragino Sans", "Microsoft YaHei", sans-serif;
-            font-size: clamp(11px, 2.5vw, 15px);
+            font-size: clamp(10px, 2.2vw, 14px);
             color: #444;
             display: flex;
             justify-content: space-between;
-            padding-top: 3px;
+            padding-top: 2px;
+            margin-bottom: 2px;
             border-top: 1px solid #1a1a1a;
+            line-height: 1.1;
         }
 
         .origin-part {
@@ -389,34 +388,23 @@
             border-top: 1px solid var(--grid-line);
         }
 
+        /* ========== 工具类 ========== */
+        .mono { font-family: 'Space Mono', monospace; }
+
         /* ========== 响应式布局 ========== */
         
         /* 平板竖屏 */
         @media (max-width: 768px) {
-            .top-nav {
-                padding: 6px 10px;
-            }
             .nav-center {
-                gap: 8px;
-            }
-            .nav-btn {
-                width: 32px;
-                height: 32px;
-            }
-            .nav-btn svg {
-                width: 16px;
-                height: 16px;
-            }
-            .header-title {
-                font-size: clamp(16px, 3.5vw, 22px);
+                gap: 6px;
             }
             #main-grid {
-                margin-top: 48px;
+                margin-top: 60px;
             }
             .toggle-btn {
-                font-size: 9px;
-                padding: 4px 6px;
-                min-width: 42px;
+                font-size: 11px;
+                padding: 6px 10px;
+                min-width: 56px;
             }
             .kana-cell {
                 max-height: 100px;
@@ -425,26 +413,12 @@
 
         /* 手机竖屏 - 保持5列布局以确保五十音正确分行 */
         @media (max-width: 480px) {
-            .top-nav {
-                flex-wrap: wrap;
-                gap: 6px;
-            }
             .nav-center {
-                order: 2;
-                width: 100%;
-                justify-content: center;
-                gap: 5px;
-            }
-            .nav-right {
-                order: 1;
-                margin-left: auto;
-            }
-            .header-title {
-                display: none;
+                gap: 4px;
             }
             #main-grid {
                 grid-template-columns: repeat(5, 1fr);
-                margin-top: 70px;
+                margin-top: 60px;
             }
             .kana-cell {
                 max-height: 90px;
@@ -460,30 +434,22 @@
                 font-size: clamp(9px, 2vw, 12px);
             }
             .toggle-btn {
-                min-width: 50px;
-                padding: 5px 8px;
-                font-size: 9px;
+                min-width: 52px;
+                padding: 6px 8px;
+                font-size: 10px;
                 letter-spacing: 0.05em;
             }
         }
 
         /* 小手机 - 继续保持5列 */
         @media (max-width: 360px) {
-            .nav-btn {
-                width: 28px;
-                height: 28px;
-            }
-            .nav-btn svg {
-                width: 14px;
-                height: 14px;
-            }
             #main-grid {
-                margin-top: 65px;
+                margin-top: 60px;
             }
             .toggle-btn {
-                min-width: 42px;
-                padding: 4px 5px;
-                font-size: 8px;
+                min-width: 46px;
+                padding: 5px 6px;
+                font-size: 9px;
             }
             .kana-cell {
                 max-height: 80px;
@@ -502,21 +468,29 @@
     </style>
 </head>
 <body>
+    <!-- 自定义光标 -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
     <!-- 顶部导航栏 -->
-    <nav class="top-nav">
+    <nav class="fixed top-0 left-0 w-full z-40 px-5 md:px-8 flex justify-between items-center backdrop-blur-md" style="height: 52px; background: linear-gradient(180deg, rgba(10,10,10,0.98) 0%, rgba(5,5,5,0.95) 100%); border-bottom: 1px solid rgba(188,254,45,0.15); box-shadow: 0 1px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(188,254,45,0.08);">
+        <a href="../" class="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity">
+            <img src="../asset/Ecco2k-E.jpg" alt="E" class="w-7 h-7 md:w-8 md:h-8 object-contain">
+            <span class="font-black tracking-tighter text-base md:text-lg" style="font-family: 'Syne', sans-serif;">EMOBOI</span>
+        </a>
         <div class="nav-center">
-            <h1 class="header-title">五十音</h1>
             <button class="toggle-btn active" data-target="cell-romaji">ROMAN</button>
             <button class="toggle-btn active" data-target="hira">HIRA</button>
             <button class="toggle-btn active" data-target="kata">KATA</button>
             <button class="toggle-btn active" data-target="cell-origin">ORIGIN</button>
         </div>
-        <div class="nav-right">
-            <a href="../" class="nav-btn" title="返回主页">
-                <i data-lucide="home"></i>
+        <div class="flex items-center gap-4 md:gap-6">
+            <span class="mono text-[10px] md:text-xs text-lime-400 uppercase hidden sm:block">GOJUON</span>
+            <a href="../" class="p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all flex items-center gap-2" title="返回主页">
+                <i data-lucide="home" class="w-5 h-5"></i>
             </a>
-            <button class="nav-btn" id="menu-btn" title="菜单">
-                <i data-lucide="menu"></i>
+            <button id="menu-btn" class="p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all" title="菜单">
+                <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
         </div>
     </nav>
@@ -538,6 +512,38 @@
     <footer></footer>
 
     <script>
+    // ==================== 自定义光标 ====================
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
+    
+    let mouseX = 0, mouseY = 0;
+    let dotX = 0, dotY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function animateCursor() {
+        dotX += (mouseX - dotX) * 0.3;
+        dotY += (mouseY - dotY) * 0.3;
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+
+        cursorDot.style.transform = `translate3d(${dotX - 5}px, ${dotY - 5}px, 0)`;
+        cursorRing.style.transform = `translate3d(${ringX - 20}px, ${ringY - 20}px, 0)`;
+
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // 悬停交互
+    document.querySelectorAll('button, a, .char-unit, .toggle-btn').forEach(el => {
+        el.addEventListener('mouseenter', () => cursorRing.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursorRing.classList.remove('hover'));
+    });
+
     // 初始化 Lucide Icons
     document.addEventListener('DOMContentLoaded', () => {
         lucide.createIcons();
@@ -655,6 +661,12 @@
         gridEl.innerHTML = '';
         kanaData.forEach(item => gridEl.appendChild(createCell(item)));
         syncDisplay();
+        
+        // 为动态生成的元素绑定光标悬停效果
+        document.querySelectorAll('.char-unit, .origin-part').forEach(el => {
+            el.addEventListener('mouseenter', () => cursorRing.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursorRing.classList.remove('hover'));
+        });
     }
 
     function createCell(item) {

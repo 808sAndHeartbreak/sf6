@@ -6,9 +6,7 @@
     <title>I AM MUSIC | EMOBOI</title>
     <meta name="description" content="EMOBOI Music Player - Personal music collection">
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
+    <!-- Lucide Icons (锁定版本) -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Archivo+Black&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
@@ -23,6 +21,10 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html {
+            scrollbar-gutter: stable;
         }
 
         body {
@@ -223,6 +225,151 @@
 
         /* ========== 工具类 ========== */
         .mono { font-family: 'Space Mono', monospace; }
+
+        /* ========== Tailwind 替代样式 ========== */
+        .fixed { position: fixed; }
+        .absolute { position: absolute; }
+        .relative { position: relative; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .top-0 { top: 0; }
+        .left-0 { left: 0; }
+        .w-full { width: 100%; }
+        .w-1\/2 { width: 50%; }
+        .w-1\/3 { width: 33.333333%; }
+        .w-3 { width: 0.75rem; }
+        .w-4 { width: 1rem; }
+        .w-5 { width: 1.25rem; }
+        .w-6 { width: 1.5rem; }
+        .w-7 { width: 1.75rem; }
+        .w-8 { width: 2rem; }
+        .w-16 { width: 4rem; }
+        .h-3 { height: 0.75rem; }
+        .h-4 { height: 1rem; }
+        .h-5 { height: 1.25rem; }
+        .h-6 { height: 1.5rem; }
+        .h-7 { height: 1.75rem; }
+        .h-8 { height: 2rem; }
+        .h-16 { height: 4rem; }
+        .h-1\/3 { height: 33.333333%; }
+        .min-h-screen { min-height: 100vh; }
+        .max-w-md { max-width: 28rem; }
+        .max-w-6xl { max-width: 72rem; }
+        .max-h-\[500px\] { max-height: 500px; }
+        .aspect-square { aspect-ratio: 1 / 1; }
+        .z-40 { z-index: 40; }
+        .flex { display: flex; }
+        .grid { display: grid; }
+        .hidden { display: none; }
+        .block { display: block; }
+        .inline { display: inline; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .gap-8 { gap: 2rem; }
+        .gap-12 { gap: 3rem; }
+        .space-y-1 > * + * { margin-top: 0.25rem; }
+        .space-y-2 > * + * { margin-top: 0.5rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .overflow-y-auto { overflow-y: auto; }
+        .border { border-width: 1px; border-style: solid; }
+        .border-b { border-bottom-width: 1px; border-bottom-style: solid; }
+        .border-t { border-top-width: 1px; border-top-style: solid; }
+        .border-4 { border-width: 4px; border-style: solid; }
+        .border-zinc-700 { border-color: #3f3f46; }
+        .border-zinc-800 { border-color: #27272a; }
+        .border-zinc-900 { border-color: #18181b; }
+        .rounded-full { border-radius: 9999px; }
+        .bg-white { background-color: #fff; }
+        .bg-black { background-color: #000; }
+        .bg-black\/80 { background-color: rgba(0, 0, 0, 0.8); }
+        .bg-zinc-900 { background-color: #18181b; }
+        .bg-zinc-900\/50 { background-color: rgba(24, 24, 27, 0.5); }
+        .bg-zinc-700 { background-color: #3f3f46; }
+        .bg-lime-400 { background-color: #a3e635; }
+        .text-black { color: #000; }
+        .text-white { color: #fff; }
+        .text-lime-400 { color: #a3e635; }
+        .text-zinc-500 { color: #71717a; }
+        .text-zinc-600 { color: #52525b; }
+        .text-red-500 { color: #ef4444; }
+        .fill-red-500 { fill: #ef4444; }
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-base { font-size: 1rem; line-height: 1.5rem; }
+        .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+        .text-\[8vw\] { font-size: 8vw; }
+        .text-\[9px\] { font-size: 9px; }
+        .text-\[10px\] { font-size: 10px; }
+        .font-bold { font-weight: 700; }
+        .font-black { font-weight: 900; }
+        .italic { font-style: italic; }
+        .uppercase { text-transform: uppercase; }
+        .tracking-tighter { letter-spacing: -0.05em; }
+        .tracking-tight { letter-spacing: -0.025em; }
+        .leading-none { line-height: 1; }
+        .leading-relaxed { line-height: 1.625; }
+        .p-2 { padding: 0.5rem; }
+        .p-4 { padding: 1rem; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+        .pt-24 { padding-top: 6rem; }
+        .pb-16 { padding-bottom: 4rem; }
+        .pr-2 { padding-right: 0.5rem; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mt-8 { margin-top: 2rem; }
+        .mt-12 { margin-top: 3rem; }
+        .mb-4 { margin-top: 1rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mb-12 { margin-bottom: 3rem; }
+        .ml-1 { margin-left: 0.25rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .opacity-10 { opacity: 0.1; }
+        .origin-left { transform-origin: left; }
+        .cursor-pointer { cursor: pointer; }
+        .select-none { user-select: none; }
+        .backdrop-blur-sm { backdrop-filter: blur(4px); }
+        .transition-all { transition: all 0.15s ease; }
+        .transition-colors { transition: color 0.15s ease; }
+        .transition-opacity { transition: opacity 0.15s ease; }
+        .transition-transform { transition: transform 0.15s ease; }
+        .duration-500 { transition-duration: 500ms; }
+        .hover\:opacity-80:hover { opacity: 0.8; }
+        .hover\:bg-white:hover { background-color: #fff; }
+        .hover\:bg-lime-400:hover { background-color: #a3e635; }
+        .hover\:text-black:hover { color: #000; }
+        .hover\:text-white:hover { color: #fff; }
+        .hover\:text-lime-400:hover { color: #a3e635; }
+        .hover\:scale-110:hover { transform: scale(1.1); }
+
+        /* 响应式 */
+        @media (min-width: 640px) {
+            .sm\:block { display: block; }
+            .sm\:inline { display: inline; }
+        }
+        @media (min-width: 768px) {
+            .md\:block { display: block; }
+            .md\:text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+            .md\:flex-row { flex-direction: row; }
+            .md\:text-left { text-align: left; }
+        }
+        @media (min-width: 1024px) {
+            .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
     </style>
 </head>
 <body>
@@ -236,16 +383,16 @@
     <div class="noise-overlay"></div>
 
     <!-- 导航栏 -->
-    <nav class="fixed top-0 left-0 w-full z-40 px-6 py-4 flex justify-between items-center bg-black/80 backdrop-blur-sm border-b border-zinc-900">
-        <a href="../" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <div class="w-8 h-8 bg-white text-black font-black flex items-center justify-center text-lg">E</div>
-            <span class="font-black tracking-tighter text-lg hidden sm:block">EMOBOI.COM</span>
+    <nav class="fixed top-0 left-0 w-full z-40 px-5 md:px-8 flex justify-between items-center backdrop-blur-md" style="height: 52px; background: linear-gradient(180deg, rgba(10,10,10,0.98) 0%, rgba(5,5,5,0.95) 100%); border-bottom: 1px solid rgba(188,254,45,0.15); box-shadow: 0 1px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(188,254,45,0.08);">
+        <a href="../" class="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity">
+            <div class="w-7 h-7 md:w-8 md:h-8 bg-white text-black font-black flex items-center justify-center text-base md:text-lg">E</div>
+            <span class="font-black tracking-tighter text-base md:text-lg hidden sm:block">EMOBOI</span>
         </a>
-        <div class="flex items-center gap-6">
-            <span class="mono text-[10px] text-lime-400 uppercase hidden md:block">I AM MUSIC</span>
-            <a href="../" class="p-2 border border-zinc-700 hover:bg-white hover:text-black transition-all flex items-center gap-2 text-sm">
-                <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                <span class="hidden sm:inline">返回首页</span>
+        <div class="flex items-center gap-4 md:gap-6">
+            <span class="mono text-[10px] md:text-xs text-lime-400 uppercase hidden md:block">I AM MUSIC</span>
+            <a href="../" class="p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all flex items-center gap-2" title="返回首页">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                <span class="hidden sm:inline text-sm">返回</span>
             </a>
         </div>
     </nav>
@@ -609,9 +756,13 @@
             }
         });
 
+        // ==================== 初始化 Lucide 图标 ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+
         // ==================== 初始化 ====================
         window.addEventListener('load', () => {
-            lucide.createIcons();
             initPlayer();
         });
     </script>

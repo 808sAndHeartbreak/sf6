@@ -26,6 +26,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            scrollbar-gutter: stable;
+        }
+
         body {
             background-color: var(--deep-black);
             color: white;
@@ -106,12 +110,13 @@
         /* ========== Hero Banner ========== */
         .hero-banner {
             position: relative;
-            height: 45vh;
-            min-height: 320px;
+            height: auto;
+            min-height: 160px;
             overflow: hidden;
             display: flex;
             align-items: flex-end;
             justify-content: flex-start;
+            padding-top: 70px;
         }
 
         .hero-bg {
@@ -129,11 +134,11 @@
 
         .hero-glitch-text {
             font-family: 'Archivo Black', sans-serif;
-            font-size: clamp(3rem, 12vw, 9rem);
+            font-size: clamp(2.5rem, 8vw, 5rem);
             font-weight: 900;
             font-style: italic;
-            letter-spacing: -0.06em;
-            line-height: 0.85;
+            letter-spacing: -0.04em;
+            line-height: 1;
             text-transform: uppercase;
             position: relative;
             z-index: 10;
@@ -180,19 +185,19 @@
         .category-tabs {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            padding: 1rem 0;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
         }
 
         .category-tab {
-            padding: 0.6rem 1.2rem;
+            padding: 0.85rem 1.6rem;
             background: transparent;
             border: 1px solid #333;
             color: #888;
             font-family: 'Space Mono', monospace;
-            font-size: 10px;
+            font-size: 14px;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.1em;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
@@ -549,31 +554,32 @@
         /* ========== 统计信息条 ========== */
         .stats-bar {
             display: flex;
-            gap: 2rem;
-            padding: 1rem 0;
+            gap: 3rem;
+            padding: 1.25rem 0;
             border-top: 1px solid #1a1a1a;
             border-bottom: 1px solid #1a1a1a;
-            margin: 1.5rem 0;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .stat-item {
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.4rem;
         }
 
         .stat-item .value {
             font-family: 'Archivo Black', sans-serif;
-            font-size: 1.5rem;
+            font-size: 2.5rem;
             font-style: italic;
             color: white;
         }
 
         .stat-item .label {
             font-family: 'Space Mono', monospace;
-            font-size: 9px;
+            font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.1em;
             color: #666;
         }
 
@@ -582,9 +588,11 @@
 
         /* ========== 响应式 ========== */
         @media (max-width: 640px) {
-            .hero-banner { height: 35vh; min-height: 250px; }
-            .stats-bar { gap: 1rem; flex-wrap: wrap; }
-            .stat-item .value { font-size: 1.2rem; }
+            .hero-banner { padding-top: 60px; min-height: 120px; }
+            .stats-bar { gap: 2rem; flex-wrap: wrap; }
+            .stat-item .value { font-size: 1.8rem; }
+            .stat-item .label { font-size: 11px; }
+            .category-tab { font-size: 12px; padding: 0.7rem 1.2rem; }
         }
     </style>
 </head>
@@ -599,18 +607,18 @@
     <div class="noise-overlay"></div>
 
     <!-- 导航栏 -->
-    <nav class="fixed top-0 left-0 w-full z-40 px-4 md:px-6 py-3 flex justify-between items-center bg-black/90 backdrop-blur-sm border-b border-zinc-900/50">
+    <nav class="fixed top-0 left-0 w-full z-40 px-5 md:px-8 flex justify-between items-center backdrop-blur-md" style="height: 52px; background: linear-gradient(180deg, rgba(10,10,10,0.98) 0%, rgba(5,5,5,0.95) 100%); border-bottom: 1px solid rgba(188,254,45,0.15); box-shadow: 0 1px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(188,254,45,0.08);">
         <a href="../" class="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity">
             <img src="../asset/Ecco2k-E.jpg" alt="E" class="w-7 h-7 md:w-8 md:h-8 object-contain">
             <span class="font-black tracking-tighter text-base md:text-lg">EMOBOI</span>
         </a>
-        <div class="flex items-center gap-3 md:gap-6">
-            <span class="mono text-[9px] md:text-[10px] text-lime-400 uppercase hidden sm:block">GALLERY</span>
-            <a href="../" class="p-2 border border-zinc-800 hover:bg-white hover:text-black transition-all flex items-center gap-2 text-xs md:text-sm" title="返回主页">
-                <i data-lucide="home" class="w-3 h-3 md:w-4 md:h-4"></i>
+        <div class="flex items-center gap-4 md:gap-6">
+            <span class="mono text-[10px] md:text-xs text-lime-400 uppercase hidden sm:block">GALLERY</span>
+            <a href="../" class="p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all flex items-center gap-2" title="返回主页">
+                <i data-lucide="home" class="w-5 h-5"></i>
             </a>
-            <button id="gallery-menu-btn" class="p-2 border border-zinc-800 hover:bg-white hover:text-black transition-all" title="菜单">
-                <i data-lucide="menu" class="w-4 h-4"></i>
+            <button id="gallery-menu-btn" class="p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all" title="菜单">
+                <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
         </div>
     </nav>
@@ -628,25 +636,15 @@
     </div>
 
     <!-- Hero Banner -->
-    <section class="hero-banner pt-20 md:pt-24">
+    <section class="hero-banner">
         <div class="hero-bg"></div>
         
-        <!-- 装饰元素 -->
-        <div class="hero-decoration" style="top: 35%; left: 5%;">
-            [VISUAL_ARCHIVE]<br>
-            LOADING...
-        </div>
-        <div class="hero-decoration" style="top: 30%; right: 5%; text-align: right;">
-            EMOBOI.COM<br>
-            ©2026
-        </div>
-        
-        <div class="relative z-10 px-4 md:px-8 pb-8">
+        <div class="relative z-10 px-4 md:px-6 pb-4">
             <h1 class="hero-glitch-text">
                 GALLERY
             </h1>
-            <p class="mono text-[10px] md:text-xs text-zinc-500 mt-4 max-w-md uppercase leading-relaxed">
-                Personal curated image collection. The eye is a camera. Each category is a fragment of the overall psyche.
+            <p class="mono text-[9px] md:text-[10px] text-zinc-600 mt-2 max-w-md uppercase leading-relaxed">
+                Personal curated image collection
             </p>
         </div>
     </section>
@@ -658,15 +656,15 @@
             <!-- 统计信息条 -->
             <div class="stats-bar">
                 <div class="stat-item">
-                    <span class="value" id="total-count">20</span>
+                    <span class="value" id="total-count">21</span>
                     <span class="label">Total Images</span>
                 </div>
                 <div class="stat-item">
-                    <span class="value">5</span>
+                    <span class="value">4</span>
                     <span class="label">Categories</span>
                 </div>
                 <div class="stat-item">
-                    <span class="value" id="visible-count">20</span>
+                    <span class="value" id="visible-count">21</span>
                     <span class="label">Showing</span>
                 </div>
             </div>
@@ -674,29 +672,26 @@
             <!-- 分类标签 -->
             <div class="category-tabs" id="category-tabs">
                 <button class="category-tab active" data-category="all">
-                    ALL<span class="count">(20)</span>
+                    ALL<span class="count">(21)</span>
                 </button>
                 <button class="category-tab" data-category="anime">
-                    ANIME_CORE<span class="count">(8)</span>
+                    ANIME<span class="count">(14)</span>
                 </button>
-                <button class="category-tab" data-category="drain">
-                    DRAIN_GANG<span class="count">(4)</span>
+                <button class="category-tab" data-category="artist">
+                    ARTIST<span class="count">(2)</span>
                 </button>
-                <button class="category-tab" data-category="goth">
-                    GOTH_EMO<span class="count">(4)</span>
+                <button class="category-tab" data-category="meow">
+                    MEOW<span class="count">(3)</span>
                 </button>
-                <button class="category-tab" data-category="cats">
-                    MEOW_VOID<span class="count">(3)</span>
-                </button>
-                <button class="category-tab" data-category="music">
-                    SOUND_ICONS<span class="count">(2)</span>
+                <button class="category-tab" data-category="random">
+                    RANDOM<span class="count">(2)</span>
                 </button>
             </div>
 
             <!-- 当前筛选状态 -->
             <div class="flex items-center gap-4 py-4">
-                <div class="w-8 h-px bg-lime-400"></div>
-                <span class="mono text-[10px] text-zinc-500 uppercase" id="current-filter">FILTER: ALL_ARCHIVE</span>
+                <div class="w-12 h-px bg-lime-400"></div>
+                <span class="mono text-sm text-zinc-500 uppercase tracking-wide" id="current-filter">FILTER: ALL_ARCHIVE</span>
             </div>
 
             <!-- 画廊网格 -->
@@ -792,10 +787,10 @@
                     </div>
                 </div>
 
-                <!-- ====== DRAIN_GANG ====== -->
+                <!-- ====== ANIME (续) - 原DRAIN风格 ====== -->
 
                 <!-- 祈祷男孩 -->
-                <div class="gallery-item" data-category="drain">
+                <div class="gallery-item" data-category="anime">
                     <div class="glitch-badge"></div>
                     <img src="../asset/drained-pray.jpg" alt="DRAINED_PRAY" loading="lazy">
                     <div class="overlay"></div>
@@ -806,7 +801,7 @@
                 </div>
 
                 <!-- 故障天使 -->
-                <div class="gallery-item" data-category="drain">
+                <div class="gallery-item" data-category="anime">
                     <div class="glitch-badge"></div>
                     <img src="../asset/glitch-angel.jpg" alt="GLITCH_ANGEL" loading="lazy">
                     <div class="overlay"></div>
@@ -817,7 +812,7 @@
                 </div>
 
                 <!-- 我爱罗 -->
-                <div class="gallery-item" data-category="drain">
+                <div class="gallery-item" data-category="anime">
                     <div class="glitch-badge"></div>
                     <img src="../asset/gaara-ai.jpg" alt="GAARA_AI" loading="lazy">
                     <div class="overlay"></div>
@@ -828,7 +823,7 @@
                 </div>
 
                 <!-- 日语拼贴 -->
-                <div class="gallery-item" data-category="drain">
+                <div class="gallery-item" data-category="anime">
                     <div class="glitch-badge"></div>
                     <img src="../asset/nihongo-collage.jpg" alt="NIHONGO_COLLAGE" loading="lazy">
                     <div class="overlay"></div>
@@ -838,21 +833,8 @@
                     </div>
                 </div>
 
-                <!-- ====== GOTH_EMO ====== -->
-
-                <!-- 哥特横幅 -->
-                <div class="gallery-item" data-category="goth">
-                    <div class="glitch-badge"></div>
-                    <img src="../asset/goth-banner.jpg" alt="GOTH_BANNER" loading="lazy">
-                    <div class="overlay"></div>
-                    <div class="info">
-                        <span class="title">GOTH_BANNER</span>
-                        <span class="category-badge">// CHANDELIER</span>
-                    </div>
-                </div>
-
                 <!-- 骷髅女孩 -->
-                <div class="gallery-item" data-category="goth">
+                <div class="gallery-item" data-category="anime">
                     <div class="glitch-badge"></div>
                     <img src="../asset/skeleton-girl.jpg" alt="SKELETON_GIRL" loading="lazy">
                     <div class="overlay"></div>
@@ -862,19 +844,8 @@
                     </div>
                 </div>
 
-                <!-- 眼中灵魂 -->
-                <div class="gallery-item" data-category="goth">
-                    <div class="glitch-badge"></div>
-                    <img src="../asset/eye-soul.jpg" alt="EYE_SOUL" loading="lazy">
-                    <div class="overlay"></div>
-                    <div class="info">
-                        <span class="title">EYE_SOUL</span>
-                        <span class="category-badge">// WINDOW TO SOUL</span>
-                    </div>
-                </div>
-
                 <!-- Misa翅膀 -->
-                <div class="gallery-item" data-category="goth">
+                <div class="gallery-item" data-category="anime">
                     <div class="glitch-badge"></div>
                     <img src="../asset/misa-wings.png" alt="MISA_WINGS" loading="lazy">
                     <div class="overlay"></div>
@@ -884,45 +855,10 @@
                     </div>
                 </div>
 
-                <!-- ====== MEOW_VOID ====== -->
-
-                <!-- 哥特猫 -->
-                <div class="gallery-item" data-category="cats">
-                    <div class="glitch-badge"></div>
-                    <img src="../asset/goth-cat.jpg" alt="GOTH_CAT" loading="lazy">
-                    <div class="overlay"></div>
-                    <div class="info">
-                        <span class="title">GOTH_CAT</span>
-                        <span class="category-badge">// VOID CREATURE</span>
-                    </div>
-                </div>
-
-                <!-- 小猫 -->
-                <div class="gallery-item" data-category="cats">
-                    <div class="glitch-badge"></div>
-                    <img src="../asset/kitten.jpg" alt="KITTEN" loading="lazy">
-                    <div class="overlay"></div>
-                    <div class="info">
-                        <span class="title">KITTEN</span>
-                        <span class="category-badge">// SMOL BEAN</span>
-                    </div>
-                </div>
-
-                <!-- 双猫 -->
-                <div class="gallery-item" data-category="cats">
-                    <div class="glitch-badge"></div>
-                    <img src="../asset/twin-cats.jpg" alt="TWIN_CATS" loading="lazy">
-                    <div class="overlay"></div>
-                    <div class="info">
-                        <span class="title">TWIN_CATS</span>
-                        <span class="category-badge">// DOUBLE TROUBLE</span>
-                    </div>
-                </div>
-
-                <!-- ====== SOUND_ICONS ====== -->
+                <!-- ====== ARTIST ====== -->
 
                 <!-- Lil Peep -->
-                <div class="gallery-item" data-category="music">
+                <div class="gallery-item" data-category="artist">
                     <div class="glitch-badge"></div>
                     <img src="../asset/lil-peep.jpg" alt="LIL_PEEP" loading="lazy">
                     <div class="overlay"></div>
@@ -933,13 +869,72 @@
                 </div>
 
                 <!-- Ecco2k -->
-                <div class="gallery-item" data-category="music">
+                <div class="gallery-item" data-category="artist">
                     <div class="glitch-badge"></div>
                     <img src="../asset/Ecco2k-E.jpg" alt="ECCO2K_E" loading="lazy">
                     <div class="overlay"></div>
                     <div class="info">
                         <span class="title">ECCO2K_E</span>
                         <span class="category-badge">// DRAIN GANG</span>
+                    </div>
+                </div>
+
+                <!-- ====== MEOW ====== -->
+
+                <!-- 哥特猫 -->
+                <div class="gallery-item" data-category="meow">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/goth-cat.jpg" alt="GOTH_CAT" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">GOTH_CAT</span>
+                        <span class="category-badge">// VOID CREATURE</span>
+                    </div>
+                </div>
+
+                <!-- 小猫 -->
+                <div class="gallery-item" data-category="meow">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/kitten.jpg" alt="KITTEN" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">KITTEN</span>
+                        <span class="category-badge">// SMOL BEAN</span>
+                    </div>
+                </div>
+
+                <!-- 双猫 -->
+                <div class="gallery-item" data-category="meow">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/twin-cats.jpg" alt="TWIN_CATS" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">TWIN_CATS</span>
+                        <span class="category-badge">// DOUBLE TROUBLE</span>
+                    </div>
+                </div>
+
+                <!-- ====== RANDOM ====== -->
+
+                <!-- 哥特横幅 -->
+                <div class="gallery-item" data-category="random">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/goth-banner.jpg" alt="GOTH_BANNER" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">GOTH_BANNER</span>
+                        <span class="category-badge">// CHANDELIER</span>
+                    </div>
+                </div>
+
+                <!-- 眼中灵魂 -->
+                <div class="gallery-item" data-category="random">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/eye-soul.jpg" alt="EYE_SOUL" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">EYE_SOUL</span>
+                        <span class="category-badge">// WINDOW TO SOUL</span>
                     </div>
                 </div>
 
@@ -1031,11 +1026,10 @@
 
         const categoryNames = {
             'all': 'ALL_ARCHIVE',
-            'anime': 'ANIME_CORE',
-            'drain': 'DRAIN_GANG',
-            'goth': 'GOTH_EMO',
-            'cats': 'MEOW_VOID',
-            'music': 'SOUND_ICONS'
+            'anime': 'ANIME',
+            'artist': 'ARTIST',
+            'meow': 'MEOW',
+            'random': 'RANDOM'
         };
 
         let currentFilter = 'all';
@@ -1167,9 +1161,13 @@
             }
         });
 
+        // ==================== 初始化 Lucide 图标 ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+
         // ==================== 初始化 ====================
         window.addEventListener('load', () => {
-            lucide.createIcons();
             updateVisibleImages();
             setupHoverEffects();
         });
