@@ -1199,7 +1199,6 @@
                             <button onclick="switchMixupTab(4)" id="mixupTab4" class="mixup-tab-btn px-6 py-3 text-lg font-black transition-colors">4F</button>
                             <button onclick="switchMixupTab(3)" id="mixupTab3" class="mixup-tab-btn px-6 py-3 text-lg font-black transition-colors">3F</button>
                             <button onclick="switchMixupTab(2)" id="mixupTab2" class="mixup-tab-btn px-6 py-3 text-lg font-black transition-colors">2F</button>
-                            <button onclick="switchMixupTab(1)" id="mixupTab1" class="mixup-tab-btn px-6 py-3 text-lg font-black transition-colors">1F</button>
                         </div>
                         
                         <!-- 内容区 -->
@@ -3471,7 +3470,7 @@
         // 计算所有能卡出特定剩余帧的场景
         function calculateThrowMixups() {
             const results = {
-                1: [], 2: [], 3: [], 4: [], 5: []
+                2: [], 3: [], 4: [], 5: []
             };
             
             if (state.moveLibrary.length === 0) return results;
@@ -3481,7 +3480,7 @@
                 const plans = calculateBestPlan(adv);
                 
                 // 收集每个剩余帧数的所有卡帧方式
-                const remainPlans = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+                const remainPlans = { 2: [], 3: [], 4: [], 5: [] };
                 
                 for (const plan of plans) {
                     // 跳过投技方案（投技不适合打投择）
@@ -3491,8 +3490,8 @@
                     
                     const remain = plan.remain;
                     
-                    // 只关注 1-5 帧的剩余
-                    if (remain < 1 || remain > 5) continue;
+                    // 只关注 2-5 帧的剩余
+                    if (remain < 2 || remain > 5) continue;
                     
                     // 生成卡帧描述
                     const killDesc = plan.killMove2 ? `${plan.killMove.name} → ${plan.killMove2.name}` : plan.killMove.name;
@@ -3504,7 +3503,7 @@
                 }
                 
                 // 为每个有有效方案的剩余帧创建条目
-                for (let r = 1; r <= 5; r++) {
+                for (let r = 2; r <= 5; r++) {
                     if (remainPlans[r].length > 0) {
                         const contexts = getContextForAdv(adv);
                         results[r].push({
@@ -3518,7 +3517,7 @@
             }
             
             // 按有利帧排序
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 2; i <= 5; i++) {
                 results[i].sort((a, b) => a.adv - b.adv);
             }
             
