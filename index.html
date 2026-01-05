@@ -89,25 +89,6 @@
             50% { opacity: 0.85; }
         }
 
-        /* ========== 光晕脉动 ========== */
-        .ambient-glow {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 80vw;
-            height: 80vh;
-            transform: translate(-50%, -50%);
-            background: radial-gradient(ellipse at center, rgba(188, 254, 45, 0.03) 0%, transparent 60%);
-            pointer-events: none;
-            z-index: 1;
-            animation: glowPulse 8s ease-in-out infinite;
-        }
-
-        @keyframes glowPulse {
-            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.1); }
-        }
-
         /* ========== 自定义光标 ========== */
         #cursor-dot {
             position: fixed;
@@ -159,7 +140,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.5s, visibility 0.5s;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
         }
 
         #preloader.hidden {
@@ -167,16 +148,56 @@
             visibility: hidden;
         }
 
-        .loader-icon {
-            width: 48px;
-            height: 48px;
-            border: 2px solid var(--acid-lime);
-            animation: loaderSpin 1s linear infinite;
+        .loader-symbol {
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 300;
+            color: white;
+            letter-spacing: 0.1em;
+            animation: symbolPulse 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
         }
 
-        @keyframes loaderSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        @keyframes symbolPulse {
+            0%, 100% { 
+                opacity: 0.3;
+                transform: scale(1);
+                filter: blur(0px);
+            }
+            50% { 
+                opacity: 1;
+                transform: scale(1.05);
+                filter: blur(0px);
+            }
+        }
+
+        /* 偶尔的故障闪烁 */
+        .loader-symbol::before {
+            content: '℮';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: rgba(188, 254, 45, 0.5);
+            animation: glitchShift 3s ease-in-out infinite;
+        }
+
+        @keyframes glitchShift {
+            0%, 90%, 100% { 
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+            92% { 
+                transform: translate(-3px, 1px);
+                opacity: 0.8;
+            }
+            94% { 
+                transform: translate(2px, -1px);
+                opacity: 0.6;
+            }
+            96% {
+                transform: translate(-1px, 2px);
+                opacity: 0.4;
+            }
         }
 
         /* ========== 故障文本效果 ========== */
@@ -381,6 +402,7 @@
             text-align: right;
             letter-spacing: 0.05em;
             animation: logoBreathe 5s ease-in-out infinite;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
         @keyframes logoBreathe {
@@ -482,6 +504,25 @@
 
         .collage-img.invert {
             filter: invert(1) contrast(1.2);
+        }
+
+        /* ========== 全屏菜单样式 ========== */
+        .menu-link {
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-link:hover .menu-index {
+            color: var(--acid-lime);
+        }
+        
+        .menu-link .menu-index {
+            transition: color 0.3s ease;
+        }
+
+        .group:hover .group-hover\:text-lime-400 {
+            color: #a3e635;
         }
 
         /* ========== 工具类 ========== */
@@ -593,14 +634,12 @@
 
     <!-- 背景层 -->
     <div class="bg-overlay"></div>
-    <div class="ambient-glow"></div>
     <div class="noise-overlay"></div>
     <div class="scanline"></div>
 
     <!-- 预加载器 -->
     <div id="preloader">
-        <div class="loader-icon mb-6"></div>
-        <p class="mono text-[10px] tracking-[0.4em] text-zinc-500 animate-pulse">LOADING_EMOBOI_OS...</p>
+        <div class="loader-symbol" style="position: relative;">℮</div>
     </div>
 
     <!-- 浮动 ASCII 装饰 -->
@@ -617,7 +656,7 @@
 ░▒▓█ DRAIN █▓▒░</div>
 
     <!-- 底部跑马灯 -->
-    <div class="fixed bottom-0 w-full bg-white text-black py-1.5 overflow-hidden z-50 text-xs font-bold uppercase tracking-wider">
+    <div class="fixed bottom-0 w-full py-1.5 overflow-hidden z-50 text-xs font-bold uppercase tracking-wider" style="background: rgba(30, 30, 30, 0.85); color: #555; border-top: 1px solid rgba(255,255,255,0.06);">
         <div class="marquee-track">
             <span class="marquee-content">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
             <span class="marquee-content">EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ EMOBOI.COM ★ DRAINED ★ GOTHBOICLIQUE ★ OPIUM ★ </span>
@@ -636,15 +675,31 @@
     </nav>
 
     <!-- 全屏菜单 -->
-    <div id="fullscreen-menu" class="fixed inset-0 bg-black z-[45] hidden items-center justify-center">
-        <button id="close-menu" class="absolute top-6 right-6 p-2 border border-zinc-700 hover:bg-white hover:text-black transition-all">
+    <div id="fullscreen-menu" class="fixed inset-0 hidden items-center justify-center" style="background: rgba(0,0,0,0.97); z-index: 9995;">
+        <!-- 背景装饰大字 -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+            <span class="menu-bg-text" style="font-family: 'Archivo Black', 'Arial Black', sans-serif; font-size: clamp(20vw, 35vw, 45vw); font-style: italic; color: rgba(255,255,255,0.02); letter-spacing: -0.05em; line-height: 0.8;">MENU</span>
+        </div>
+        <button id="close-menu" class="absolute top-6 right-6 p-2 border border-zinc-700 hover:bg-white hover:text-black transition-all" style="z-index: 10;">
             <i data-lucide="x" class="w-6 h-6"></i>
         </button>
-        <div class="flex flex-col gap-6 text-center">
-            <a href="sf6/" onclick="closeMenu()" class="text-4xl md:text-7xl font-black italic tracking-tighter hover:text-lime-400 transition-colors uppercase">SF6 FRAME LAB</a>
-            <a href="gojuon/" onclick="closeMenu()" class="text-4xl md:text-7xl font-black italic tracking-tighter hover:text-lime-400 transition-colors uppercase">GOJUON</a>
-            <a href="gallery/" onclick="closeMenu()" class="text-4xl md:text-7xl font-black italic tracking-tighter hover:text-lime-400 transition-colors uppercase">MY GALLERY</a>
-            <a href="javascript:void(0)" onclick="closeMenu(); alert('开发中')" class="text-4xl md:text-7xl font-black italic tracking-tighter hover:text-lime-400 transition-colors uppercase">I AM MUSIC</a>
+        <div class="flex flex-col gap-4 text-center relative" style="z-index: 5;">
+            <a href="sf6/" onclick="closeMenu()" class="menu-link group flex items-center justify-center gap-4">
+                <span class="menu-index mono text-zinc-600 text-sm">01</span>
+                <span class="text-4xl md:text-7xl font-black italic tracking-tighter group-hover:text-lime-400 transition-colors uppercase">SF6 FRAME LAB</span>
+            </a>
+            <a href="gojuon/" onclick="closeMenu()" class="menu-link group flex items-center justify-center gap-4">
+                <span class="menu-index mono text-zinc-600 text-sm">02</span>
+                <span class="text-4xl md:text-7xl font-black italic tracking-tighter group-hover:text-lime-400 transition-colors uppercase">GOJUON</span>
+            </a>
+            <a href="gallery/" onclick="closeMenu()" class="menu-link group flex items-center justify-center gap-4">
+                <span class="menu-index mono text-zinc-600 text-sm">03</span>
+                <span class="text-4xl md:text-7xl font-black italic tracking-tighter group-hover:text-lime-400 transition-colors uppercase">MY GALLERY</span>
+            </a>
+            <a href="javascript:void(0)" onclick="closeMenu(); alert('开发中')" class="menu-link group flex items-center justify-center gap-4">
+                <span class="menu-index mono text-zinc-600 text-sm">04</span>
+                <span class="text-4xl md:text-7xl font-black italic tracking-tighter group-hover:text-lime-400 transition-colors uppercase">I AM MUSIC</span>
+            </a>
         </div>
     </div>
 
@@ -744,9 +799,8 @@
             </nav>
 
         <!-- 底部版权信息 -->
-        <footer class="fixed bottom-10 w-full px-8 z-10" style="font-family: 'Syne', sans-serif;">
+        <footer class="fixed w-full px-8 z-10" style="font-family: 'Syne', sans-serif; bottom: 32px;">
             <div class="text-[10px] tracking-widest text-gray-500">
-                <span class="uppercase">Design by 天 // ℮</span> <br>
                 天的QQ空间 <span style="font-family: 'Space Mono', 'Courier New', monospace;">^^</span>
             </div>
         </footer>
@@ -801,21 +855,32 @@
         const menuBtn = document.getElementById('menu-btn');
         const closeMenuBtn = document.getElementById('close-menu');
         const fullscreenMenu = document.getElementById('fullscreen-menu');
+        const cornerLogo = document.getElementById('corner-logo');
 
         menuBtn.addEventListener('click', () => {
             fullscreenMenu.style.display = 'flex';
+            cornerLogo.style.opacity = '0';
+            cornerLogo.style.visibility = 'hidden';
         });
 
         closeMenuBtn.addEventListener('click', closeMenu);
 
         function closeMenu() {
             fullscreenMenu.style.display = 'none';
+            cornerLogo.style.opacity = '';
+            cornerLogo.style.visibility = '';
         }
 
+        // ESC 键关闭菜单
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && fullscreenMenu.style.display === 'flex') {
+                closeMenu();
+            }
+        });
+
         // ==================== 右上角 Logo 随机抖动效果 ====================
-        const cornerLogo = document.getElementById('corner-logo');
         setInterval(() => {
-            if (Math.random() > 0.96) {
+            if (Math.random() > 0.96 && fullscreenMenu.style.display !== 'flex') {
                 cornerLogo.style.transform = `translate(${Math.random()*8-4}px, ${Math.random()*8-4}px) skew(${Math.random()*6-3}deg)`;
                 setTimeout(() => {
                     cornerLogo.style.transform = 'none';
