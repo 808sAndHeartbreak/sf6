@@ -140,9 +140,14 @@
         .nav-center {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 4px;
             justify-content: center;
+        }
+        
+        @media (min-width: 480px) {
+            .nav-center {
+                gap: 8px;
+            }
         }
 
         /* ========== 下拉菜单容器 ========== */
@@ -1151,12 +1156,22 @@
 
         .modal-preview-img {
             width: 100%;
-            max-width: 600px;
+            max-width: 420px;
             height: auto;
             border: 1px solid var(--grid-line);
             margin: 0 auto 20px;
             display: block;
             filter: drop-shadow(0 0 20px rgba(170, 255, 240, 0.2));
+        }
+        
+        .modal-subtitle {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            margin-top: -12px;
+            margin-bottom: 20px;
+            letter-spacing: 0.02em;
         }
 
         .modal-link-container {
@@ -1241,9 +1256,6 @@
         
         /* 平板竖屏 */
         @media (max-width: 768px) {
-            .nav-center {
-                gap: 6px;
-            }
             #main-grid {
                 margin-top: 60px;
             }
@@ -1277,8 +1289,9 @@
 
         /* 手机竖屏 - 保持5列布局以确保五十音正确分行 */
         @media (max-width: 480px) {
-            .nav-center {
-                gap: 4px;
+            .dropdown-trigger, .quiz-btn {
+                font-size: 10px;
+                padding: 5px 8px;
             }
             #main-grid {
                 grid-template-columns: repeat(5, 1fr);
@@ -1418,12 +1431,12 @@
     <div id="cursor-ring"></div>
 
     <!-- 顶部导航栏 -->
-    <nav class="fixed top-0 left-0 w-full z-40 px-5 md:px-8 flex justify-between items-center backdrop-blur-md" style="height: 52px; background: linear-gradient(180deg, rgba(10,10,10,0.98) 0%, rgba(5,5,5,0.95) 100%); border-bottom: 1px solid rgba(188,254,45,0.15); box-shadow: 0 1px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(188,254,45,0.08);">
-        <a href="../" class="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity">
+    <nav class="fixed top-0 left-0 w-full z-40 px-3 sm:px-5 md:px-8 flex justify-between items-center backdrop-blur-md" style="height: 52px; background: linear-gradient(180deg, rgba(10,10,10,0.98) 0%, rgba(5,5,5,0.95) 100%); border-bottom: 1px solid rgba(188,254,45,0.15); box-shadow: 0 1px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(188,254,45,0.08);">
+        <a href="../" class="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity flex-shrink-0">
             <img src="../asset/Ecco2k-E.jpg" alt="E" class="w-7 h-7 md:w-8 md:h-8 object-contain">
-            <span class="font-black tracking-tighter text-base md:text-lg" style="font-family: 'Syne', sans-serif;">EMOBOI</span>
+            <span class="font-black tracking-tighter text-base md:text-lg hidden sm:block" style="font-family: 'Syne', sans-serif;">EMOBOI</span>
         </a>
-        <div class="nav-center">
+        <div class="nav-center flex-shrink-0">
             <!-- 显隐下拉菜单 -->
             <div class="dropdown-container">
                 <button class="dropdown-trigger" id="display-dropdown-btn">
@@ -1454,13 +1467,13 @@
             <!-- 测试按钮 -->
             <button class="quiz-btn" id="quiz-btn">测试</button>
         </div>
-        <div class="flex items-center gap-4 md:gap-6">
+        <div class="flex items-center gap-2 sm:gap-4 md:gap-6 flex-shrink-0">
             <span class="mono text-[10px] md:text-xs text-lime-400 uppercase hidden sm:block">GOJUON</span>
-            <a href="../" class="p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all flex items-center gap-2" title="返回主页">
-                <i data-lucide="home" class="w-5 h-5"></i>
+            <a href="../" class="p-2 sm:p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all flex items-center gap-2" title="返回主页">
+                <i data-lucide="home" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             </a>
-            <button id="menu-btn" class="p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all" title="菜单">
-                <i data-lucide="menu" class="w-5 h-5"></i>
+            <button id="menu-btn" class="p-2 sm:p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all" title="菜单">
+                <i data-lucide="menu" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             </button>
         </div>
     </nav>
@@ -1568,6 +1581,7 @@
         <div class="modal-content">
             <button class="modal-close" id="modal-close">×</button>
             <h2 class="modal-title">† 五十音 * 假名 † WALLPAPER</h2>
+            <p class="modal-subtitle">音频监听，显示音乐封面，整体界面响应音频频段互动</p>
             <img src="../asset/drain-angel-gojuon-preview.jpg" alt="Wallpaper Preview" class="modal-preview-img">
             <div class="modal-link-container">
                 <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3635766356" target="_blank" class="modal-link">

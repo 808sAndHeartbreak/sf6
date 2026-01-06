@@ -440,19 +440,34 @@
         .char-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            gap: 6px;
+            padding-bottom: 8px; /* 为hover放大效果预留空间，避免出现滚动条 */
+        }
+        
+        /* 超小屏幕优化：3列更易点击 */
+        @media (max-width: 359px) {
+            .char-grid { 
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 6px;
+            }
         }
         
         @media (min-width: 640px) {
-            .char-grid { grid-template-columns: repeat(5, 1fr); }
+            .char-grid { 
+                grid-template-columns: repeat(5, 1fr); 
+                gap: 8px;
+            }
         }
         
         @media (min-width: 768px) {
-            .char-grid { grid-template-columns: repeat(6, 1fr); }
+            .char-grid { 
+                grid-template-columns: repeat(6, 1fr); 
+                gap: 10px;
+            }
         }
 
         .char-item {
-            aspect-ratio: 1.2;
+            aspect-ratio: 1.1;
             background: #1a1a2e;
             border: 2px solid #333;
             display: flex;
@@ -461,7 +476,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
-            padding: 6px;
+            padding: 4px;
         }
         
         .char-item:hover {
@@ -488,13 +503,28 @@
         
         .char-name {
             font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
-            font-size: 11px;
+            font-size: 9px;
             font-weight: 900;
             text-transform: uppercase;
-            margin-top: 4px;
+            margin-top: 2px;
+            line-height: 1.1;
+            text-align: center;
         }
         
-        .char-icon { font-size: 24px; }
+        .char-icon { font-size: 20px; }
+        
+        /* 较大屏幕恢复尺寸 */
+        @media (min-width: 480px) {
+            .char-item {
+                aspect-ratio: 1.2;
+                padding: 6px;
+            }
+            .char-name {
+                font-size: 11px;
+                margin-top: 4px;
+            }
+            .char-icon { font-size: 24px; }
+        }
         
         /* ========== 移动端优化 ========== */
         /* 触摸设备上移除 hover 变换效果，避免 sticky hover */
@@ -1360,11 +1390,11 @@
     </div>
 
     <!-- MODAL: Character Select -->
-    <div id="charModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="charModalTitle">
-        <div class="bg-zinc-900 border w-full max-w-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-card-border);">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="charModalTitle" class="impact-text text-2xl sm:text-3xl font-black" style="color: var(--theme-modal-title);">选择角色</h2>
-                <button onclick="closeCharModal()" class="text-zinc-500 hover:text-white text-3xl sm:text-2xl p-2 -m-2" title="关闭">&times;</button>
+    <div id="charModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm hidden flex items-center justify-center p-2 sm:p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="charModalTitle">
+        <div class="bg-zinc-900 border w-full max-w-3xl p-4 sm:p-6 md:p-8 max-h-[85vh] sm:max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-card-border);">
+            <div class="flex justify-between items-center mb-4 sm:mb-6">
+                <h2 id="charModalTitle" class="impact-text text-xl sm:text-2xl md:text-3xl font-black" style="color: var(--theme-modal-title);">选择角色</h2>
+                <button onclick="closeCharModal()" class="text-zinc-500 hover:text-white text-2xl sm:text-3xl p-2 -m-2" title="关闭">&times;</button>
             </div>
             <div class="char-grid" id="charGrid"></div>
         </div>
