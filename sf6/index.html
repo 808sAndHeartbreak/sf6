@@ -400,17 +400,18 @@
         /* 角色选择按钮 - Opium/Trap 菱形风格 */
         .champion-btn {
             font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
-            font-style: italic;
-            font-size: 1.4rem;
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 0.1em;
             color: #fff;
             transition: all 0.3s;
             background: color-mix(in srgb, var(--theme-primary) 20%, #000);
             border: 2px solid var(--theme-primary);
-            padding: 0.7rem 1.8rem;
+            padding: 0.5rem 1.4rem;
             position: relative;
             cursor: pointer;
             /* 菱形斜切 */
-            clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+            clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
             margin-right: auto;
         }
         
@@ -439,11 +440,72 @@
         }
         
         .champion-btn .char-icon {
+            font-size: 1.6rem;
             transition: transform 0.3s;
+        }
+        
+        .champion-btn .char-text {
+            font-family: "Arial Black", Impact, "Noto Sans SC", "Microsoft YaHei", sans-serif;
+            font-weight: 900;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
         }
         
         .champion-btn:hover .char-icon {
             transform: scale(1.15);
+        }
+        
+        /* 角色按钮切换动画 */
+        @keyframes char-btn-pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(var(--theme-primary-rgb, 255, 0, 122), 0);
+            }
+            15% {
+                transform: scale(1.05) translateX(-2px);
+                box-shadow: 
+                    0 0 20px var(--theme-primary),
+                    inset 0 0 10px color-mix(in srgb, var(--theme-primary) 30%, transparent);
+            }
+            30% {
+                transform: scale(1.02) translateX(2px);
+            }
+            45% {
+                transform: scale(1.04) translateX(-1px);
+                box-shadow: 
+                    0 0 30px var(--theme-primary),
+                    0 0 60px color-mix(in srgb, var(--theme-primary) 50%, transparent),
+                    inset 0 0 15px color-mix(in srgb, var(--theme-primary) 40%, transparent);
+            }
+            60% {
+                transform: scale(1.01) translateX(1px);
+            }
+            75% {
+                transform: scale(1.03);
+                box-shadow: 
+                    0 0 15px var(--theme-primary),
+                    inset 0 0 8px color-mix(in srgb, var(--theme-primary) 20%, transparent);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: none;
+            }
+        }
+        
+        .champion-btn.char-switch-active {
+            animation: char-btn-pulse 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            border-color: var(--theme-secondary) !important;
+        }
+        
+        .champion-btn.char-switch-active .char-icon {
+            animation: char-icon-bounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        @keyframes char-icon-bounce {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            20% { transform: scale(1.3) rotate(-10deg); }
+            40% { transform: scale(1.1) rotate(5deg); }
+            60% { transform: scale(1.2) rotate(-5deg); }
+            80% { transform: scale(1.05) rotate(2deg); }
         }
 
         /* 角色选择网格 - 响应式 */
@@ -1044,16 +1106,16 @@
             font-size: 28px;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.08em;
             color: #000;
-            padding: 0 50px;
+            padding: 0 20px;
         }
         
         .marquee-content span::after {
             content: "✦";
-            margin-left: 50px;
+            margin-left: 20px;
             opacity: 0.5;
-            font-size: 22px;
+            font-size: 20px;
         }
         
         @keyframes marquee-scroll {
@@ -1354,7 +1416,7 @@
                 <div class="flex flex-col">
                 <div class="flex items-center gap-3">
                     <h1 class="impact-text text-5xl sm:text-6xl tracking-tighter title-animate glitch-hover">SF6 FRAME LAB</h1>
-                    <button onclick="openHelpModal()" class="group px-3 py-1 bg-gradient-to-r from-cyan-600/20 to-pink-600/20 border border-cyan-500/50 hover:border-cyan-400 text-cyan-400 hover:text-cyan-300 text-xs font-bold tracking-wider uppercase transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.3)] flex items-center gap-1 whitespace-nowrap" title="使用说明">
+                    <button onclick="openHelpModal()" class="group px-3 py-1 ml-1 bg-gradient-to-r from-cyan-600/20 to-pink-600/20 border border-cyan-500/50 hover:border-cyan-400 text-cyan-400 hover:text-cyan-300 text-xs font-bold tracking-wider uppercase transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.3)] flex items-center gap-1 whitespace-nowrap" title="使用说明">
                         <span class="text-sm">?</span>
                         <span>说明</span>
                     </button>
@@ -1362,9 +1424,9 @@
                 <span class="text-zinc-500 font-bold text-xs tracking-widest mt-1">made by Yuetian</span>
             </div>
             <nav class="flex items-end gap-6 sm:gap-8 w-full sm:w-auto">
-                <button onclick="openCharacterModal()" class="champion-btn tracking-widest uppercase flex items-center gap-2">
-                    <span class="char-icon text-lg" id="currentCharIcon">🥋</span>
-                    <span>角色</span>
+                <button onclick="openCharacterModal()" class="champion-btn uppercase flex items-center gap-2">
+                    <span class="char-icon" id="currentCharIcon">🥋</span>
+                    <span class="char-text">角色</span>
                 </button>
                 <div class="flex gap-1 sm:gap-2 tab-container relative ml-auto sm:ml-0" id="tabContainer">
                     <button onclick="switchTab('notes')" id="tab-notes" class="tab-btn active uppercase tracking-widest text-base sm:text-xl pb-2">方案</button>
@@ -1783,7 +1845,7 @@
                 <section>
                     <h3 class="text-lg font-bold text-white mb-2">🎮 如何使用</h3>
                     <ol class="list-decimal list-inside space-y-3 text-zinc-400">
-                        <li><strong class="text-white">选择角色</strong> - 点击 <span class="text-cyan-400">角色</span> 按钮切换角色</li>
+                        <li><strong class="text-white">选择角色</strong> - 点击 <span class="text-cyan-400">角色</span> 按钮或顶部滚动横幅切换角色</li>
                         <li>
                             <strong class="text-white">查看卡帧策略</strong> - <span class="text-cyan-400">方案</span> 页签展示各种击倒情境下的最优方案
                             <p class="text-zinc-500 text-xs mt-1 ml-5">*使用搜索框查找特定帧数或场景，点击排序按钮切换排序方向</p>
@@ -1791,7 +1853,8 @@
                         </li>
                         <li>
                             <strong class="text-white">新增场景</strong> - 点击 <span class="text-cyan-400">+ 新增场景</span> 输入有利帧数，系统自动计算
-                            <p class="text-zinc-500 text-xs mt-1 ml-5">*可展开「期望后续」指定剩余帧数或压制招式，系统验证可行性</p>
+                            <p class="text-zinc-500 text-xs mt-1 ml-5">*切换「模糊」模式可输入帧数范围，系统计算通用方案</p>
+                            <p class="text-zinc-500 text-xs ml-5">*可展开「期望后续」指定剩余帧数或压制招式，系统验证可行性</p>
                         </li>
                         <li>
                             <strong class="text-white">管理帧数据</strong> - <span class="text-cyan-400">数据</span> 页签可查看/导入角色招式数据
@@ -2693,8 +2756,10 @@
             closeCharModal();
             renderAll();
             
-            // 自动触发标题 Glitch 效果 0.5 秒
+            // 自动触发标题 Glitch 效果
             triggerTitleGlitch();
+            // 触发角色按钮动画
+            triggerCharBtnAnimation();
         }
         
         // 触发标题 Glitch 效果
@@ -2705,6 +2770,20 @@
                 setTimeout(() => {
                     title.classList.remove('glitch-active');
                 }, 1000);
+            }
+        }
+        
+        // 触发角色按钮动画
+        function triggerCharBtnAnimation() {
+            const btn = document.querySelector('.champion-btn');
+            if (btn) {
+                btn.classList.remove('char-switch-active');
+                // 强制重绘以重新触发动画
+                void btn.offsetWidth;
+                btn.classList.add('char-switch-active');
+                setTimeout(() => {
+                    btn.classList.remove('char-switch-active');
+                }, 800);
             }
         }
 
@@ -5601,6 +5680,10 @@
             // 标记加载完成，启用页面过渡
             requestAnimationFrame(() => {
                 document.documentElement.classList.add('loaded');
+                // 首次加载时触发角色按钮动画（延迟一点让页面先渲染）
+                setTimeout(() => {
+                    triggerCharBtnAnimation();
+                }, 300);
             });
             
             // 初始化 Lucide 图标

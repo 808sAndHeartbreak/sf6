@@ -35,7 +35,7 @@ CHARACTER_DATA["JURI"] = {
     { "adv": 37, "context": "轻风破刃" },
     { "adv": 37, "context": "五黄杀" },
     { "adv": 38, "context": "下重脚" },
-    { "adv": 42, "context": "重脚确反" },
+    { "adv": 42, "context": "站重拳确反" },
     { "adv": 42, "context": "重风破刃" },
     { "adv": 47, "context": "下重脚确反" }
   ]
