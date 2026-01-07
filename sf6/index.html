@@ -1812,9 +1812,6 @@
                     <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">理由 (可选)</label>
                     <input type="text" id="inputPreferDesc" class="w-full bg-black border p-3 text-sm text-zinc-400" style="border-color: var(--theme-card-border);" placeholder="例如: 伤害高、确认简单">
                 </div>
-                <div class="text-[10px] text-cyan-400 bg-cyan-900/20 border border-cyan-800/50 p-2">
-                    💡 该规则会将使用此招式作为压制的方案从备选区提升到推荐区
-                </div>
                 <div class="flex gap-2 pt-2">
                     <button onclick="savePreferRule()" class="flex-1 text-white py-3 font-bold text-sm transition-all modal-btn-primary">保存规则</button>
                     <button onclick="closeRuleModal()" class="px-4 py-3 bg-zinc-800 text-zinc-400 font-bold text-sm hover:text-white transition-all">取消</button>
@@ -2026,14 +2023,28 @@
             CHARACTER_PRESET_RULES: {
                 "RYU": [
                     {
-                        id: "ryu_preset_6hp_meaty",
+                        id: "ryu_preset_6hp_meaty_after",
                         type: "disable",
                         moveName: "6HP",
                         usage: "meaty_after_kill",
                         description: "两段攻击"
                     },
                     {
-                        id: "ryu_preset_5mk_direct",
+                        id: "ryu_preset_6hp_meaty_direct",
+                        type: "disable",
+                        moveName: "6HP",
+                        usage: "meaty_direct",
+                        description: "两段攻击"
+                    },
+                    {
+                        id: "ryu_preset_5mk_meaty_after",
+                        type: "disable",
+                        moveName: "5MK",
+                        usage: "meaty_after_kill",
+                        description: "无法取消，不适合用于压制"
+                    },
+                    {
+                        id: "ryu_preset_5mk_meaty_direct",
                         type: "disable",
                         moveName: "5MK",
                         usage: "meaty_direct",
@@ -2952,6 +2963,49 @@
             }).filter(t => t).join('\n');
         }
 
+        // 生成方案复制文本
+        function generatePlanCopyText(plan, adv, label) {
+            // 获取场景描述
+            const contexts = state.notes.filter(n => n.adv === adv).map(n => n.context);
+            const contextStr = contexts.length > 0 ? contexts[0] : '';
+            
+            // 生成方案描述
+            let planDesc;
+            if (plan.isDirect) {
+                planDesc = `直接 ${plan.meatyMove.name}`;
+            } else if (plan.killMove2) {
+                const separator = plan.isCommutative ? '+' : '→';
+                planDesc = `${plan.killMove.name}${separator}${plan.killMove2.name}→${plan.meatyMove.name}`;
+            } else {
+                planDesc = `${plan.killMove.name}→${plan.meatyMove.name}`;
+            }
+            
+            // 根据标签类型生成不同格式
+            if (label === '打投择') {
+                return `+${adv}F ${contextStr}：${planDesc} —— ${plan.remain}F 打投择`;
+            }
+            
+            // 普通方案格式
+            const isThrow = plan.isThrow;
+            if (isThrow) {
+                return `+${adv}F ${contextStr}：${planDesc} —— 投技放倒`;
+            }
+            
+            const hitStr = plan.finalHit >= 0 ? `+${plan.finalHit}` : plan.finalHit;
+            const blockStr = plan.finalBlock >= 0 ? `+${plan.finalBlock}` : plan.finalBlock;
+            return `+${adv}F ${contextStr}：${planDesc} —— 偷${plan.stolen}F，打中${hitStr}，打防${blockStr}`;
+        }
+        
+        // 复制方案信息到剪贴板
+        function copyPlanInfo(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('已复制方案信息');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                showToast('复制失败');
+            });
+        }
+        
         // 渲染主要方案（紧凑版，带收藏和最小化按钮）
         function renderMainPlan(plan, label, adv, reasons = []) {
             if (!plan) return '';
@@ -3068,12 +3122,16 @@
             // 方案标签（如"打投择"）
             const labelHtml = label ? `<div class="absolute top-1 left-1 sm:top-2 sm:left-2 text-[9px] font-bold px-1.5 py-0.5 bg-amber-600/80 text-white uppercase">${label}</div>` : '';
 
+            // 生成复制文本
+            const copyText = generatePlanCopyText(plan, adv, label);
+            
             return `
                 <div class="mb-3 p-4 border ${borderColor} ${bgColor} relative group overflow-visible recommend-card">
                     ${stampHtml}
                     ${labelHtml}
                     ${tooltipHtml}
                     <div class="absolute top-1 right-1 sm:top-2 sm:right-2 flex gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                        <button onclick="copyPlanInfo(\`${copyText.replace(/`/g, '\\`')}\`)" class="text-zinc-600 hover:text-cyan-400 text-base sm:text-sm p-2 sm:p-1 transition-colors" title="复制方案">📋</button>
                         <button onclick="toggleFavorite(${adv}, '${planKey}')" class="${starClass} text-xl sm:text-lg p-2 sm:p-1 transition-colors" title="收藏">${starIcon}</button>
                         <button onclick="minimizePlan(${adv}, '${planKey}')" class="text-zinc-600 hover:text-zinc-400 text-base sm:text-sm p-2 sm:p-1 transition-colors" title="折叠至备选">▼</button>
                     </div>
@@ -3114,6 +3172,9 @@
 
             const stolenColorAlt = getStolenColorClass(plan.stolen);
             
+            // 生成复制文本
+            const copyText = generatePlanCopyText(plan, adv, '');
+            
             return `
                 <details class="border-b border-zinc-800/50 ${rowBg}">
                     <summary class="flex items-center justify-between py-2 cursor-pointer hover:bg-zinc-800/30 transition-colors group">
@@ -3122,6 +3183,7 @@
                             <span class="${stolenColorAlt} text-xs sm:text-sm">偷${plan.stolen}F</span>
                             <span class="${getFrameColorClass(plan.finalHit)} text-xs sm:text-sm">H${plan.finalHit >= 0 ? '+' : ''}${plan.finalHit}</span>
                             <span class="${getFrameColorClass(plan.finalBlock)} text-xs sm:text-sm">B${plan.finalBlock >= 0 ? '+' : ''}${plan.finalBlock}</span>
+                            <button onclick="event.stopPropagation(); copyPlanInfo(\`${copyText.replace(/`/g, '\\`')}\`)" class="text-zinc-600 hover:text-cyan-400 transition-colors p-1.5 sm:p-1 text-base sm:text-sm" title="复制方案">📋</button>
                             <button onclick="event.stopPropagation(); toggleFavorite(${adv}, '${planKey}')" class="${starClass} transition-colors p-1.5 sm:p-1 text-base sm:text-sm" title="收藏">${starIcon}</button>
                             <button onclick="event.stopPropagation(); maximizePlan(${adv}, '${planKey}')" class="text-zinc-600 hover:text-zinc-400 transition-colors p-1.5 sm:p-1 text-base sm:text-sm" title="置顶显示">▲</button>
                         </div>
@@ -4268,9 +4330,15 @@
                         return `<span class="text-white font-black text-lg">${desc}</span>`;
                     }).join('<span class="text-zinc-500 mx-2">或</span>');
                     
+                    // 生成复制文本（打投择格式）
+                    const contextStr = item.contexts[0] || '';
+                    const killDescText = item.killDescs.join(' 或 ');
+                    const mixupCopyText = `+${item.adv}F ${contextStr}：${killDescText} —— ${currentMixupTab}F 打投择`;
+                    
                     return `
-                        <div class="py-3 px-4 bg-zinc-900/50 border-l-4 mb-3" style="border-left-color: var(--theme-primary);">
-                            <div class="flex items-center gap-3 flex-wrap">
+                        <div class="py-3 px-4 bg-zinc-900/50 border-l-4 mb-3 relative group" style="border-left-color: var(--theme-primary);">
+                            <button onclick="copyPlanInfo(\`${mixupCopyText.replace(/`/g, '\\`')}\`)" class="absolute top-2 right-2 text-zinc-600 hover:text-cyan-400 transition-colors p-1 opacity-60 group-hover:opacity-100" title="复制方案">📋</button>
+                            <div class="flex items-center gap-3 flex-wrap pr-8">
                                 <span class="impact-text text-2xl font-black" style="color: var(--theme-secondary);">+${item.adv}F</span>
                                 ${killDescsHtml}
                             </div>
@@ -4297,11 +4365,16 @@
                         return `<span class="text-zinc-300 font-bold">${desc}</span>`;
                     }).join('<span class="text-zinc-500 mx-1">或</span>');
                     
+                    // 生成复制文本（无场景的打投择）
+                    const killDescText = item.killDescs.join(' 或 ');
+                    const mixupCopyText = `+${item.adv}F：${killDescText} —— ${currentMixupTab}F 打投择`;
+                    
                     return `
-                        <div class="py-1.5 px-3 bg-black/20 border-l-2 mb-1" style="border-left-color: var(--theme-card-border);">
-                            <div class="flex items-center gap-2 flex-wrap text-sm">
+                        <div class="py-1.5 px-3 bg-black/20 border-l-2 mb-1 relative group" style="border-left-color: var(--theme-card-border);">
+                            <div class="flex items-center gap-2 flex-wrap text-sm pr-6">
                                 <span class="font-bold" style="color: var(--theme-secondary);">+${item.adv}F</span>
                                 ${killDescsHtml}
+                                <button onclick="copyPlanInfo(\`${mixupCopyText.replace(/`/g, '\\`')}\`)" class="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-cyan-400 transition-colors p-0.5 opacity-60 group-hover:opacity-100 text-xs" title="复制方案">📋</button>
                             </div>
                         </div>
                     `;
