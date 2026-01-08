@@ -656,7 +656,7 @@
             <!-- 统计信息条 -->
             <div class="stats-bar">
                 <div class="stat-item">
-                    <span class="value" id="total-count">21</span>
+                    <span class="value" id="total-count">33</span>
                     <span class="label">Total Images</span>
                 </div>
                 <div class="stat-item">
@@ -664,7 +664,7 @@
                     <span class="label">Categories</span>
                 </div>
                 <div class="stat-item">
-                    <span class="value" id="visible-count">21</span>
+                    <span class="value" id="visible-count">33</span>
                     <span class="label">Showing</span>
                 </div>
             </div>
@@ -672,19 +672,19 @@
             <!-- 分类标签 -->
             <div class="category-tabs" id="category-tabs">
                 <button class="category-tab active" data-category="all">
-                    ALL<span class="count">(21)</span>
+                    ALL<span class="count">(33)</span>
                 </button>
                 <button class="category-tab" data-category="anime">
-                    ANIME<span class="count">(11)</span>
+                    ANIME<span class="count">(12)</span>
                 </button>
                 <button class="category-tab" data-category="artist">
-                    ARTIST<span class="count">(2)</span>
+                    ARTIST<span class="count">(3)</span>
                 </button>
                 <button class="category-tab" data-category="meow">
-                    MEOW<span class="count">(3)</span>
+                    MEOW<span class="count">(4)</span>
                 </button>
                 <button class="category-tab" data-category="art">
-                    ART<span class="count">(5)</span>
+                    ART<span class="count">(14)</span>
                 </button>
             </div>
 
@@ -697,27 +697,73 @@
             <!-- 画廊网格 -->
             <div class="gallery-grid" id="gallery">
                 
-                <!-- ====== ANIME_CORE ====== -->
+                <!-- ====== 精选优先 ====== -->
                 
-                <!-- 夜神月 (经典) -->
+                <!-- 故障坐着的女孩 -->
+                <div class="gallery-item" data-category="art">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/glitch-girl-sitting.jpg" alt="GIRL_SITTING" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">GIRL_SITTING</span>
+                        <span class="category-badge">// STATIC POSE</span>
+                    </div>
+                </div>
+
+                <!-- Slow Damage 塔 -->
+                <div class="gallery-item" data-category="anime">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/slowdamage-towa.jpg" alt="TOWA" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">TOWA</span>
+                        <span class="category-badge">// SLOW DAMAGE</span>
+                    </div>
+                </div>
+
+                <!-- ====== ART 分类 ====== -->
+                
+                <!-- 故障天使 -->
+                <div class="gallery-item" data-category="art">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/glitch-angel.jpg" alt="GLITCH_ANGEL" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">GLITCH_ANGEL</span>
+                        <span class="category-badge">// DIGITAL DECAY</span>
+                    </div>
+                </div>
+
+                <!-- 像素天使 -->
+                <div class="gallery-item" data-category="art">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/pixel-angel.jpg" alt="PIXEL_ANGEL" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">PIXEL_ANGEL</span>
+                        <span class="category-badge">// RETRO AESTHETIC</span>
+                    </div>
+                </div>
+
+                <!-- 日语拼贴 -->
+                <div class="gallery-item" data-category="anime">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/deathnote-light-yagami-glitch.jpg" alt="LIGHT_YAGAMI_GLITCH" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">LIGHT YAGAMI</span>
+                        <span class="category-badge">// DEATH NOTE GLITCH</span>
+                    </div>
+                </div>
+
+                <!-- Death Note 夜神月 -->
                 <div class="gallery-item" data-category="anime">
                     <div class="glitch-badge"></div>
                     <img src="../asset/deathnote-light-yagami.jpg" alt="LIGHT_YAGAMI" loading="lazy">
                     <div class="overlay"></div>
                     <div class="info">
-                        <span class="title">LIGHT_YAGAMI</span>
+                        <span class="title">LIGHT YAGAMI</span>
                         <span class="category-badge">// DEATH NOTE</span>
-                    </div>
-                </div>
-
-                <!-- 夜神月 (glitch) -->
-                <div class="gallery-item" data-category="anime">
-                    <div class="glitch-badge"></div>
-                    <img src="../asset/deathnote-light-yagami-glitch.jpg" alt="DRAINED_YAGAMI" loading="lazy">
-                    <div class="overlay"></div>
-                    <div class="info">
-                        <span class="title">DRAINED_YAGAMI</span>
-                        <span class="category-badge">// GLITCH EDIT</span>
                     </div>
                 </div>
 
@@ -743,17 +789,6 @@
                     </div>
                 </div>
 
-                <!-- Misa房间 -->
-                <div class="gallery-item" data-category="anime">
-                    <div class="glitch-badge"></div>
-                    <img src="../asset/deathnote-misa-room.jpg" alt="MISA_ROOM" loading="lazy">
-                    <div class="overlay"></div>
-                    <div class="info">
-                        <span class="title">MISA_ROOM</span>
-                        <span class="category-badge">// DEATH NOTE</span>
-                    </div>
-                </div>
-
                 <!-- Misa条纹 -->
                 <div class="gallery-item" data-category="anime">
                     <div class="glitch-badge"></div>
@@ -765,17 +800,6 @@
                     </div>
                 </div>
 
-                <!-- 银时 -->
-                <div class="gallery-item" data-category="anime">
-                    <div class="glitch-badge"></div>
-                    <img src="../asset/gintama-gintoki.jpg" alt="GINTOKI" loading="lazy">
-                    <div class="overlay"></div>
-                    <div class="info">
-                        <span class="title">GINTOKI</span>
-                        <span class="category-badge">// GINTAMA</span>
-                    </div>
-                </div>
-
                 <!-- 寄生兽 -->
                 <div class="gallery-item" data-category="anime">
                     <div class="glitch-badge"></div>
@@ -784,30 +808,6 @@
                     <div class="info">
                         <span class="title">PARASYTE</span>
                         <span class="category-badge">// KISEIJUU</span>
-                    </div>
-                </div>
-
-                <!-- ====== ANIME (续) - 原DRAIN风格 ====== -->
-
-                <!-- 祈祷男孩 -->
-                <div class="gallery-item" data-category="anime">
-                    <div class="glitch-badge"></div>
-                    <img src="../asset/slowdamage-towa.jpg" alt="DRAINED_PRAY" loading="lazy">
-                    <div class="overlay"></div>
-                    <div class="info">
-                        <span class="title">DRAINED_PRAY</span>
-                        <span class="category-badge">// DRAIN AESTHETIC</span>
-                    </div>
-                </div>
-
-                <!-- 故障天使 -->
-                <div class="gallery-item" data-category="art">
-                    <div class="glitch-badge"></div>
-                    <img src="../asset/glitch-angel.jpg" alt="GLITCH_ANGEL" loading="lazy">
-                    <div class="overlay"></div>
-                    <div class="info">
-                        <span class="title">GLITCH_ANGEL</span>
-                        <span class="category-badge">// DIGITAL DECAY</span>
                     </div>
                 </div>
 
@@ -830,17 +830,6 @@
                     <div class="info">
                         <span class="title">NIHONGO_COLLAGE</span>
                         <span class="category-badge">// 日本語</span>
-                    </div>
-                </div>
-
-                <!-- 骷髅女孩 -->
-                <div class="gallery-item" data-category="art">
-                    <div class="glitch-badge"></div>
-                    <img src="../asset/skeleton-girl.jpg" alt="SKELETON_GIRL" loading="lazy">
-                    <div class="overlay"></div>
-                    <div class="info">
-                        <span class="title">SKELETON_GIRL</span>
-                        <span class="category-badge">// MEMENTO MORI</span>
                     </div>
                 </div>
 
@@ -935,6 +924,127 @@
                     <div class="info">
                         <span class="title">EYE_SOUL</span>
                         <span class="category-badge">// WINDOW TO SOUL</span>
+                    </div>
+                </div>
+
+                <!-- L I AM MUSIC -->
+                <div class="gallery-item" data-category="anime">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/deathnote-l-iammusic.jpg" alt="L_IAMMUSIC" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">L_IAMMUSIC</span>
+                        <span class="category-badge">// DEATH NOTE</span>
+                    </div>
+                </div>
+
+                <!-- 故障小猫 -->
+                <div class="gallery-item" data-category="meow">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/cat-kitten-glitch.jpg" alt="KITTEN_GLITCH" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">KITTEN_GLITCH</span>
+                        <span class="category-badge">// DRAINED KITTEN</span>
+                    </div>
+                </div>
+
+                <!-- 故障头晕女孩 -->
+                <div class="gallery-item" data-category="art">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/glitch-girl-dizzy.jpg" alt="DIZZY_GIRL" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">DIZZY_GIRL</span>
+                        <span class="category-badge">// GLITCH VERTIGO</span>
+                    </div>
+                </div>
+
+                <!-- 故障错误头 -->
+                <div class="gallery-item" data-category="art">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/glitch-error-head.jpg" alt="ERROR_HEAD" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">ERROR_HEAD</span>
+                        <span class="category-badge">// SYSTEM FAILURE</span>
+                    </div>
+                </div>
+
+                <!-- Kanye & Ryuk -->
+                <div class="gallery-item" data-category="art">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/kanye-ryuk.jpg" alt="KANYE_RYUK" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">KANYE_RYUK</span>
+                        <span class="category-badge">// CROSSOVER</span>
+                    </div>
+                </div>
+
+                <!-- 朋克男孩故障 -->
+                <div class="gallery-item" data-category="art">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/punk-boy-glitch.jpg" alt="PUNK_BOY" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">PUNK_BOY</span>
+                        <span class="category-badge">// PUNK AESTHETIC</span>
+                    </div>
+                </div>
+
+                <!-- 摇滚男孩 -->
+                <div class="gallery-item" data-category="art">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/rockstar-boy.jpg" alt="ROCKSTAR_BOY" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">ROCKSTAR_BOY</span>
+                        <span class="category-badge">// ROCKSTAR LIFE</span>
+                    </div>
+                </div>
+
+                <!-- Opium I AM MUSIC -->
+                <div class="gallery-item" data-category="artist">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/opium-iammusic.jpg" alt="OPIUM_IAMMUSIC" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">OPIUM_IAMMUSIC</span>
+                        <span class="category-badge">// OPIUM AESTHETIC</span>
+                    </div>
+                </div>
+
+                <!-- 中村佐和 -->
+                <div class="gallery-item" data-category="art">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/nakamura-sawa.jpg" alt="NAKAMURA_SAWA" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">NAKAMURA_SAWA</span>
+                        <span class="category-badge">// PORTRAIT</span>
+                    </div>
+                </div>
+
+                <!-- 混沌武士仁 -->
+                <div class="gallery-item" data-category="anime">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/amuraichamploo-jin.jpg" alt="JIN" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">JIN</span>
+                        <span class="category-badge">// SAMURAI CHAMPLOO</span>
+                    </div>
+                </div>
+
+                <!-- 骷髅女孩 -->
+                <div class="gallery-item" data-category="art">
+                    <div class="glitch-badge"></div>
+                    <img src="../asset/skeleton-girl.jpg" alt="SKELETON_GIRL" loading="lazy">
+                    <div class="overlay"></div>
+                    <div class="info">
+                        <span class="title">SKELETON_GIRL</span>
+                        <span class="category-badge">// MEMENTO MORI</span>
                     </div>
                 </div>
 

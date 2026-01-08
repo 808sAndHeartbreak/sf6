@@ -1626,11 +1626,11 @@
         <div class="sf6-nav-right">
             <span class="mono text-[10px] md:text-xs uppercase hidden sm:block" style="color: var(--theme-primary);">SF6 FRAME LAB</span>
             <a href="../" class="sf6-nav-btn sf6-nav-home-btn" title="返回主页">
-                <i data-lucide="home"></i>
-            </a>
-            <button class="sf6-nav-btn" id="sf6MenuBtn" title="菜单">
-                <i data-lucide="menu"></i>
-            </button>
+            <i data-lucide="home"></i>
+        </a>
+        <button class="sf6-nav-btn" id="sf6MenuBtn" title="菜单">
+            <i data-lucide="menu"></i>
+        </button>
         </div>
     </nav>
     
@@ -1746,12 +1746,12 @@
                 </div>
                 <!-- 工具栏按钮组 -->
                 <div class="flex gap-1.5 flex-shrink-0">
-                    <button onclick="toggleSortOrder()" id="sortOrderBtn" 
+                <button onclick="toggleSortOrder()" id="sortOrderBtn" 
                         class="sort-btn px-2.5 py-2 border transition-all flex items-center gap-1 text-xs font-bold"
-                        title="切换排序方向">
-                        <span id="sortOrderIcon">↑</span>
-                        <span id="sortOrderText" class="hidden sm:inline">帧数</span>
-                    </button>
+                    title="切换排序方向">
+                    <span id="sortOrderIcon">↑</span>
+                    <span id="sortOrderText" class="hidden sm:inline">帧数</span>
+                </button>
                     <button onclick="toggleAllDetails()" id="toggleAllDetailsBtn" 
                         class="sort-btn px-2.5 py-2 border transition-all flex items-center gap-1 text-xs font-bold"
                         title="展开/收起所有详情">
@@ -1763,7 +1763,7 @@
                         title="只显示收藏方案">
                         <span id="showFavoritesIcon">☆</span>
                         <span id="showFavoritesText" class="hidden sm:inline">收藏</span>
-                    </button>
+                </button>
                 </div>
             </div>
             <div id="noteListContainer" class="grid grid-cols-1 gap-6"></div>
@@ -1771,14 +1771,33 @@
             <!-- 收藏卡片视图 -->
             <div id="favoritesGridView" class="hidden">
                 <div class="flex items-center justify-between mb-8 pb-4 border-b-2" style="border-color: var(--theme-primary);">
-                    <div class="flex items-center gap-4">
-                        <span class="text-4xl" style="color: #facc15; filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.6));">★</span>
-                        <h3 class="text-2xl sm:text-3xl font-black text-white">我的收藏</h3>
-                        <span id="favoritesCount" class="text-lg font-bold" style="color: var(--theme-secondary);">(0)</span>
+                    <div class="flex items-center gap-2 sm:gap-4 flex-wrap">
+                        <span class="text-3xl sm:text-4xl" style="color: #facc15; filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.6));">★</span>
+                        <div class="relative">
+                            <button id="templateSelectorBtn" onclick="toggleTemplateDropdown()" class="flex items-center gap-2 text-xl sm:text-2xl lg:text-3xl font-black text-white hover:opacity-80 transition-opacity">
+                                <span id="currentTemplateName">我的收藏</span>
+                                <span class="text-base sm:text-lg" style="color: var(--theme-secondary);">▼</span>
+                            </button>
+                            <!-- 下拉菜单 -->
+                            <div id="templateDropdown" class="hidden absolute top-full left-0 mt-2 bg-zinc-900 border-2 rounded-lg shadow-2xl z-50 min-w-[200px]" style="border-color: var(--theme-primary);">
+                                <div id="templateDropdownList" class="py-2">
+                                    <!-- 动态填充 -->
+                                </div>
+                            </div>
+                        </div>
+                        <span id="favoritesCount" class="text-base sm:text-lg font-bold" style="color: var(--theme-secondary);">(0)</span>
+                        <button onclick="openTemplateManageModal()" class="text-zinc-400 hover:text-zinc-200 transition-colors p-1.5 text-sm" title="管理模板">
+                            ✏️
+                        </button>
                     </div>
-                    <button onclick="toggleShowOnlyFavorites()" class="px-5 py-2.5 text-sm bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-white transition-all font-bold flex items-center gap-2 border border-zinc-600 hover:border-zinc-500">
-                        ← 返回列表
-                    </button>
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <button onclick="openImportExportModal()" class="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-white transition-all font-bold flex items-center gap-1.5 sm:gap-2 border border-zinc-600 hover:border-zinc-500">
+                            导入/导出
+                        </button>
+                        <button onclick="toggleShowOnlyFavorites()" class="px-3 sm:px-5 py-2 text-xs sm:text-sm bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-white transition-all font-bold flex items-center gap-1.5 sm:gap-2 border border-zinc-600 hover:border-zinc-500">
+                            ← 返回列表
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- 压制方案收藏 -->
@@ -2371,7 +2390,7 @@
             notes: [],
             // 角色数据缓存：{ moves: [], scenarios: [] }
             characterCache: {},
-            // 收藏的方案 { "charName:adv:planKey": true }
+            // 收藏的方案 { "charName:adv:planKey": true } - 旧版，保留用于迁移
             favorites: {},
             // 最小化的方案 { "charName:adv:planKey": true }
             minimized: {},
@@ -2387,10 +2406,14 @@
             allDetailsExpanded: false,
             // 是否只显示收藏方案
             showOnlyFavorites: false,
-            // 打投择收藏 { "charName:adv:remain:killDesc": true }
+            // 打投择收藏 { "charName:adv:remain:killDesc": true } - 旧版，保留用于迁移
             mixupFavorites: {},
             // 打投择隐藏的方案 { "charName:adv:remain:killDesc": true }
-            mixupHidden: {}
+            mixupHidden: {},
+            // 收藏模板系统 { charName: { current: "my", templates: {...} } }
+            favoriteTemplates: {},
+            // 模板修改提示标记 { "charName:templateId": true }
+            templateModifyWarned: {}
         };
 
         // ==================== 工具函数 ====================
@@ -3284,7 +3307,7 @@
                 showToast('复制失败');
             });
         }
-        
+
         // 渲染主要方案（紧凑版，带收藏和最小化按钮）
         function renderMainPlan(plan, label, adv, reasons = []) {
             if (!plan) return '';
@@ -3404,7 +3427,7 @@
 
             // 生成复制文本
             const copyText = generatePlanCopyText(plan, adv, label);
-            
+
             return `
                 <div class="mb-3 p-4 border ${borderColor} ${bgColor} relative group overflow-visible recommend-card">
                     ${stampHtml}
@@ -3647,11 +3670,48 @@
         
         // 切换收藏状态
         function toggleFavorite(adv, planKey) {
-            const stateKey = `${state.currentCharacter}:${adv}:${planKey}`;
-            state.favorites[stateKey] = !state.favorites[stateKey];
-            if (!state.favorites[stateKey]) delete state.favorites[stateKey]; // 清理 false 值
-            saveFavorites();
+            const char = state.currentCharacter;
+            const template = getCurrentTemplate();
+            
+            // 如果不是"我的收藏"模板，首次修改时弹窗提示
+            if (template.id !== 'my') {
+                const warnKey = `${char}:${template.id}`;
+                if (!state.templateModifyWarned[warnKey]) {
+                    showTemplateModifyWarning(template.name, () => {
+                        state.templateModifyWarned[warnKey] = true;
+                        saveTemplateModifyWarned();
+                        doToggleFavorite(adv, planKey);
+                    });
+                    return;
+                }
+            }
+            
+            doToggleFavorite(adv, planKey);
+        }
+        
+        function doToggleFavorite(adv, planKey) {
+            const template = getCurrentTemplate();
+            const fullKey = `${planKey}|${adv}`;
+            const favorites = template.favorites || [];
+            
+            const index = favorites.indexOf(fullKey);
+            if (index > -1) {
+                // 取消收藏
+                favorites.splice(index, 1);
+            } else {
+                // 添加收藏
+                favorites.push(fullKey);
+            }
+            
+            template.favorites = favorites;
+            saveFavoriteTemplates();
+            
+            // 如果在收藏视图，刷新收藏视图；否则刷新普通视图
+            if (state.showOnlyFavorites) {
+                renderFavoritesView();
+            } else {
             renderNotes();
+            }
         }
         
         // 最小化方案（移到备选列表）
@@ -3677,36 +3737,73 @@
         
         // 检查方案是否被收藏
         function isPlanFavorite(adv, planKey) {
-            return state.favorites[`${state.currentCharacter}:${adv}:${planKey}`] === true;
+            const template = getCurrentTemplate();
+            const fullKey = `${planKey}|${adv}`;
+            return (template.favorites || []).includes(fullKey);
         }
         
         // ========== 打投择收藏相关函数 ==========
         // 生成打投择收藏的key
         function getMixupKey(adv, remain, killDesc) {
-            return `${state.currentCharacter}:${adv}:${remain}:${killDesc}`;
+            return `${adv}|${remain}|${killDesc}`;
         }
         
         // 检查打投择方案是否被收藏
         function isMixupFavorite(adv, remain, killDesc) {
-            return state.mixupFavorites[getMixupKey(adv, remain, killDesc)] === true;
+            const template = getCurrentTemplate();
+            const key = getMixupKey(adv, remain, killDesc);
+            return (template.mixupFavorites || []).includes(key);
         }
         
         // 检查某个adv是否有任何打投择收藏
         function hasMixupFavoriteForAdv(adv) {
-            const prefix = `${state.currentCharacter}:${adv}:`;
-            return Object.keys(state.mixupFavorites).some(key => key.startsWith(prefix));
+            const template = getCurrentTemplate();
+            const mixupFavs = template.mixupFavorites || [];
+            const prefix = `${adv}|`;
+            return mixupFavs.some(key => key.startsWith(prefix));
         }
         
         // 切换打投择收藏
         function toggleMixupFavorite(adv, remain, killDesc) {
-            const key = getMixupKey(adv, remain, killDesc);
-            if (state.mixupFavorites[key]) {
-                delete state.mixupFavorites[key];
-            } else {
-                state.mixupFavorites[key] = true;
+            const char = state.currentCharacter;
+            const template = getCurrentTemplate();
+            
+            // 如果不是"我的收藏"模板，首次修改时弹窗提示
+            if (template.id !== 'my') {
+                const warnKey = `${char}:${template.id}`;
+                if (!state.templateModifyWarned[warnKey]) {
+                    showTemplateModifyWarning(template.name, () => {
+                        state.templateModifyWarned[warnKey] = true;
+                        saveTemplateModifyWarned();
+                        doToggleMixupFavorite(adv, remain, killDesc);
+                    });
+                    return;
+                }
             }
-            saveMixupFavorites();
-            renderThrowMixupContent();
+            
+            doToggleMixupFavorite(adv, remain, killDesc);
+        }
+        
+        function doToggleMixupFavorite(adv, remain, killDesc) {
+            const template = getCurrentTemplate();
+            const key = getMixupKey(adv, remain, killDesc);
+            const mixupFavorites = template.mixupFavorites || [];
+            
+            const index = mixupFavorites.indexOf(key);
+            if (index > -1) {
+                mixupFavorites.splice(index, 1);
+            } else {
+                mixupFavorites.push(key);
+            }
+            
+            template.mixupFavorites = mixupFavorites;
+            saveFavoriteTemplates();
+            
+            if (state.showOnlyFavorites) {
+                renderFavoritesView();
+            } else {
+                renderThrowMixupContent();
+            }
         }
         
         // 检查打投择方案是否被隐藏
@@ -3746,6 +3843,265 @@
                 const saved = localStorage.getItem('sf6_mixup_hidden');
                 return saved ? JSON.parse(saved) : {};
             } catch(e) { return {}; }
+        }
+        
+        // ==================== 收藏模板系统 ====================
+        
+        // 保存收藏模板
+        function saveFavoriteTemplates() {
+            try {
+                localStorage.setItem(getGlobalStorageKey('favoriteTemplates'), JSON.stringify(state.favoriteTemplates));
+            } catch (e) {
+                console.warn('保存收藏模板失败:', e);
+            }
+        }
+        
+        // 加载收藏模板
+        function loadFavoriteTemplates() {
+            try {
+                const saved = localStorage.getItem(getGlobalStorageKey('favoriteTemplates'));
+                return saved ? JSON.parse(saved) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+        
+        // 保存模板修改警告状态
+        function saveTemplateModifyWarned() {
+            try {
+                localStorage.setItem(getGlobalStorageKey('templateModifyWarned'), JSON.stringify(state.templateModifyWarned));
+            } catch (e) {
+                console.warn('保存模板修改警告状态失败:', e);
+            }
+        }
+        
+        // 加载模板修改警告状态
+        function loadTemplateModifyWarned() {
+            try {
+                const saved = localStorage.getItem(getGlobalStorageKey('templateModifyWarned'));
+                return saved ? JSON.parse(saved) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+        
+        // 初始化角色的模板结构
+        function initCharacterTemplates(char) {
+            if (!state.favoriteTemplates[char]) {
+                state.favoriteTemplates[char] = {
+                    current: 'my',
+                    templates: {
+                        'my': {
+                            id: 'my',
+                            name: '我的收藏',
+                            type: 'user',
+                            favorites: [],
+                            mixupFavorites: []
+                        }
+                    }
+                };
+            }
+            
+            // 确保有 current 字段
+            if (!state.favoriteTemplates[char].current) {
+                state.favoriteTemplates[char].current = 'my';
+            }
+            
+            // 确保有 templates 字段
+            if (!state.favoriteTemplates[char].templates) {
+                state.favoriteTemplates[char].templates = {};
+            }
+            
+            // 确保有"我的收藏"模板
+            if (!state.favoriteTemplates[char].templates['my']) {
+                state.favoriteTemplates[char].templates['my'] = {
+                    id: 'my',
+                    name: '我的收藏',
+                    type: 'user',
+                    favorites: [],
+                    mixupFavorites: []
+                };
+            }
+        }
+        
+        // 从旧格式迁移收藏数据
+        function migrateLegacyFavorites() {
+            // 遍历所有旧的收藏数据
+            const charPrefix = {};
+            Object.keys(state.favorites).forEach(key => {
+                if (state.favorites[key]) {
+                    // key 格式: "charName:adv:planKey"
+                    const parts = key.split(':');
+                    if (parts.length >= 3) {
+                        const char = parts[0];
+                        const adv = parts[1];
+                        const planKey = parts.slice(2).join(':');
+                        
+                        if (!charPrefix[char]) charPrefix[char] = [];
+                        charPrefix[char].push(`${planKey}|${adv}`);
+                    }
+                }
+            });
+            
+            // 迁移打投择收藏
+            const charMixup = {};
+            Object.keys(state.mixupFavorites).forEach(key => {
+                if (state.mixupFavorites[key]) {
+                    // key 格式: "charName:adv:remain:killDesc"
+                    const parts = key.split(':');
+                    if (parts.length >= 3) {
+                        const char = parts[0];
+                        const adv = parts[1];
+                        const remain = parts[2];
+                        const killDesc = parts.slice(3).join(':');
+                        
+                        if (!charMixup[char]) charMixup[char] = [];
+                        charMixup[char].push(`${adv}|${remain}|${killDesc}`);
+                    }
+                }
+            });
+            
+            // 写入新格式
+            Object.keys(charPrefix).forEach(char => {
+                initCharacterTemplates(char);
+                state.favoriteTemplates[char].templates['my'].favorites = charPrefix[char];
+            });
+            
+            Object.keys(charMixup).forEach(char => {
+                initCharacterTemplates(char);
+                state.favoriteTemplates[char].templates['my'].mixupFavorites = charMixup[char];
+            });
+            
+            console.log('[迁移] 已从旧格式迁移收藏数据');
+        }
+        
+        // 获取当前角色当前模板
+        function getCurrentTemplate() {
+            const char = state.currentCharacter;
+            initCharacterTemplates(char);
+            const templateId = state.favoriteTemplates[char].current;
+            return state.favoriteTemplates[char].templates[templateId];
+        }
+        
+        // 获取当前角色所有模板列表
+        function getAllTemplates() {
+            const char = state.currentCharacter;
+            initCharacterTemplates(char);
+            return state.favoriteTemplates[char].templates;
+        }
+        
+        // 获取默认模板名称
+        function getDefaultTemplateName(char) {
+            const templates = state.favoriteTemplates[char]?.templates || {};
+            const existingNames = Object.values(templates).map(t => t.name);
+            
+            let counter = 2;
+            while (existingNames.includes(`我的收藏${counter}`)) {
+                counter++;
+            }
+            return `我的收藏${counter}`;
+        }
+        
+        // 验证模板名称
+        function validateTemplateName(char, name, excludeId) {
+            if (!name || name.trim() === '') {
+                return { valid: false, error: "模板名称不能为空" };
+            }
+            if (name.length > 10) {
+                return { valid: false, error: "模板名称不超过10个字符" };
+            }
+            
+            const templates = state.favoriteTemplates[char]?.templates || {};
+            const existingNames = Object.entries(templates)
+                .filter(([id, t]) => id !== excludeId)
+                .map(([id, t]) => t.name);
+                
+            if (existingNames.includes(name.trim())) {
+                return { valid: false, error: "模板名称已存在" };
+            }
+            
+            return { valid: true };
+        }
+        
+        // 切换模板
+        function switchTemplate(templateId) {
+            const char = state.currentCharacter;
+            initCharacterTemplates(char);
+            
+            if (state.favoriteTemplates[char].templates[templateId]) {
+                state.favoriteTemplates[char].current = templateId;
+                saveFavoriteTemplates();
+                renderFavoritesView();
+                updateTemplateSelector();
+            }
+        }
+        
+        // 导入模板
+        function importTemplate(data, templateName) {
+            const char = data.character || state.currentCharacter;
+            
+            // 如果角色不匹配，需要切换角色
+            if (char !== state.currentCharacter) {
+                selectCharacter(char);
+            }
+            
+            initCharacterTemplates(char);
+            
+            // 生成新模板 ID
+            const templateId = `imported_${Date.now()}`;
+            
+            // 创建新模板
+            state.favoriteTemplates[char].templates[templateId] = {
+                id: templateId,
+                name: templateName,
+                type: 'imported',
+                favorites: data.favorites || [],
+                mixupFavorites: data.mixupFavorites || []
+            };
+            
+            // 切换到新模板
+            state.favoriteTemplates[char].current = templateId;
+            
+            saveFavoriteTemplates();
+            return templateId;
+        }
+        
+        // 删除模板
+        function deleteTemplate(templateId) {
+            const char = state.currentCharacter;
+            const template = state.favoriteTemplates[char]?.templates[templateId];
+            
+            // 不能删除"我的收藏"
+            if (templateId === 'my' || !template) {
+                return false;
+            }
+            
+            // 删除模板
+            delete state.favoriteTemplates[char].templates[templateId];
+            
+            // 如果删除的是当前模板，切换到"我的收藏"
+            if (state.favoriteTemplates[char].current === templateId) {
+                state.favoriteTemplates[char].current = 'my';
+            }
+            
+            saveFavoriteTemplates();
+            return true;
+        }
+        
+        // 导出模板
+        function exportCurrentTemplate() {
+            const template = getCurrentTemplate();
+            const char = state.currentCharacter;
+            
+            const exportData = {
+                name: template.name,
+                character: char,
+                timestamp: new Date().toISOString(),
+                favorites: template.favorites || [],
+                mixupFavorites: template.mixupFavorites || []
+            };
+            
+            return JSON.stringify(exportData, null, 2);
         }
         
         // 切换有利帧展开/收起（支持多项同时展开）
@@ -3886,52 +4242,56 @@
             const emptyState = document.getElementById('favEmptyState');
             const countSpan = document.getElementById('favoritesCount');
             
+            // 更新模板选择器
+            updateTemplateSelector();
+            
+            // 从当前模板获取收藏
+            const template = getCurrentTemplate();
+            const favorites = template.favorites || [];
+            const mixupFavorites = template.mixupFavorites || [];
+            
             // 收集所有收藏的压制方案
             const meatyFavs = [];
-            const charPrefix = `${state.currentCharacter}:`;
-            
-            Object.keys(state.favorites).forEach(key => {
-                if (key.startsWith(charPrefix) && state.favorites[key]) {
-                    // 解析 key: "charName:adv:planKey"
-                    const parts = key.split(':');
-                    if (parts.length >= 3) {
-                        const adv = parseInt(parts[1]);
-                        const planKey = parts.slice(2).join(':'); // planKey 可能包含冒号
-                        
-                        // 获取该 adv 对应的场景
-                        const contexts = [];
-                        state.notes.forEach(note => {
-                            if (note.adv === adv && !note.isFuzzy) {
-                                contexts.push(note.context);
-                            }
-                        });
-                        
-                        meatyFavs.push({ adv, planKey, contexts });
+            favorites.forEach(fullKey => {
+                // fullKey 格式: "planKey|adv"
+                const lastPipe = fullKey.lastIndexOf('|');
+                if (lastPipe === -1) return;
+                
+                const planKey = fullKey.substring(0, lastPipe);
+                const adv = parseInt(fullKey.substring(lastPipe + 1));
+                
+                if (isNaN(adv)) return;
+                
+                // 获取该 adv 对应的场景
+                const contexts = [];
+                state.notes.forEach(note => {
+                    if (note.adv === adv && !note.isFuzzy) {
+                        contexts.push(note.context);
                     }
-                }
+                });
+                
+                meatyFavs.push({ adv, planKey, contexts });
             });
             
             // 收集所有收藏的打投择方案
             const mixupFavs = [];
-            Object.keys(state.mixupFavorites).forEach(key => {
-                if (key.startsWith(charPrefix) && state.mixupFavorites[key]) {
-                    // 解析 key: "charName:adv:remain:killDesc"
-                    const parts = key.split(':');
-                    if (parts.length >= 4) {
-                        const adv = parseInt(parts[1]);
-                        const remain = parseInt(parts[2]);
-                        const killDesc = parts.slice(3).join(':');
-                        
-                        // 获取该 adv 对应的场景
-                        const contexts = [];
-                        state.notes.forEach(note => {
-                            if (note.adv === adv && !note.isFuzzy) {
-                                contexts.push(note.context);
-                            }
-                        });
-                        
-                        mixupFavs.push({ adv, remain, killDesc, contexts });
-                    }
+            mixupFavorites.forEach(key => {
+                // key 格式: "adv|remain|killDesc"
+                const parts = key.split('|');
+                if (parts.length >= 3) {
+                    const adv = parseInt(parts[0]);
+                    const remain = parseInt(parts[1]);
+                    const killDesc = parts.slice(2).join('|');
+                    
+                    // 获取该 adv 对应的场景
+                    const contexts = [];
+                    state.notes.forEach(note => {
+                        if (note.adv === adv && !note.isFuzzy) {
+                            contexts.push(note.context);
+                        }
+                    });
+                    
+                    mixupFavs.push({ adv, remain, killDesc, contexts });
                 }
             });
             
@@ -4037,7 +4397,6 @@
         // 从收藏视图中移除压制方案
         function removeFavoriteMeaty(adv, encodedPlanKey) {
             const planKey = decodeURIComponent(encodedPlanKey);
-            const key = `${state.currentCharacter}:${adv}:${planKey}`;
             
             // 添加移除动画
             const cardId = `fav-meaty-${adv}-${encodedPlanKey}`;
@@ -4045,21 +4404,16 @@
             if (card) {
                 card.classList.add('removing');
                 setTimeout(() => {
-                    delete state.favorites[key];
-                    saveFavorites();
-                    renderFavoritesView();
+                    doToggleFavorite(adv, planKey);
                 }, 300);
             } else {
-                delete state.favorites[key];
-                saveFavorites();
-                renderFavoritesView();
+                doToggleFavorite(adv, planKey);
             }
         }
         
         // 从收藏视图中移除打投择方案
         function removeFavoriteMixup(adv, remain, encodedKillDesc) {
             const killDesc = decodeURIComponent(encodedKillDesc);
-            const key = getMixupKey(adv, remain, killDesc);
             
             // 添加移除动画
             const cardId = `fav-mixup-${adv}-${remain}-${encodedKillDesc}`;
@@ -4067,14 +4421,10 @@
             if (card) {
                 card.classList.add('removing');
                 setTimeout(() => {
-                    delete state.mixupFavorites[key];
-                    saveMixupFavorites();
-                    renderFavoritesView();
+                    doToggleMixupFavorite(adv, remain, killDesc);
                 }, 300);
             } else {
-                delete state.mixupFavorites[key];
-                saveMixupFavorites();
-                renderFavoritesView();
+                doToggleMixupFavorite(adv, remain, killDesc);
             }
         }
         
@@ -4315,10 +4665,10 @@
                 
                 if (isEmptyNotes) {
                     emptyHtml = `
-                        <div class="trend-card p-8 text-center">
-                            <div class="text-zinc-600 text-lg mb-2">📋 暂无 Scenario</div>
-                            <div class="text-zinc-700 text-sm">点击 + 新增场景 添加有利帧情境</div>
-                        </div>
+                    <div class="trend-card p-8 text-center">
+                        <div class="text-zinc-600 text-lg mb-2">📋 暂无 Scenario</div>
+                        <div class="text-zinc-700 text-sm">点击 + 新增场景 添加有利帧情境</div>
+                    </div>
                     `;
                 } else if (state.showOnlyFavorites) {
                     emptyHtml = `
@@ -4330,11 +4680,11 @@
                     `;
                 } else {
                     emptyHtml = `
-                        <div class="trend-card p-8 text-center">
-                            <div class="text-zinc-600 text-lg mb-2">🔍 未找到匹配的 Scenario</div>
-                            <div class="text-zinc-700 text-sm">尝试其他搜索词，或清空搜索框查看全部</div>
-                        </div>
-                    `;
+                    <div class="trend-card p-8 text-center">
+                        <div class="text-zinc-600 text-lg mb-2">🔍 未找到匹配的 Scenario</div>
+                        <div class="text-zinc-700 text-sm">尝试其他搜索词，或清空搜索框查看全部</div>
+                    </div>
+                `;
                 }
                 
                 container.innerHTML = emptyHtml;
@@ -4513,152 +4863,152 @@
                     });
                 } else {
                     // ========== 没有收藏时，使用默认推荐逻辑 ==========
-                    
-                    // ========== 0. 卡帧达成安全跳的方案 ==========
-                    // 注意：场景级别的安全跳判断已在 leftPanel 处理
-                    // 这里只处理通过卡帧达到安全跳帧数的方案
-                    const safeJumpFrames = getSafeJumpFrames(state.currentCharacter);
-                    
-                    // 找卡帧后能达到安全跳的方案（排除直接压制，因为那是场景级别的安全跳）
-                    const safeJumpPlans = availableNormal.filter(p => !p.isDirect && p.remain === safeJumpFrames);
-                    if (safeJumpPlans.length > 0) {
-                        const bestSafeJump = [...safeJumpPlans].sort((a, b) => {
+
+                // ========== 0. 卡帧达成安全跳的方案 ==========
+                // 注意：场景级别的安全跳判断已在 leftPanel 处理
+                // 这里只处理通过卡帧达到安全跳帧数的方案
+                const safeJumpFrames = getSafeJumpFrames(state.currentCharacter);
+                
+                // 找卡帧后能达到安全跳的方案（排除直接压制，因为那是场景级别的安全跳）
+                const safeJumpPlans = availableNormal.filter(p => !p.isDirect && p.remain === safeJumpFrames);
+                if (safeJumpPlans.length > 0) {
+                    const bestSafeJump = [...safeJumpPlans].sort((a, b) => {
+                        if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
+                        return b.finalHit - a.finalHit;
+                    })[0];
+                    addMainPlan(bestSafeJump, '安全跳', 'safe_jump');
+                }
+                
+                // 如果没有安全跳方案，找伪安全跳方案
+                if (safeJumpPlans.length === 0) {
+                    const pseudoSafeJumpPlans = availableNormal.filter(p => !p.isDirect && p.remain === safeJumpFrames - 1);
+                    if (pseudoSafeJumpPlans.length > 0) {
+                        const bestPseudoSafeJump = [...pseudoSafeJumpPlans].sort((a, b) => {
                             if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
                             return b.finalHit - a.finalHit;
                         })[0];
-                        addMainPlan(bestSafeJump, '安全跳', 'safe_jump');
+                        addMainPlan(bestPseudoSafeJump, '伪安全跳', 'pseudo_safe_jump');
                     }
-                    
-                    // 如果没有安全跳方案，找伪安全跳方案
-                    if (safeJumpPlans.length === 0) {
-                        const pseudoSafeJumpPlans = availableNormal.filter(p => !p.isDirect && p.remain === safeJumpFrames - 1);
-                        if (pseudoSafeJumpPlans.length > 0) {
-                            const bestPseudoSafeJump = [...pseudoSafeJumpPlans].sort((a, b) => {
-                                if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
-                                return b.finalHit - a.finalHit;
-                            })[0];
-                            addMainPlan(bestPseudoSafeJump, '伪安全跳', 'pseudo_safe_jump');
-                        }
-                    }
+                }
 
-                    // ========== 1. finalBlock 最高的方案 ==========
-                    if (availableNormal.length > 0) {
-                        const bestBlockPlan = [...availableNormal].sort((a, b) => {
-                            if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
-                            return b.finalHit - a.finalHit;
-                        })[0];
-                        addMainPlan(bestBlockPlan, '', 'best_block');
-                    }
+                // ========== 1. finalBlock 最高的方案 ==========
+                if (availableNormal.length > 0) {
+                    const bestBlockPlan = [...availableNormal].sort((a, b) => {
+                        if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
+                        return b.finalHit - a.finalHit;
+                    })[0];
+                    addMainPlan(bestBlockPlan, '', 'best_block');
+                }
 
-                    // ========== 2. finalHit 最高的方案 ==========
-                    if (availableNormal.length > 0) {
-                        const bestHitPlan = [...availableNormal].sort((a, b) => {
-                            if (b.finalHit !== a.finalHit) return b.finalHit - a.finalHit;
-                            return b.finalBlock - a.finalBlock;
-                        })[0];
-                        addMainPlan(bestHitPlan, '', 'best_hit');
-                    }
+                // ========== 2. finalHit 最高的方案 ==========
+                if (availableNormal.length > 0) {
+                    const bestHitPlan = [...availableNormal].sort((a, b) => {
+                        if (b.finalHit !== a.finalHit) return b.finalHit - a.finalHit;
+                        return b.finalBlock - a.finalBlock;
+                    })[0];
+                    addMainPlan(bestHitPlan, '', 'best_hit');
+                }
 
-                    // ========== 3. 中/弱攻击中 finalBlock 最优 ==========
-                    const nonHeavyPlans = availableNormal.filter(p => {
-                        const strength = getPlanStrength(p);
-                        return strength === 'medium' || strength === 'light' || strength === 'other';
-                    });
-                    if (nonHeavyPlans.length > 0) {
-                        const bestNonHeavyBlock = [...nonHeavyPlans].sort((a, b) => {
-                            if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
-                            return b.finalHit - a.finalHit;
-                        })[0];
-                        addMainPlan(bestNonHeavyBlock, '', 'best_nonheavy_block');
-                    }
+                // ========== 3. 中/弱攻击中 finalBlock 最优 ==========
+                const nonHeavyPlans = availableNormal.filter(p => {
+                    const strength = getPlanStrength(p);
+                    return strength === 'medium' || strength === 'light' || strength === 'other';
+                });
+                if (nonHeavyPlans.length > 0) {
+                    const bestNonHeavyBlock = [...nonHeavyPlans].sort((a, b) => {
+                        if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
+                        return b.finalHit - a.finalHit;
+                    })[0];
+                    addMainPlan(bestNonHeavyBlock, '', 'best_nonheavy_block');
+                }
 
-                    // ========== 4. 中/弱攻击中 finalHit 最优 ==========
-                    if (nonHeavyPlans.length > 0) {
-                        const bestNonHeavyHit = [...nonHeavyPlans].sort((a, b) => {
-                            if (b.finalHit !== a.finalHit) return b.finalHit - a.finalHit;
-                            return b.finalBlock - a.finalBlock;
-                        })[0];
-                        addMainPlan(bestNonHeavyHit, '', 'best_nonheavy_hit');
-                    }
+                // ========== 4. 中/弱攻击中 finalHit 最优 ==========
+                if (nonHeavyPlans.length > 0) {
+                    const bestNonHeavyHit = [...nonHeavyPlans].sort((a, b) => {
+                        if (b.finalHit !== a.finalHit) return b.finalHit - a.finalHit;
+                        return b.finalBlock - a.finalBlock;
+                    })[0];
+                    addMainPlan(bestNonHeavyHit, '', 'best_nonheavy_hit');
+                }
 
-                    // ========== 5. 偷帧最多的方案 ==========
-                    if (availableNormal.length > 0) {
-                        const bestStolenPlan = [...availableNormal].sort((a, b) => {
-                            if (b.stolen !== a.stolen) return b.stolen - a.stolen;
-                            if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
-                            return b.finalHit - a.finalHit;
-                        })[0];
-                        addMainPlan(bestStolenPlan, '', 'most_stolen');
-                    }
+                // ========== 5. 偷帧最多的方案 ==========
+                if (availableNormal.length > 0) {
+                    const bestStolenPlan = [...availableNormal].sort((a, b) => {
+                        if (b.stolen !== a.stolen) return b.stolen - a.stolen;
+                        if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
+                        return b.finalHit - a.finalHit;
+                    })[0];
+                    addMainPlan(bestStolenPlan, '', 'most_stolen');
+                }
 
-                    // ========== 6. 投技方案 ==========
-                    let hasShownThrow = false;
-                    if (availableThrow.length > 0) {
+                // ========== 6. 投技方案 ==========
+                let hasShownThrow = false;
+                if (availableThrow.length > 0) {
                         // 投技方案按直接优先，然后按 remain 越小越优先
-                        const sortedThrow = [...availableThrow].sort((a, b) => {
-                            if (b.isDirect !== a.isDirect) return (b.isDirect ? 1 : 0) - (a.isDirect ? 1 : 0);
-                            return a.remain - b.remain;
+                    const sortedThrow = [...availableThrow].sort((a, b) => {
+                        if (b.isDirect !== a.isDirect) return (b.isDirect ? 1 : 0) - (a.isDirect ? 1 : 0);
+                        return a.remain - b.remain;
+                    });
+                    
+                    const bestThrow = sortedThrow[0];
+                    if (addMainPlan(bestThrow, '', 'throw')) {
+                        hasShownThrow = true;
+                    }
+                }
+
+                // ========== 6'. 零帧打投择方案：当没有正收益的普通方案在主显示区，但有投技时，显示 Block=0 的方案形成打投择 ==========
+                const hasNormalMainPlan = normalPlans.some(p => mainKeys.has(getPlanKey(p)));
+                if (!hasNormalMainPlan && hasShownThrow) {
+                    // 从 allPlans 中找出所有 finalBlock === 0 的非投技方案且未被最小化的
+                    const zeroBlockPlans = allPlans.filter(p => !p.isThrow && p.finalBlock === 0 && !isMinimized(p));
+                    if (zeroBlockPlans.length > 0) {
+                        // 按攻击等级排序：重 > 中 > 轻
+                        const strengthOrder = { heavy: 0, medium: 1, light: 2, other: 3 };
+                        const sortedZeroPlans = [...zeroBlockPlans].sort((a, b) => {
+                            const aStrength = strengthOrder[getPlanStrength(a)] ?? 3;
+                            const bStrength = strengthOrder[getPlanStrength(b)] ?? 3;
+                            if (aStrength !== bStrength) return aStrength - bStrength;
+                            // 同等级按 finalHit 排序
+                            return b.finalHit - a.finalHit;
                         });
                         
-                        const bestThrow = sortedThrow[0];
-                        if (addMainPlan(bestThrow, '', 'throw')) {
-                            hasShownThrow = true;
-                        }
+                        // 显示所有 0 帧方案（打投择配合）
+                        sortedZeroPlans.forEach(plan => {
+                            addMainPlan(plan, '打投择', 'mixup');
+                        });
                     }
-
-                    // ========== 6'. 零帧打投择方案：当没有正收益的普通方案在主显示区，但有投技时，显示 Block=0 的方案形成打投择 ==========
-                    const hasNormalMainPlan = normalPlans.some(p => mainKeys.has(getPlanKey(p)));
-                    if (!hasNormalMainPlan && hasShownThrow) {
-                        // 从 allPlans 中找出所有 finalBlock === 0 的非投技方案且未被最小化的
-                        const zeroBlockPlans = allPlans.filter(p => !p.isThrow && p.finalBlock === 0 && !isMinimized(p));
-                        if (zeroBlockPlans.length > 0) {
-                            // 按攻击等级排序：重 > 中 > 轻
-                            const strengthOrder = { heavy: 0, medium: 1, light: 2, other: 3 };
-                            const sortedZeroPlans = [...zeroBlockPlans].sort((a, b) => {
-                                const aStrength = strengthOrder[getPlanStrength(a)] ?? 3;
-                                const bStrength = strengthOrder[getPlanStrength(b)] ?? 3;
-                                if (aStrength !== bStrength) return aStrength - bStrength;
-                                // 同等级按 finalHit 排序
-                                return b.finalHit - a.finalHit;
-                            });
-                            
-                            // 显示所有 0 帧方案（打投择配合）
-                            sortedZeroPlans.forEach(plan => {
-                                addMainPlan(plan, '打投择', 'mixup');
-                            });
-                        }
+                }
+                
+                // 获取当前角色的所有规则
+                const rules = getAllRulesForCharacter(state.currentCharacter);
+                
+                // ========== 7. 用户倾向压制规则 ==========
+                // 查找使用了倾向招式的方案，从备选提升到推荐
+                const preferRules = rules.filter(r => r.type === 'prefer');
+                preferRules.forEach(rule => {
+                    const preferMoveName = rule.moveName.toUpperCase();
+                    // 在备选中查找使用该招式作为压制的方案（满足偷帧≥1且finalBlock≥1）
+                    const preferPlans = normalPlans.filter(p => 
+                        !mainKeys.has(getPlanKey(p)) &&
+                        !isMinimized(p) &&
+                        p.meatyMove && 
+                        p.meatyMove.name.toUpperCase() === preferMoveName &&
+                        p.stolen >= 1 &&
+                        p.finalBlock >= 1
+                    );
+                    
+                    // 如果找到，添加最优的几个
+                    if (preferPlans.length > 0) {
+                        const sorted = [...preferPlans].sort((a, b) => {
+                            if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
+                            return b.finalHit - a.finalHit;
+                        });
+                        // 最多添加前2个最优方案
+                        sorted.slice(0, 2).forEach(plan => {
+                            addMainPlan(plan, '', `prefer:${rule.moveName}`);
+                        });
                     }
-                    
-                    // 获取当前角色的所有规则
-                    const rules = getAllRulesForCharacter(state.currentCharacter);
-                    
-                    // ========== 7. 用户倾向压制规则 ==========
-                    // 查找使用了倾向招式的方案，从备选提升到推荐
-                    const preferRules = rules.filter(r => r.type === 'prefer');
-                    preferRules.forEach(rule => {
-                        const preferMoveName = rule.moveName.toUpperCase();
-                        // 在备选中查找使用该招式作为压制的方案（满足偷帧≥1且finalBlock≥1）
-                        const preferPlans = normalPlans.filter(p => 
-                            !mainKeys.has(getPlanKey(p)) &&
-                            !isMinimized(p) &&
-                            p.meatyMove && 
-                            p.meatyMove.name.toUpperCase() === preferMoveName &&
-                            p.stolen >= 1 &&
-                            p.finalBlock >= 1
-                        );
-                        
-                        // 如果找到，添加最优的几个
-                        if (preferPlans.length > 0) {
-                            const sorted = [...preferPlans].sort((a, b) => {
-                                if (b.finalBlock !== a.finalBlock) return b.finalBlock - a.finalBlock;
-                                return b.finalHit - a.finalHit;
-                            });
-                            // 最多添加前2个最优方案
-                            sorted.slice(0, 2).forEach(plan => {
-                                addMainPlan(plan, '', `prefer:${rule.moveName}`);
-                            });
-                        }
-                    });
+                });
                 }
                 
                 // ========== 最终渲染：按记录的理由渲染所有方案 ==========
@@ -5170,6 +5520,411 @@
             closeMixupEditModal();
             openMixupEditModal(adv, remain);
             renderThrowMixupContent();
+        }
+        
+        // ==================== 模板管理 UI ====================
+        
+        // 更新模板选择器显示
+        function updateTemplateSelector() {
+            const template = getCurrentTemplate();
+            const nameSpan = document.getElementById('currentTemplateName');
+            if (nameSpan) {
+                nameSpan.textContent = template.name;
+            }
+        }
+        
+        // 切换模板下拉菜单
+        function toggleTemplateDropdown() {
+            const dropdown = document.getElementById('templateDropdown');
+            const isHidden = dropdown.classList.contains('hidden');
+            
+            if (isHidden) {
+                // 更新下拉列表内容
+                renderTemplateDropdown();
+                dropdown.classList.remove('hidden');
+                
+                // 点击外部关闭
+                setTimeout(() => {
+                    document.addEventListener('click', closeTemplateDropdownOnClickOutside);
+                }, 0);
+            } else {
+                dropdown.classList.add('hidden');
+                document.removeEventListener('click', closeTemplateDropdownOnClickOutside);
+            }
+        }
+        
+        function closeTemplateDropdownOnClickOutside(e) {
+            const dropdown = document.getElementById('templateDropdown');
+            const btn = document.getElementById('templateSelectorBtn');
+            if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                dropdown.classList.add('hidden');
+                document.removeEventListener('click', closeTemplateDropdownOnClickOutside);
+            }
+        }
+        
+        // 渲染模板下拉列表
+        function renderTemplateDropdown() {
+            const listDiv = document.getElementById('templateDropdownList');
+            const templates = getAllTemplates();
+            const currentId = state.favoriteTemplates[state.currentCharacter].current;
+            
+            const items = [];
+            Object.entries(templates).forEach(([id, template]) => {
+                if (id !== currentId) {  // 不显示当前选中的
+                    const isActive = id === currentId;
+                    items.push(`
+                        <button onclick="switchTemplate('${id}'); toggleTemplateDropdown();" 
+                            class="w-full px-4 py-2.5 text-left hover:bg-zinc-800 transition-colors text-white font-bold text-sm flex items-center justify-between gap-2">
+                            <span>${escapeHtml(template.name)}</span>
+                            ${isActive ? '<span style="color: var(--theme-primary);">✓</span>' : ''}
+                        </button>
+                    `);
+                }
+            });
+            
+            if (items.length === 0) {
+                listDiv.innerHTML = '<div class="px-4 py-3 text-zinc-500 text-sm">暂无其他模板</div>';
+            } else {
+                listDiv.innerHTML = items.join('');
+            }
+        }
+        
+        // 打开模板管理弹窗
+        function openTemplateManageModal() {
+            const templates = getAllTemplates();
+            const templateItems = [];
+            
+            Object.entries(templates).forEach(([id, template]) => {
+                if (id !== 'my') {  // "我的收藏"不可删除
+                    const favCount = (template.favorites || []).length + (template.mixupFavorites || []).length;
+                    templateItems.push(`
+                        <label class="flex items-center gap-3 p-4 bg-zinc-800/50 border border-zinc-700 cursor-pointer hover:bg-zinc-800 transition-colors">
+                            <input type="checkbox" class="template-delete-checkbox w-5 h-5 accent-red-500 flex-shrink-0" data-template-id="${id}">
+                            <div class="flex-1">
+                                <div class="text-white font-bold">${escapeHtml(template.name)}</div>
+                                <div class="text-xs text-zinc-500 mt-1">${favCount} 个收藏方案</div>
+                            </div>
+                        </label>
+                    `);
+                }
+            });
+            
+            const modalHtml = `
+                <div id="templateManageModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50" onclick="if(event.target === this) closeTemplateManageModal()">
+                    <div class="bg-zinc-900 border-2 w-full max-w-md p-6 max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-primary);">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-white">管理收藏模板</h2>
+                            <button onclick="closeTemplateManageModal()" class="text-zinc-500 hover:text-white text-2xl p-2 -m-2" title="关闭">&times;</button>
+                        </div>
+                        ${templateItems.length > 0 ? `
+                            <div class="mb-4">
+                                <div class="text-sm text-zinc-400 mb-3">选择要删除的模板：</div>
+                                <div class="space-y-2 mb-6">
+                                    ${templateItems.join('')}
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <button onclick="closeTemplateManageModal()" class="flex-1 px-4 py-2.5 bg-zinc-700 text-zinc-300 hover:bg-zinc-600 transition-colors text-sm font-bold">取消</button>
+                                <button onclick="confirmDeleteTemplates()" class="flex-1 px-4 py-2.5 bg-red-600 text-white hover:bg-red-500 transition-colors text-sm font-bold">删除选中</button>
+                            </div>
+                        ` : `
+                            <div class="text-center py-8 text-zinc-500">
+                                暂无可管理的模板
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+        
+        function closeTemplateManageModal() {
+            const modal = document.getElementById('templateManageModal');
+            if (modal) modal.remove();
+        }
+        
+        function confirmDeleteTemplates() {
+            const checkboxes = document.querySelectorAll('.template-delete-checkbox:checked');
+            const templateIds = Array.from(checkboxes).map(cb => cb.dataset.templateId);
+            
+            if (templateIds.length === 0) {
+                closeTemplateManageModal();
+                return;
+            }
+            
+            // 删除选中的模板
+            templateIds.forEach(id => deleteTemplate(id));
+            
+            closeTemplateManageModal();
+            renderFavoritesView();
+        }
+        
+        // 打开导入/导出弹窗
+        function openImportExportModal() {
+            const currentTemplate = getCurrentTemplate();
+            const exportJson = exportCurrentTemplate();
+            
+            const modalHtml = `
+                <div id="importExportModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50" onclick="if(event.target === this) closeImportExportModal()">
+                    <div class="bg-zinc-900 border-2 w-full max-w-2xl max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-primary);">
+                        <div class="sticky top-0 bg-zinc-900 border-b border-zinc-700 p-6 pb-4 z-10">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-bold text-white">导入/导出收藏模板</h2>
+                                <button onclick="closeImportExportModal()" class="text-zinc-500 hover:text-white text-2xl p-2 -m-2" title="关闭">&times;</button>
+                            </div>
+                            <div class="flex gap-2">
+                                <button id="importTab" onclick="switchImportExportTab('import')" class="flex-1 px-4 py-2 text-sm font-bold transition-all border-b-2" style="color: var(--theme-primary); border-color: var(--theme-primary);">导入</button>
+                                <button id="exportTab" onclick="switchImportExportTab('export')" class="flex-1 px-4 py-2 text-sm font-bold transition-all border-b-2 border-transparent text-zinc-500 hover:text-zinc-300">导出</button>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <!-- 导入面板 -->
+                            <div id="importPanel">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm text-zinc-400 mb-2">模板名称</label>
+                                        <input type="text" id="importTemplateName" placeholder="${escapeHtml(getDefaultTemplateName(state.currentCharacter))}" 
+                                            class="w-full px-4 py-2.5 bg-zinc-800 border border-zinc-600 text-white focus:border-cyan-500 focus:outline-none transition-colors text-sm">
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between items-center mb-2">
+                                            <label class="text-sm text-zinc-400">模板数据</label>
+                                            <button onclick="toggleFormatHelp()" class="text-xs text-cyan-500 hover:text-cyan-400 transition-colors">点击查看格式说明</button>
+                                        </div>
+                                        <textarea id="importTemplateData" rows="12" 
+                                            class="w-full px-4 py-3 bg-zinc-800 border border-zinc-600 text-white focus:border-cyan-500 focus:outline-none transition-colors font-mono text-xs"
+                                            placeholder='{\n  "character": "RYU",\n  "favorites": [...],\n  "mixupFavorites": [...]\n}'></textarea>
+                                        
+                                        <!-- 格式说明 -->
+                                        <div id="formatHelp" class="hidden mt-3 p-4 bg-zinc-800/50 border border-zinc-700 text-xs">
+                                            <div class="text-zinc-300 font-bold mb-2">格式说明</div>
+                                            <div class="text-zinc-400 space-y-2">
+                                                <div>必须包含以下字段：</div>
+                                                <div class="pl-3">• <span class="text-cyan-400">character</span>: 角色名称（如 "RYU"）</div>
+                                                <div class="pl-3">• <span class="text-cyan-400">favorites</span>: 压制方案数组</div>
+                                                <div class="pl-3">• <span class="text-cyan-400">mixupFavorites</span>: 打投择方案数组</div>
+                                                <div class="mt-3 pt-3 border-t border-zinc-700">
+                                                    <div class="text-zinc-300 mb-1">示例：</div>
+                                                    <pre class="text-[10px] text-zinc-500 overflow-x-auto">{
+  "character": "RYU",
+  "favorites": ["DIRECT||5MP|18"],
+  "mixupFavorites": ["18|0|投技"]
+}</pre>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="importError" class="hidden text-red-400 text-sm p-3 bg-red-900/20 border border-red-800"></div>
+                                </div>
+                                <div class="flex justify-end mt-6">
+                                    <button onclick="confirmImport()" class="px-6 py-2.5 bg-cyan-600 text-white hover:bg-cyan-500 transition-colors text-sm font-bold">确认导入</button>
+                                </div>
+                            </div>
+                            
+                            <!-- 导出面板 -->
+                            <div id="exportPanel" class="hidden">
+                                <div class="mb-4">
+                                    <div class="text-sm text-zinc-400 mb-2">当前模板：<span class="text-white font-bold">${escapeHtml(currentTemplate.name)}</span></div>
+                                    <textarea id="exportTemplateData" readonly rows="16" 
+                                        class="w-full px-4 py-3 bg-zinc-800 border border-zinc-600 text-zinc-300 font-mono text-xs overflow-auto">${escapeHtml(exportJson)}</textarea>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button onclick="copyExportData()" class="px-6 py-2.5 bg-zinc-700 text-zinc-300 hover:bg-zinc-600 hover:text-white transition-colors text-sm font-bold flex items-center gap-2">
+                                        <span>📋</span>
+                                        <span id="copyBtnText">复制</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+        
+        function closeImportExportModal() {
+            const modal = document.getElementById('importExportModal');
+            if (modal) modal.remove();
+        }
+        
+        function switchImportExportTab(tab) {
+            const importTab = document.getElementById('importTab');
+            const exportTab = document.getElementById('exportTab');
+            const importPanel = document.getElementById('importPanel');
+            const exportPanel = document.getElementById('exportPanel');
+            
+            if (tab === 'import') {
+                importTab.style.color = 'var(--theme-primary)';
+                importTab.style.borderColor = 'var(--theme-primary)';
+                exportTab.style.color = '';
+                exportTab.style.borderColor = 'transparent';
+                importPanel.classList.remove('hidden');
+                exportPanel.classList.add('hidden');
+            } else {
+                exportTab.style.color = 'var(--theme-primary)';
+                exportTab.style.borderColor = 'var(--theme-primary)';
+                importTab.style.color = '';
+                importTab.style.borderColor = 'transparent';
+                exportPanel.classList.remove('hidden');
+                importPanel.classList.add('hidden');
+            }
+        }
+        
+        function toggleFormatHelp() {
+            const help = document.getElementById('formatHelp');
+            help.classList.toggle('hidden');
+        }
+        
+        function confirmImport() {
+            const nameInput = document.getElementById('importTemplateName');
+            const dataInput = document.getElementById('importTemplateData');
+            const errorDiv = document.getElementById('importError');
+            
+            const templateName = nameInput.value.trim() || nameInput.placeholder;
+            const dataStr = dataInput.value.trim();
+            
+            // 验证名称
+            const nameValidation = validateTemplateName(state.currentCharacter, templateName);
+            if (!nameValidation.valid) {
+                errorDiv.textContent = nameValidation.error;
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            // 验证 JSON
+            let data;
+            try {
+                data = JSON.parse(dataStr);
+            } catch (e) {
+                errorDiv.textContent = 'JSON 格式错误：' + e.message;
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            // 验证必需字段
+            if (!data.character || !Array.isArray(data.favorites) || !Array.isArray(data.mixupFavorites)) {
+                errorDiv.textContent = '缺少必需字段：character, favorites, mixupFavorites';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            // 角色不匹配？
+            if (data.character !== state.currentCharacter) {
+                showCharacterMismatchWarning(data.character, templateName, data);
+                return;
+            }
+            
+            // 导入
+            importTemplate(data, templateName);
+            closeImportExportModal();
+            renderFavoritesView();
+        }
+        
+        function showCharacterMismatchWarning(targetChar, templateName, data) {
+            const modalHtml = `
+                <div id="charMismatchModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+                    <div class="bg-zinc-900 border-2 border-red-500 w-full max-w-md p-6">
+                        <h2 class="text-xl font-bold text-white mb-4">角色不匹配</h2>
+                        <div class="text-zinc-300 mb-6 space-y-2">
+                            <p>导入的模板是 <span class="font-bold text-yellow-400">${targetChar}</span> 的收藏方案</p>
+                            <p>当前查看的是 <span class="font-bold" style="color: var(--theme-primary);">${state.currentCharacter}</span></p>
+                            <p class="text-sm text-zinc-400 mt-4">是否切换到 ${targetChar} 并导入？</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="closeCharMismatchModal()" class="flex-1 px-4 py-2.5 bg-zinc-700 text-zinc-300 hover:bg-zinc-600 transition-colors text-sm font-bold">取消</button>
+                            <button onclick="confirmCharSwitch('${targetChar}', '${escapeHtml(templateName).replace(/'/g, "\\'")}', ${escapeHtml(JSON.stringify(data))})" class="flex-1 px-4 py-2.5 bg-cyan-600 text-white hover:bg-cyan-500 transition-colors text-sm font-bold">确认切换</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+        
+        function closeCharMismatchModal() {
+            const modal = document.getElementById('charMismatchModal');
+            if (modal) modal.remove();
+        }
+        
+        function confirmCharSwitch(targetChar, templateName, data) {
+            closeCharMismatchModal();
+            closeImportExportModal();
+            
+            // 切换角色
+            selectCharacter(targetChar);
+            
+            // 导入模板
+            setTimeout(() => {
+                importTemplate(data, templateName);
+                // 切换到收藏视图
+                if (!state.showOnlyFavorites) {
+                    toggleShowOnlyFavorites();
+                } else {
+                    renderFavoritesView();
+                }
+            }, 100);
+        }
+        
+        function copyExportData() {
+            const textarea = document.getElementById('exportTemplateData');
+            const btnText = document.getElementById('copyBtnText');
+            
+            textarea.select();
+            document.execCommand('copy');
+            
+            // 视觉反馈
+            const originalText = btnText.textContent;
+            btnText.textContent = '已复制！';
+            setTimeout(() => {
+                btnText.textContent = originalText;
+            }, 2000);
+        }
+        
+        // 显示模板修改警告
+        function showTemplateModifyWarning(templateName, onConfirm) {
+            const modalHtml = `
+                <div id="templateModifyWarning" class="fixed inset-0 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+                    <div class="bg-zinc-900 border-2 w-full max-w-md p-6" style="border-color: var(--theme-primary);">
+                        <h2 class="text-xl font-bold text-white mb-4">提示</h2>
+                        <div class="text-zinc-300 mb-6 space-y-2">
+                            <p>当前正在修改 <span class="font-bold" style="color: var(--theme-primary);">[${escapeHtml(templateName)}]</span> 模板</p>
+                            <p class="text-sm text-zinc-400">是否继续？</p>
+                            <label class="flex items-center gap-2 mt-4 text-sm text-zinc-500">
+                                <input type="checkbox" id="dontShowAgain" class="w-4 h-4 accent-cyan-500">
+                                <span>下次操作不再提示</span>
+                            </label>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="closeTemplateModifyWarning()" class="flex-1 px-4 py-2.5 bg-zinc-700 text-zinc-300 hover:bg-zinc-600 transition-colors text-sm font-bold">取消</button>
+                            <button onclick="confirmTemplateModify()" class="flex-1 px-4 py-2.5 bg-cyan-600 text-white hover:bg-cyan-500 transition-colors text-sm font-bold">确认</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            // 存储回调
+            window._templateModifyCallback = onConfirm;
+        }
+        
+        function closeTemplateModifyWarning() {
+            const modal = document.getElementById('templateModifyWarning');
+            if (modal) modal.remove();
+            delete window._templateModifyCallback;
+        }
+        
+        function confirmTemplateModify() {
+            const dontShow = document.getElementById('dontShowAgain').checked;
+            closeTemplateModifyWarning();
+            
+            if (window._templateModifyCallback) {
+                window._templateModifyCallback();
+                delete window._templateModifyCallback;
+            }
         }
 
         // ==================== 事件处理 ====================
@@ -6596,8 +7351,8 @@
             }
             
             // 用户添加的招式需要确认
-            if (!confirm(`确定要删除招式 "${move.name}" 吗？`)) {
-                return;
+                if (!confirm(`确定要删除招式 "${move.name}" 吗？`)) {
+                    return;
             }
             
             const moveName = move.name;
@@ -6759,15 +7514,32 @@
             state.deletedPresetRules = loadDeletedPresetRules();
             console.log(`[Rules] 加载 ${Object.keys(state.deletedPresetRules).length} 个已删除预设规则`);
             
-            // 5. 加载收藏和最小化状态
-            state.favorites = loadFavorites();
-            state.minimized = loadMinimized();
-            console.log(`[UI] 加载 ${Object.keys(state.favorites).length} 个收藏, ${Object.keys(state.minimized).length} 个最小化`);
+            // 5. 加载收藏模板系统
+            state.favoriteTemplates = loadFavoriteTemplates();
+            state.templateModifyWarned = loadTemplateModifyWarned();
             
-            // 6. 加载打投择收藏和隐藏状态
+            // 5.1 兼容旧版收藏数据，自动迁移
+            state.favorites = loadFavorites();
             state.mixupFavorites = loadMixupFavorites();
+            if (Object.keys(state.favorites).length > 0 || Object.keys(state.mixupFavorites).length > 0) {
+                if (Object.keys(state.favoriteTemplates).length === 0) {
+                    migrateLegacyFavorites();
+                    saveFavoriteTemplates();
+                    console.log('[迁移] 旧版收藏数据已自动迁移到新系统');
+                }
+            }
+            
+            // 初始化当前角色的模板结构
+            initCharacterTemplates(state.currentCharacter);
+            console.log(`[模板] 加载 ${Object.keys(state.favoriteTemplates[state.currentCharacter]?.templates || {}).length} 个收藏模板`);
+            
+            // 5.2 加载最小化状态
+            state.minimized = loadMinimized();
+            console.log(`[UI] 加载 ${Object.keys(state.minimized).length} 个最小化`);
+            
+            // 6. 加载打投择隐藏状态
             state.mixupHidden = loadMixupHidden();
-            console.log(`[Mixup] 加载 ${Object.keys(state.mixupFavorites).length} 个打投择收藏, ${Object.keys(state.mixupHidden).length} 个隐藏`);
+            console.log(`[Mixup] 加载 ${Object.keys(state.mixupHidden).length} 个隐藏`);
             
             console.log(`最终状态: ${state.moveLibrary.length} 招式, ${state.notes.length} 场景`);
             console.log('=== 初始化完成 ===');
