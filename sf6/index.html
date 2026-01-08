@@ -3648,7 +3648,7 @@
                 return `
                     <div class="trend-card py-3 px-4 cursor-pointer hover:bg-opacity-80 transition-all fuzzy-scenario-card" onclick="toggleAdvExpand('fuzzy_${group.idx}')" style="animation-delay: ${cardIndex * 0.02}s">
                         <div class="flex items-center gap-2 sm:gap-3">
-                            <span class="impact-text text-xl sm:text-2xl font-black min-w-[80px] sm:min-w-[90px] flex-shrink-0" style="color: var(--theme-fuzzy);">${minAdv}~${maxAdv}F</span>
+                            <span class="impact-text text-xl sm:text-2xl font-black min-w-[80px] sm:min-w-[90px] flex-shrink-0" style="color: var(--theme-secondary);">${minAdv}~${maxAdv}F</span>
                             <span class="compact-context-tag">${escapeHtml(group.context)}</span>
                             ${fuzzyBadge}
                             <span class="text-zinc-600 mx-1 flex-shrink-0">→</span>
@@ -3663,7 +3663,7 @@
             const leftPanel = `
                 <div class="flex flex-col min-w-0 sm:min-w-[160px] items-start lg:border-r border-zinc-800 lg:pr-6 w-full lg:w-auto">
                     <div class="flex items-center gap-3 sm:block">
-                        <div class="impact-text text-3xl sm:text-4xl md:text-5xl leading-none frame-number" style="color: var(--theme-fuzzy);">${minAdv}~${maxAdv}F</div>
+                        <div class="impact-text text-3xl sm:text-4xl md:text-5xl leading-none frame-number" style="color: var(--theme-secondary);">${minAdv}~${maxAdv}F</div>
                         <div class="sm:hidden">${fuzzyBadge}</div>
                     </div>
                     <div class="hidden sm:block mt-2">${fuzzyBadge}</div>
