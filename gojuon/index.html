@@ -388,6 +388,86 @@
             border-top: 1px solid var(--grid-line);
         }
 
+        /* ========== 测试模式样式 ========== */
+        .test-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: monospace;
+            font-size: 11px;
+        }
+
+        .test-score {
+            color: var(--toxic-cyan);
+            font-weight: bold;
+            padding: 5px 10px;
+            background: rgba(170, 255, 240, 0.08);
+            border: 1px solid var(--ui-border);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .test-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--ui-border);
+            color: #777;
+            font-family: monospace;
+            font-size: 11px;
+            padding: 5px 12px;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .test-btn:hover {
+            color: var(--toxic-cyan);
+            border-color: var(--toxic-cyan);
+            background: rgba(170, 255, 240, 0.08);
+        }
+
+        .test-btn.active {
+            color: #fff;
+            background: var(--toxic-cyan);
+            border-color: var(--toxic-cyan);
+            text-shadow: none;
+        }
+
+        .quiz-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--ui-border);
+            color: var(--drain-white);
+            font-family: "Courier New", monospace;
+            font-size: 1.2rem;
+            padding: 8px 12px;
+            text-align: center;
+            width: 120px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .quiz-input:focus {
+            border-color: var(--toxic-cyan);
+            background: rgba(170, 255, 240, 0.1);
+            box-shadow: 0 0 10px rgba(170, 255, 240, 0.3);
+        }
+
+        .quiz-input.correct {
+            border-color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .quiz-input.incorrect {
+            border-color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
+        }
+
+        .kana-cell.quiz-active {
+            outline: 2px solid var(--toxic-cyan);
+            background: rgba(170, 255, 240, 0.05);
+            box-shadow: 0 0 20px rgba(170, 255, 240, 0.3);
+        }
+
         /* ========== 工具类 ========== */
         .mono { font-family: 'Space Mono', monospace; }
 
@@ -408,6 +488,15 @@
             }
             .kana-cell {
                 max-height: 100px;
+            }
+            .test-controls {
+                font-size: 10px;
+                gap: 4px;
+            }
+            .test-score, .test-btn {
+                font-size: 10px;
+                padding: 4px 8px;
+                min-width: 50px;
             }
         }
 
@@ -441,6 +530,20 @@
                 font-size: 10px;
                 letter-spacing: 0.05em;
             }
+            .test-controls {
+                font-size: 9px;
+                gap: 3px;
+            }
+            .test-score, .test-btn {
+                font-size: 9px;
+                padding: 3px 6px;
+                min-width: 44px;
+            }
+            .quiz-input {
+                font-size: 1rem;
+                padding: 4px 6px;
+                width: 80px;
+            }
         }
 
         /* 小手机 - 继续保持5列 */
@@ -466,6 +569,20 @@
             .cell-origin {
                 font-size: clamp(8px, 1.8vw, 10px);
             }
+            .test-controls {
+                font-size: 8px;
+                gap: 2px;
+            }
+            .test-score, .test-btn {
+                font-size: 8px;
+                padding: 3px 5px;
+                min-width: 40px;
+            }
+            .quiz-input {
+                font-size: 0.9rem;
+                padding: 3px 5px;
+                width: 70px;
+            }
         }
     </style>
 </head>
@@ -480,14 +597,18 @@
             <img src="../asset/Ecco2k-E.jpg" alt="E" class="w-7 h-7 md:w-8 md:h-8 object-contain">
             <span class="font-black tracking-tighter text-base md:text-lg" style="font-family: 'Syne', sans-serif;">EMOBOI</span>
         </a>
-        <div class="nav-center">
+        <div class="nav-center" id="nav-toggles">
             <button class="toggle-btn active" data-target="cell-romaji">ROMAN</button>
             <button class="toggle-btn active" data-target="hira">HIRA</button>
             <button class="toggle-btn active" data-target="kata">KATA</button>
             <button class="toggle-btn active" data-target="cell-origin">ORIGIN</button>
         </div>
+        <div class="test-controls hidden" id="test-controls">
+            <span class="test-score" id="test-score">0/0</span>
+            <button class="test-btn" id="reset-score">RESET</button>
+        </div>
         <div class="flex items-center gap-4 md:gap-6">
-            <span class="mono text-[10px] md:text-xs text-lime-400 uppercase hidden sm:block">GOJUON</span>
+            <button class="test-btn" id="toggle-test">TEST</button>
             <a href="../" class="p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all flex items-center gap-2" title="返回主页">
                 <i data-lucide="home" class="w-5 h-5"></i>
             </a>
@@ -541,7 +662,7 @@
     animateCursor();
 
     // 悬停交互
-    document.querySelectorAll('button, a, .char-unit, .toggle-btn').forEach(el => {
+    document.querySelectorAll('button, a, .char-unit, .toggle-btn, .test-btn').forEach(el => {
         el.addEventListener('mouseenter', () => cursorRing.classList.add('hover'));
         el.addEventListener('mouseleave', () => cursorRing.classList.remove('hover'));
     });
@@ -644,15 +765,174 @@
         null
     ];
 
+    // ==================== 测试模式 ====================
+    let testMode = false;
+    let testStats = { correct: 0, total: 0 };
+    let currentQuizCell = null;
+    let currentQuizInput = null;
+
+    // 从localStorage读取战绩
+    function loadTestStats() {
+        const saved = localStorage.getItem('gojuon-test-stats');
+        if (saved) {
+            testStats = JSON.parse(saved);
+            updateScoreDisplay();
+        }
+    }
+
+    // 保存战绩到localStorage
+    function saveTestStats() {
+        localStorage.setItem('gojuon-test-stats', JSON.stringify(testStats));
+    }
+
+    // 更新分数显示
+    function updateScoreDisplay() {
+        const scoreEl = document.getElementById('test-score');
+        scoreEl.textContent = `${testStats.correct}/${testStats.total}`;
+    }
+
+    // 切换测试模式
+    function toggleTestMode() {
+        testMode = !testMode;
+        const toggleBtn = document.getElementById('toggle-test');
+        const navToggles = document.getElementById('nav-toggles');
+        const testControls = document.getElementById('test-controls');
+
+        if (testMode) {
+            toggleBtn.classList.add('active');
+            toggleBtn.textContent = 'EXIT TEST';
+            navToggles.classList.add('hidden');
+            testControls.classList.remove('hidden');
+            startNewQuiz();
+        } else {
+            toggleBtn.classList.remove('active');
+            toggleBtn.textContent = 'TEST';
+            navToggles.classList.remove('hidden');
+            testControls.classList.add('hidden');
+            clearCurrentQuiz();
+        }
+    }
+
+    // 开始新的测试题目
+    function startNewQuiz() {
+        clearCurrentQuiz();
+        
+        // 随机选择一个有效的假名
+        const validKana = kanaData.filter(item => item !== null);
+        const randomKana = validKana[Math.floor(Math.random() * validKana.length)];
+        
+        // 找到对应的cell
+        const cells = document.querySelectorAll('.kana-cell:not(.empty)');
+        const kanaIndex = kanaData.indexOf(randomKana);
+        currentQuizCell = cells[kanaIndex];
+        
+        if (!currentQuizCell) return;
+        
+        currentQuizCell.classList.add('quiz-active');
+        
+        // 替换romaji为输入框
+        const romajiEl = currentQuizCell.querySelector('.cell-romaji');
+        const correctAnswer = romajiEl.textContent.trim();
+        
+        romajiEl.innerHTML = `<input type="text" class="quiz-input" placeholder="?" maxlength="4" autocomplete="off">`;
+        currentQuizInput = romajiEl.querySelector('input');
+        
+        // 绑定输入事件
+        currentQuizInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                checkAnswer(correctAnswer);
+            }
+        });
+        
+        // 绑定假名点击事件（支持点击假名填入答案）
+        const hiraEl = currentQuizCell.querySelector('.hira');
+        const kataEl = currentQuizCell.querySelector('.kata');
+        
+        const clickToAnswer = () => {
+            currentQuizInput.value = correctAnswer;
+            checkAnswer(correctAnswer);
+        };
+        
+        hiraEl.addEventListener('click', clickToAnswer, { once: true });
+        kataEl.addEventListener('click', clickToAnswer, { once: true });
+        
+        currentQuizInput.focus();
+    }
+
+    // 检查答案
+    function checkAnswer(correctAnswer) {
+        if (!currentQuizInput) return;
+        
+        const userAnswer = currentQuizInput.value.trim().toLowerCase();
+        const isCorrect = userAnswer === correctAnswer.toLowerCase();
+        
+        testStats.total++;
+        if (isCorrect) {
+            testStats.correct++;
+            currentQuizInput.classList.add('correct');
+        } else {
+            currentQuizInput.classList.add('incorrect');
+            // 显示正确答案
+            setTimeout(() => {
+                if (currentQuizInput) {
+                    currentQuizInput.value = correctAnswer;
+                }
+            }, 300);
+        }
+        
+        saveTestStats();
+        updateScoreDisplay();
+        
+        // 1.5秒后开始下一题
+        setTimeout(() => {
+            if (testMode) {
+                startNewQuiz();
+            }
+        }, 1500);
+    }
+
+    // 清除当前测试状态
+    function clearCurrentQuiz() {
+        if (currentQuizCell) {
+            currentQuizCell.classList.remove('quiz-active');
+            const romajiEl = currentQuizCell.querySelector('.cell-romaji');
+            if (romajiEl) {
+                const original = romajiEl.dataset.original;
+                if (original) {
+                    romajiEl.innerHTML = '';
+                    romajiEl.textContent = original;
+                }
+            }
+            currentQuizCell = null;
+        }
+        currentQuizInput = null;
+    }
+
+    // 重置战绩
+    function resetTestStats() {
+        if (confirm('确定要重置战绩吗？')) {
+            testStats = { correct: 0, total: 0 };
+            saveTestStats();
+            updateScoreDisplay();
+        }
+    }
+
     // 页面初始化
     document.addEventListener('DOMContentLoaded', () => {
         // 绑定控制按钮点击
-        document.querySelectorAll('.nav-center .toggle-btn').forEach(btn => {
+        document.querySelectorAll('#nav-toggles .toggle-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 btn.classList.toggle('active');
                 syncDisplay();
             });
         });
+        
+        // 绑定测试相关按钮
+        document.getElementById('toggle-test').addEventListener('click', toggleTestMode);
+        document.getElementById('reset-score').addEventListener('click', resetTestStats);
+        
+        // 加载战绩
+        loadTestStats();
         
         renderGrid();
     });
@@ -694,6 +974,9 @@
         const o1 = cell.querySelector('.o1');
         const o2 = cell.querySelector('.o2');
         const romaji = cell.querySelector('.cell-romaji');
+        
+        // 保存原始romaji文本用于测试模式恢复
+        romaji.dataset.original = item.r;
 
         // 绑定交互（支持鼠标和触摸）
         const bindInteraction = (trigger, target, romajiEl) => {
