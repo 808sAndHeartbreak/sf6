@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I AM MUSIC | EMOBOI</title>
+    <title>MUSIC | EMOBOI</title>
     <meta name="description" content="EMOBOI Music Player - Personal music collection">
     
     <!-- Lucide Icons (锁定版本) -->
@@ -216,14 +216,14 @@
             background: linear-gradient(to bottom, transparent 0%, var(--deep-black) 90%);
         }
 
-        /* Hero 标题 - 先锋暗黑风格 */
+        /* Hero 标题 - 参考菜单风格,更酷更紧凑 */
         .hero-glitch-text {
-            font-family: 'Archivo Black', sans-serif;
-            font-size: clamp(3rem, 10vw, 6rem);
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(4rem, 15vw, 8rem);
             font-weight: 900;
             font-style: italic;
-            letter-spacing: -0.06em;
-            line-height: 0.85;
+            letter-spacing: -0.04em;
+            line-height: 0.9;
             text-transform: uppercase;
             position: relative;
             z-index: 10;
@@ -364,13 +364,32 @@
             height: 6px;
             background: rgba(34, 34, 34, 0.8);
             border-radius: 3px;
-            overflow: hidden;
+            overflow: visible; /* 改为visible以显示扩大的触摸区域 */
             cursor: pointer;
+            border: 1px solid rgba(188, 254, 45, 0.1);
+            /* 增加触摸区域 - 使用padding增加点击区域 */
+            padding: 12px 0;
+            margin: -12px 0;
+        }
+        
+        /* 进度条内部容器 */
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: rgba(34, 34, 34, 0.8);
+            border-radius: 3px;
             border: 1px solid rgba(188, 254, 45, 0.1);
         }
 
         .progress-fill {
-            height: 100%;
+            position: absolute;
+            top: 12px;
+            left: 0;
+            height: 6px;
             background: linear-gradient(90deg, 
                 var(--acid-lime) 0%,
                 rgba(188, 254, 45, 0.8) 100%);
@@ -379,20 +398,46 @@
             box-shadow: 
                 0 0 15px rgba(188, 254, 45, 0.6),
                 0 0 30px rgba(188, 254, 45, 0.3);
-            position: relative;
+            border-radius: 3px;
+            z-index: 1;
         }
 
         .progress-fill::after {
             content: '';
             position: absolute;
-            right: 0;
+            right: -5px;
             top: 50%;
             transform: translateY(-50%);
-            width: 10px;
-            height: 10px;
+            width: 14px;
+            height: 14px;
             background: var(--acid-lime);
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(188, 254, 45, 0.8);
+        }
+        
+        /* 移动端进度条增强 */
+        @media (hover: none) and (pointer: coarse) {
+            .progress-bar {
+                height: 8px;
+                padding: 16px 0;
+                margin: -16px 0;
+            }
+            
+            .progress-bar::before {
+                top: 16px;
+                height: 8px;
+            }
+            
+            .progress-fill {
+                top: 16px;
+                height: 8px;
+            }
+            
+            .progress-fill::after {
+                width: 16px;
+                height: 16px;
+                right: -8px;
+            }
         }
 
          /* ========== 音量条 ========== */
@@ -406,6 +451,9 @@
              outline: none;
              border: 1px solid rgba(0, 255, 255, 0.15);
              touch-action: none; /* 防止触摸时的浏览器默认行为 */
+             /* 增加触摸区域 */
+             padding: 10px 0;
+             margin: -10px 0;
          }
 
          .volume-slider::-webkit-slider-thumb {
@@ -427,6 +475,25 @@
              cursor: pointer;
              border: none;
              box-shadow: 0 0 8px rgba(188, 254, 45, 0.5);
+         }
+         
+         /* 移动端音量滑块增强 */
+         @media (hover: none) and (pointer: coarse) {
+             .volume-slider {
+                 height: 6px;
+                 padding: 14px 0;
+                 margin: -14px 0;
+             }
+             
+             .volume-slider::-webkit-slider-thumb {
+                 width: 20px;
+                 height: 20px;
+             }
+
+             .volume-slider::-moz-range-thumb {
+                 width: 20px;
+                 height: 20px;
+             }
          }
 
          /* ========== 播放列表折叠动画 ========== */
@@ -625,7 +692,7 @@
              transform: translateX(calc(-50% + 100px)); /* 播放按钮右侧100px */
              display: flex;
              align-items: center;
-             gap: 1rem;
+             gap: 1.5rem; /* 增加随机按钮与下一曲的间距 */
          }
 
          /* 控制按钮基础样式 */
@@ -679,13 +746,14 @@
                  font-size: 1.5rem;
              }
              
-             /* 播放器控制按钮 - 小屏幕缩小间距 */
+             /* 播放器控制按钮 - 小屏幕增加间距避免重叠 */
              #prev-btn {
-                 transform: translateX(calc(-50% - 60px)) !important;
+                 transform: translateX(calc(-50% - 75px)) !important;
              }
              
              .right-controls {
-                 transform: translateX(calc(-50% + 60px)) !important;
+                 transform: translateX(calc(-50% + 75px)) !important;
+                 gap: 1rem !important;
              }
              
              /* 播放按钮稍微缩小 */
@@ -742,6 +810,19 @@
              }
          }
          
+         /* 中等手机屏幕优化 (iPhone 14 Pro Max等大屏手机) */
+         @media (min-width: 430px) and (max-width: 640px) {
+             /* 大屏手机可以稍微增加间距 */
+             #prev-btn {
+                 transform: translateX(calc(-50% - 85px)) !important;
+             }
+             
+             .right-controls {
+                 transform: translateX(calc(-50% + 85px)) !important;
+                 gap: 1.25rem !important;
+             }
+         }
+         
          /* 超小屏幕优化 (iPhone SE等) */
          @media (max-width: 375px) {
              /* 播放按钮进一步缩小 */
@@ -750,13 +831,14 @@
                  height: 48px !important;
              }
              
-             /* 播放器控制按钮进一步缩小间距 */
+             /* 播放器控制按钮 - 超小屏幕进一步增加间距 */
              #prev-btn {
-                 transform: translateX(calc(-50% - 45px)) !important;
+                 transform: translateX(calc(-50% - 65px)) !important;
              }
              
              .right-controls {
-                 transform: translateX(calc(-50% + 45px)) !important;
+                 transform: translateX(calc(-50% + 65px)) !important;
+                 gap: 0.75rem !important;
              }
              
              /* 控制按钮图标进一步缩小 */
@@ -1008,7 +1090,7 @@
             <span class="font-black tracking-tighter text-base md:text-lg">EMOBOI</span>
         </a>
         <div class="flex items-center gap-4 md:gap-6">
-            <span class="mono text-[10px] md:text-xs text-lime-400 uppercase hidden md:block">I AM MUSIC</span>
+            <span class="mono text-[10px] md:text-xs text-lime-400 uppercase hidden md:block">MUSIC</span>
             <a href="../" class="p-2.5 border border-zinc-800 hover:bg-white hover:text-black transition-all flex items-center gap-2" title="返回主页">
                 <i data-lucide="home" class="w-5 h-5"></i>
             </a>
@@ -1038,11 +1120,11 @@
             </a>
             <a href="../gallery/" onclick="closeMenu()" class="menu-link group flex items-center justify-center gap-4" style="font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 6vw, 3.5rem); font-weight: 900; font-style: italic; letter-spacing: -0.02em; color: #fff; text-decoration: none; text-transform: uppercase; transition: all 0.3s ease;">
                 <span class="mono text-zinc-600 text-sm">04</span>
-                <span class="hover:text-lime-400">MY GALLERY</span>
+                <span class="hover:text-lime-400">GALLERY</span>
             </a>
             <a href="./" class="menu-link group flex items-center justify-center gap-4" style="font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 6vw, 3.5rem); font-weight: 900; font-style: italic; letter-spacing: -0.02em; color: var(--acid-lime); text-decoration: none; text-transform: uppercase; text-shadow: 0 0 15px var(--acid-lime);">
                 <span class="mono text-zinc-600 text-sm">05</span>
-                <span>I AM MUSIC</span>
+                <span>IAMMUSIC</span>
             </a>
         </div>
     </div>
@@ -1052,8 +1134,8 @@
         <div class="hero-bg"></div>
         
         <div class="relative z-10 text-center px-4 md:px-6">
-            <h1 class="hero-glitch-text">
-                I AM<br>MUSIC
+            <h1 class="hero-glitch-text" style="font-family: 'Syne', sans-serif; font-weight: 900; font-style: italic;">
+                MUSIC
             </h1>
             <p class="mono text-[9px] md:text-[10px] text-zinc-600 mt-3 max-w-md mx-auto uppercase leading-relaxed">
                 Personal frequency collection
@@ -1076,10 +1158,7 @@
                         </div>
                         <!-- 音频信息叠加层 -->
                         <div class="audio-info-overlay">
-                            <span class="mono text-xs text-lime-400 uppercase tracking-widest inline-block px-3 py-1 font-bold" style="text-shadow: 0 0 15px rgba(188, 254, 45, 0.6); letter-spacing: 0.2em;">
-                                ▸ NOW PLAYING
-                            </span>
-                            <h2 id="track-title" class="text-3xl md:text-4xl font-black italic tracking-tighter uppercase mt-4 mb-2 drain-track-title" style="font-family: 'Archivo Black', sans-serif;">—</h2>
+                            <h2 id="track-title" class="text-3xl md:text-4xl font-black italic tracking-tighter uppercase mb-2 drain-track-title" style="font-family: 'Archivo Black', sans-serif;">—</h2>
                             <p id="track-artist" class="text-lg text-lime-400 font-bold italic uppercase tracking-wide" style="text-shadow: 0 0 20px rgba(188, 254, 45, 0.5);">—</p>
                         </div>
                     </div>
@@ -1100,11 +1179,8 @@
                         </div>
                         <!-- 视频信息叠加层 -->
                         <div class="video-overlay">
-                            <span class="mono text-xs text-lime-400 uppercase tracking-widest font-bold" style="text-shadow: 0 0 15px rgba(188, 254, 45, 0.8);">
-                                ▸ NOW PLAYING
-                            </span>
-                            <h3 id="video-track-title" class="text-xl font-black italic tracking-tighter uppercase mt-2" style="font-family: 'Archivo Black', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">—</h3>
-                            <p id="video-track-artist" class="text-sm text-lime-400 font-bold italic uppercase" style="text-shadow: 0 0 15px rgba(188, 254, 45, 0.6);">—</p>
+                            <h3 id="video-track-title" class="text-xl font-black italic tracking-tighter uppercase" style="font-family: 'Archivo Black', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">—</h3>
+                            <p id="video-track-artist" class="text-sm text-lime-400 font-bold italic uppercase mt-1" style="text-shadow: 0 0 15px rgba(188, 254, 45, 0.6);">—</p>
                         </div>
                     </div>
                 </div>
@@ -1263,22 +1339,7 @@
 
         // 播放列表配置 - 支持音频(MP3)和视频(MP4)
         const playlist = [
-            { 
-                title: "Acura Integurl", 
-                artist: "Frank Ocean",
-                src: "tracks/Acura Integurl - Frank Ocean.mp3",
-                type: "audio",
-                cover: "covers/Acura Integurl - Frank Ocean.jpg", // 封面图片路径
-                duration: "3:08"
-            },
-            { 
-                title: "either on or off the drugs", 
-                artist: "JPEGMAFIA",
-                src: "tracks/JPEGMAFIA - either on or off the drugs.mp3",
-                type: "audio",
-                cover: "covers/JPEGMAFIA - either on or off the drugs.jpg",
-                duration: "3:16"
-            },
+            // 视频区域
             { 
                 title: "BOWSER", 
                 artist: "Lil Tracy",
@@ -1294,11 +1355,51 @@
                 duration: "—"
             },
             { 
+                title: "Bamb", 
+                artist: "fakemink",
+                src: "videos/fakemink - Bamb.mp4",
+                type: "video",
+                duration: "—"
+            },
+            { 
                 title: "Bad Enough", 
                 artist: "Corey Lingo",
                 src: "videos/Corey Lingo - Bad Enough.mp4",
                 type: "video",
                 duration: "—"
+            },
+            // 音频区域
+            { 
+                title: "either on or off the drugs", 
+                artist: "JPEGMAFIA",
+                src: "tracks/JPEGMAFIA - either on or off the drugs.mp3",
+                type: "audio",
+                cover: "covers/JPEGMAFIA - either on or off the drugs.jpg",
+                duration: "3:16"
+            },
+            { 
+                title: "Acura Integurl", 
+                artist: "Frank Ocean",
+                src: "tracks/Acura Integurl - Frank Ocean.mp3",
+                type: "audio",
+                cover: "covers/Acura Integurl - Frank Ocean.jpg",
+                duration: "3:08"
+            },
+            { 
+                title: "Suspended", 
+                artist: "Sampha",
+                src: "tracks/Sampha - Suspended.mp3",
+                type: "audio",
+                cover: "covers/Sampha - Suspended.jpg",
+                duration: "4:43"
+            },
+            { 
+                title: "Street Lights", 
+                artist: "Kanye West",
+                src: "tracks/Street Lights-Kanye West.mp3",
+                type: "audio",
+                cover: "covers/Street Lights-Kanye West.jpg",
+                duration: "3:09"
             }
         ];
 
@@ -1415,7 +1516,7 @@
                         <span class="mono text-xs w-6">${String(i + 1).padStart(2, '0')}</span>
                         <div>
                             <span class="text-base font-bold italic tracking-tighter uppercase block">${track.title}</span>
-                            <span class="mono text-[10px] text-zinc-500">${track.artist}</span>
+                            <span class="mono text-xs text-zinc-400">${track.artist}</span>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1556,6 +1657,20 @@
                 }
             }
         });
+        
+        // 音量滑块触摸增强 - 添加触摸反馈
+        volumeSlider.addEventListener('touchstart', (e) => {
+            volumeSlider.style.transform = 'scaleY(1.2)';
+            volumeSlider.style.transition = 'transform 0.1s ease';
+        });
+        
+        volumeSlider.addEventListener('touchend', (e) => {
+            volumeSlider.style.transform = 'scaleY(1)';
+        });
+        
+        volumeSlider.addEventListener('touchcancel', (e) => {
+            volumeSlider.style.transform = 'scaleY(1)';
+        });
 
         // 进度条更新 - 监听当前播放器
         function setupMediaListeners() {
@@ -1616,6 +1731,8 @@
         // 鼠标事件
         progressBar.addEventListener('mousedown', (e) => {
             isDragging = true;
+            progressBar.style.transform = 'scaleY(1.3)';
+            progressBar.style.transition = 'transform 0.1s ease';
             updateProgressFromMouse(e);
         });
 
@@ -1626,13 +1743,19 @@
         });
 
         document.addEventListener('mouseup', () => {
-            isDragging = false;
+            if (isDragging) {
+                isDragging = false;
+                progressBar.style.transform = 'scaleY(1)';
+            }
         });
 
         // 触摸事件
         progressBar.addEventListener('touchstart', (e) => {
             isDragging = true;
+            progressBar.style.transform = 'scaleY(1.3)';
+            progressBar.style.transition = 'transform 0.1s ease';
             updateProgressFromTouch(e);
+            e.stopPropagation(); // 防止事件冒泡
         }, { passive: false });
 
         document.addEventListener('touchmove', (e) => {
@@ -1642,7 +1765,17 @@
         }, { passive: false });
 
         document.addEventListener('touchend', () => {
-            isDragging = false;
+            if (isDragging) {
+                isDragging = false;
+                progressBar.style.transform = 'scaleY(1)';
+            }
+        });
+        
+        document.addEventListener('touchcancel', () => {
+            if (isDragging) {
+                isDragging = false;
+                progressBar.style.transform = 'scaleY(1)';
+            }
         });
 
         function updateProgressFromMouse(e) {
@@ -1657,12 +1790,14 @@
 
         function updateProgressFromTouch(e) {
             e.preventDefault(); // 防止页面滚动
-            const touch = e.touches[0];
+            const touch = e.touches[0] || e.changedTouches[0];
+            if (!touch) return;
+            
             const rect = progressBar.getBoundingClientRect();
             let percent = (touch.clientX - rect.left) / rect.width;
             percent = Math.max(0, Math.min(1, percent)); // 限制在 0-1 之间
             
-            if (currentPlayer.duration) {
+            if (currentPlayer.duration && !isNaN(currentPlayer.duration)) {
                 currentPlayer.currentTime = percent * currentPlayer.duration;
             }
         }
