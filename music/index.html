@@ -1122,10 +1122,10 @@
                 <span class="mono text-zinc-600 text-sm">04</span>
                 <span class="hover:text-lime-400">GALLERY</span>
             </a>
-            <a href="./" class="menu-link group flex items-center justify-center gap-4" style="font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 6vw, 3.5rem); font-weight: 900; font-style: italic; letter-spacing: -0.02em; color: var(--acid-lime); text-decoration: none; text-transform: uppercase; text-shadow: 0 0 15px var(--acid-lime);">
+            <div class="menu-link group flex items-center justify-center gap-4" style="font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 6vw, 3.5rem); font-weight: 900; font-style: italic; letter-spacing: -0.02em; color: var(--acid-lime); text-decoration: none; text-transform: uppercase; text-shadow: 0 0 15px var(--acid-lime); cursor: default; pointer-events: none;">
                 <span class="mono text-zinc-600 text-sm">05</span>
                 <span>IAMMUSIC</span>
-            </a>
+            </div>
         </div>
     </div>
 
@@ -1744,7 +1744,7 @@
 
         document.addEventListener('mouseup', () => {
             if (isDragging) {
-                isDragging = false;
+            isDragging = false;
                 progressBar.style.transform = 'scaleY(1)';
             }
         });
