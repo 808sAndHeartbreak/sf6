@@ -25,7 +25,6 @@ CHARACTER_DATA["SAGAT"] = {
     { "name": "66", "isDash": true, "dashFrames": 23 }
   ],
   "scenarios": [
-    // TODO: 补充 SAGAT 的常用压制场景
     { "adv": 17, "context": "投技" },
     { "adv": 39, "context": "轻升龙" }
   ]

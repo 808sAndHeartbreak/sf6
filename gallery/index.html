@@ -457,61 +457,322 @@
         .gallery-fullscreen-menu {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.97);
+            background: 
+                linear-gradient(45deg, transparent 0%, rgba(139, 0, 0, 0.03) 50%, transparent 100%),
+                linear-gradient(-45deg, transparent 0%, rgba(188, 254, 45, 0.02) 50%, transparent 100%),
+                rgba(0, 0, 0, 0.97);
             z-index: 200;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 1.5rem;
+            gap: 0.5rem;
+            /* 扫描线效果 */
+            background-size: 100% 4px, 100% 100%, 100% 100%;
+            animation: menuScanline 8s linear infinite;
+        }
+
+        @keyframes menuScanline {
+            0% { background-position: 0% 0%, 0% 0%, 0% 0%; }
+            100% { background-position: 0% 100%, 0% 0%, 0% 0%; }
         }
 
         .gallery-fullscreen-menu.active {
             display: flex;
         }
 
+        /* 菜单背景网格装饰 */
+        .gallery-fullscreen-menu::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(0deg, transparent 24%, rgba(188, 254, 45, 0.03) 25%, rgba(188, 254, 45, 0.03) 26%, transparent 27%, transparent 74%, rgba(188, 254, 45, 0.03) 75%, rgba(188, 254, 45, 0.03) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(188, 254, 45, 0.03) 25%, rgba(188, 254, 45, 0.03) 26%, transparent 27%, transparent 74%, rgba(188, 254, 45, 0.03) 75%, rgba(188, 254, 45, 0.03) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* 关闭按钮 - punk/emo风格 */
         .gallery-menu-close-btn {
             position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 44px;
-            height: 44px;
+            top: 20px;
+            right: 20px;
+            width: 52px;
+            height: 52px;
             background: transparent;
-            border: 1px solid #333;
-            color: #777;
+            border: none;
+            color: rgba(188, 254, 45, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            cursor: pointer;
+            cursor: none;
+            /* 不规则撕裂形状 */
+            clip-path: polygon(
+                0% 15%, 
+                15% 0%, 
+                85% 0%, 
+                100% 20%, 
+                100% 80%, 
+                90% 100%, 
+                10% 100%, 
+                0% 85%
+            );
+            background: linear-gradient(135deg, 
+                rgba(139, 0, 0, 0.2) 0%, 
+                rgba(188, 254, 45, 0.1) 100%);
+            box-shadow: 
+                0 0 20px rgba(188, 254, 45, 0.2),
+                inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .gallery-menu-close-btn::before {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: rgba(0, 0, 0, 0.9);
+            clip-path: polygon(
+                0% 15%, 
+                15% 0%, 
+                85% 0%, 
+                100% 20%, 
+                100% 80%, 
+                90% 100%, 
+                10% 100%, 
+                0% 85%
+            );
+        }
+
+        .gallery-menu-close-btn i {
+            position: relative;
+            z-index: 1;
+            width: 28px;
+            height: 28px;
+            filter: drop-shadow(0 0 8px rgba(188, 254, 45, 0.8));
         }
 
         .gallery-menu-close-btn:hover {
-            color: var(--acid-lime);
-            border-color: var(--acid-lime);
-            background: rgba(188, 254, 45, 0.08);
+            background: linear-gradient(135deg, 
+                var(--blood-red) 0%, 
+                var(--acid-lime) 100%);
+            color: #000;
+            box-shadow: 
+                0 0 30px rgba(188, 254, 45, 0.6),
+                0 0 50px rgba(139, 0, 0, 0.4),
+                inset 0 0 30px rgba(255, 255, 255, 0.1);
+            transform: scale(1.1) rotate(-5deg);
+            animation: glitchShake 0.3s ease infinite;
         }
 
+        @keyframes glitchShake {
+            0%, 100% { transform: scale(1.1) rotate(-5deg) translate(0, 0); }
+            25% { transform: scale(1.1) rotate(-5deg) translate(-2px, 2px); }
+            75% { transform: scale(1.1) rotate(-5deg) translate(2px, -2px); }
+        }
+
+        /* 菜单链接样式 - drain-core/punk风格 */
         .gallery-menu-link {
             font-family: 'Syne', sans-serif;
-            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            font-size: clamp(2rem, 6vw, 4rem);
             font-weight: 900;
             font-style: italic;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
             color: #fff;
             text-decoration: none;
             text-transform: uppercase;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            position: relative;
+            padding: 0.6rem 3rem;
+            cursor: none;
+            /* 不规则形状背景 */
+            clip-path: polygon(
+                0% 0%, 
+                95% 0%, 
+                100% 25%, 
+                100% 100%, 
+                5% 100%, 
+                0% 75%
+            );
+            background: linear-gradient(90deg, 
+                rgba(0, 0, 0, 0.5) 0%, 
+                rgba(139, 0, 0, 0.1) 50%, 
+                rgba(0, 0, 0, 0.5) 100%);
         }
 
+        /* 胶带贴纸效果 - 左侧 */
+        .gallery-menu-link::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-45deg);
+            width: 30px;
+            height: 10px;
+            background: linear-gradient(135deg, 
+                rgba(188, 254, 45, 0.3) 0%, 
+                rgba(188, 254, 45, 0.1) 100%);
+            box-shadow: 0 0 10px rgba(188, 254, 45, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 撕裂装饰 - 右侧 */
+        .gallery-menu-link::after {
+            content: '//';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.4em;
+            color: var(--acid-lime);
+            opacity: 0;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px rgba(188, 254, 45, 0.8);
+        }
+
+        /* 悬停效果 - 故障美学 */
         .gallery-menu-link:hover {
             color: var(--acid-lime);
-            text-shadow: 0 0 20px var(--acid-lime);
+            background: linear-gradient(90deg, 
+                rgba(139, 0, 0, 0.3) 0%, 
+                rgba(188, 254, 45, 0.15) 50%, 
+                rgba(139, 0, 0, 0.3) 100%);
+            text-shadow: 
+                0 0 20px rgba(188, 254, 45, 0.9),
+                0 0 40px rgba(188, 254, 45, 0.5),
+                3px 0 0 rgba(255, 0, 85, 0.5),
+                -3px 0 0 rgba(0, 170, 255, 0.5),
+                0 3px 0 rgba(188, 254, 45, 0.3);
+            transform: translateX(12px) skewX(-2deg);
+            box-shadow: 
+                0 0 30px rgba(188, 254, 45, 0.3),
+                inset 0 0 20px rgba(188, 254, 45, 0.1);
+            animation: glitchText 0.5s ease-in-out infinite;
         }
 
+        .gallery-menu-link:hover::before {
+            opacity: 1;
+            animation: tapeFlicker 1s ease infinite;
+        }
+
+        .gallery-menu-link:hover::after {
+            opacity: 1;
+            animation: slashBlink 0.7s ease infinite;
+        }
+
+        @keyframes glitchText {
+            0%, 100% {
+                text-shadow: 
+                    0 0 20px rgba(188, 254, 45, 0.9),
+                    0 0 40px rgba(188, 254, 45, 0.5),
+                    3px 0 0 rgba(255, 0, 85, 0.5),
+                    -3px 0 0 rgba(0, 170, 255, 0.5);
+            }
+            50% {
+                text-shadow: 
+                    0 0 25px rgba(188, 254, 45, 1),
+                    0 0 50px rgba(188, 254, 45, 0.7),
+                    -3px 0 0 rgba(255, 0, 85, 0.7),
+                    3px 0 0 rgba(0, 170, 255, 0.7);
+            }
+        }
+
+        @keyframes tapeFlicker {
+            0%, 100% { opacity: 0.8; transform: translateY(-50%) rotate(-45deg); }
+            50% { opacity: 1; transform: translateY(-50%) rotate(-40deg); }
+        }
+
+        @keyframes slashBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* 当前页面 - 极度高亮 */
         .gallery-menu-link.current {
             color: var(--acid-lime);
-            text-shadow: 0 0 15px var(--acid-lime);
+            background: linear-gradient(90deg, 
+                rgba(139, 0, 0, 0.4) 0%, 
+                rgba(188, 254, 45, 0.2) 50%, 
+                rgba(139, 0, 0, 0.4) 100%);
+            text-shadow: 
+                0 0 20px rgba(188, 254, 45, 1),
+                0 0 40px rgba(188, 254, 45, 0.7),
+                0 0 60px rgba(188, 254, 45, 0.4),
+                3px 0 0 rgba(255, 0, 85, 0.6),
+                -3px 0 0 rgba(0, 170, 255, 0.6);
+            box-shadow: 
+                0 0 40px rgba(188, 254, 45, 0.5),
+                inset 0 0 30px rgba(188, 254, 45, 0.2);
+            pointer-events: none;
+            cursor: default;
+            animation: currentPagePulse 2s ease-in-out infinite;
+        }
+
+        .gallery-menu-link.current::before {
+            opacity: 1;
+            animation: tapeFlicker 1.5s ease infinite;
+        }
+
+        .gallery-menu-link.current::after {
+            opacity: 1;
+            content: '▶';
+            font-size: 0.5em;
+            animation: playPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes currentPagePulse {
+            0%, 100% {
+                box-shadow: 
+                    0 0 40px rgba(188, 254, 45, 0.5),
+                    inset 0 0 30px rgba(188, 254, 45, 0.2);
+            }
+            50% {
+                box-shadow: 
+                    0 0 50px rgba(188, 254, 45, 0.7),
+                    inset 0 0 40px rgba(188, 254, 45, 0.3);
+            }
+        }
+
+        @keyframes playPulse {
+            0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+            50% { opacity: 0.6; transform: translateY(-50%) scale(1.2); }
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 640px) {
+            .gallery-menu-close-btn {
+                width: 46px;
+                height: 46px;
+                top: 16px;
+                right: 16px;
+            }
+
+            .gallery-menu-close-btn i {
+                width: 24px;
+                height: 24px;
+            }
+
+            .gallery-menu-link {
+                padding: 0.5rem 2rem;
+                font-size: clamp(1.6rem, 8vw, 3rem);
+            }
+
+            .gallery-menu-link::before {
+                width: 20px;
+                height: 8px;
+                left: -10px;
+            }
+
+            .gallery-menu-link::after {
+                right: -18px;
+            }
+
+            .gallery-menu-link:hover {
+                transform: translateX(8px) skewX(-1deg);
+            }
         }
 
         /* ========== 滚动条 ========== */
@@ -629,7 +890,7 @@
             <i data-lucide="x" class="w-6 h-6"></i>
         </button>
         <a href="../" class="gallery-menu-link">HOME</a>
-        <a href="../sf6/" class="gallery-menu-link">SF6 FRAME LAB</a>
+        <a href="../sf6/" class="gallery-menu-link">SF6</a>
         <a href="../gojuon/" class="gallery-menu-link">GOJUON</a>
         <a href="./" class="gallery-menu-link current">GALLERY</a>
         <a href="../music/" class="gallery-menu-link">IAMMUSIC</a>

@@ -15,6 +15,11 @@
         :root {
             --acid-lime: #bcfe2d;
             --deep-black: #050505;
+            --blood-red: #4a0000;
+            --dark-red: #2d0000;
+            --sick-purple: #1a0a1a;
+            --drain-red: #3d0000;
+            --sharp-red: #660000;
         }
 
         * {
@@ -427,31 +432,6 @@
             50% { opacity: 0.22; transform: translateY(-3px); }
         }
 
-        /* ========== 右上角 Logo ========== */
-        .corner-logo {
-            font-size: clamp(0.7rem, 1.5vw, 1rem);
-            line-height: 0.9;
-            filter: drop-shadow(0 0 10px rgba(188, 254, 45, 0.3));
-            position: fixed;
-            top: 0.8rem;
-            right: 2rem;
-            z-index: 50;
-            text-align: right;
-            letter-spacing: 0.05em;
-            animation: logoBreathe 5s ease-in-out infinite;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        @keyframes logoBreathe {
-            0%, 100% { 
-                filter: drop-shadow(0 0 8px rgba(188, 254, 45, 0.2));
-                opacity: 0.85;
-            }
-            50% { 
-                filter: drop-shadow(0 0 15px rgba(188, 254, 45, 0.5));
-                opacity: 1;
-            }
-        }
 
         /* ========== 拼贴装饰图片 ========== */
         .collage-img {
@@ -544,22 +524,395 @@
         }
 
         /* ========== 全屏菜单样式 ========== */
+        #fullscreen-menu {
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* VHS录像带噪点层 */
+        .vhs-noise-layer {
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='vhs'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23vhs)'/%3E%3C/svg%3E");
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 1;
+            animation: vhsDistort 0.4s steps(2) infinite;
+            mix-blend-mode: overlay;
+        }
+        
+        @keyframes vhsDistort {
+            0%, 100% { transform: translate(0, 0); opacity: 0.08; }
+            50% { transform: translate(-1px, 0.5px); opacity: 0.1; }
+        }
+        
+        /* 血色脉搏呼吸层 - 更硬朗 */
+        .blood-pulse-layer {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(
+                ellipse at 50% 50%, 
+                rgba(74, 0, 0, 0.15) 0%, 
+                transparent 40%
+            );
+            pointer-events: none;
+            z-index: 1;
+            animation: bloodPulseSharp 3s ease-in-out infinite;
+            mix-blend-mode: screen;
+        }
+        
+        @keyframes bloodPulseSharp {
+            0%, 100% { 
+                opacity: 0.4;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.8;
+                transform: scale(1.02);
+            }
+        }
+        
+        /* 血管脉搏动画 - 锐利版 */
+        @keyframes pulseBlood {
+            0%, 100% { 
+                opacity: 0.3;
+                box-shadow: 0 0 20px rgba(74, 0, 0, 0.5);
+            }
+            50% { 
+                opacity: 0.6;
+                box-shadow: 0 0 40px rgba(102, 0, 0, 0.8);
+            }
+        }
+        
+        /* 哥特符号呼吸动画 - 血色版 */
+        @keyframes fadeGothicDrain {
+            0%, 100% { 
+                opacity: 0.12; 
+                transform: translateY(0) scale(1); 
+                filter: drop-shadow(0 0 0 transparent);
+            }
+            50% { 
+                opacity: 0.25; 
+                transform: translateY(-4px) scale(1.05); 
+                filter: drop-shadow(0 0 12px currentColor);
+            }
+        }
+        
+        #fullscreen-menu.menu-entering {
+            animation: menuFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        #fullscreen-menu.menu-leaving {
+            animation: menuFadeOut 0.4s cubic-bezier(0.4, 0, 1, 1) forwards;
+        }
+        
+        @keyframes menuFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes menuFadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+        }
+        
         .menu-link {
             text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
+            color: #ddd;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: block;
+            padding: 1.8rem 3rem;
+            margin: 0.5rem 0;
+            border: none;
+            background: transparent;
+            overflow: hidden;
         }
         
-        .menu-link:hover .menu-index {
-            color: var(--acid-lime);
+        /* 菜单初始隐藏状态 */
+        #fullscreen-menu:not(.menu-visible) .menu-link {
+            opacity: 0;
+            transform: translateX(-30px);
         }
         
+        /* 菜单项依次进入动画 */
+        #fullscreen-menu.menu-entering .menu-link {
+            animation: menuItemSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        #fullscreen-menu.menu-entering .menu-link:nth-child(1) { animation-delay: 0.08s; }
+        #fullscreen-menu.menu-entering .menu-link:nth-child(2) { animation-delay: 0.16s; }
+        #fullscreen-menu.menu-entering .menu-link:nth-child(3) { animation-delay: 0.24s; }
+        #fullscreen-menu.menu-entering .menu-link:nth-child(4) { animation-delay: 0.32s; }
+        
+        /* 菜单显示状态 - 保持可见 */
+        #fullscreen-menu.menu-visible .menu-link {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        @keyframes menuItemSlideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* 十字架装饰符号 - 深红色 */
+        .cross-symbol {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            transition: all 0.4s ease;
+            opacity: 0.25;
+            color: var(--blood-red);
+        }
+        
+        .menu-link:hover .cross-symbol {
+            opacity: 0.8;
+            transform: translateY(-50%) translateX(5px) rotate(180deg);
+            text-shadow: 0 0 25px var(--sharp-red);
+            filter: drop-shadow(0 0 20px var(--sharp-red)) contrast(1.3);
+        }
+        
+        /* 发光边框效果 - 移除 */
+        .menu-link::before {
+            display: none;
+        }
+        
+        /* 背景血色渗透 + 噪点 */
+        .menu-link::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+            background-color: rgba(45, 0, 0, 0.08);
+        }
+        
+        .menu-link:hover::after {
+            opacity: 0.35;
+            animation: noiseBloodGlitch 0.6s steps(3) infinite;
+        }
+        
+        @keyframes noiseBloodGlitch {
+            0% { transform: translate(0, 0); background-color: rgba(45, 0, 0, 0.08); }
+            33% { transform: translate(-2px, 1px); background-color: rgba(74, 0, 0, 0.12); }
+            66% { transform: translate(1px, -1px); background-color: rgba(26, 10, 26, 0.1); }
+        }
+        
+        .menu-link:hover {
+            transform: translateY(-4px) scale(1.02);
+            filter: 
+                drop-shadow(0 0 60px rgba(74, 0, 0, 0.6)) 
+                drop-shadow(0 0 100px rgba(26, 10, 26, 0.4))
+                contrast(1.15);
+        }
+        
+        /* 序号样式 - 已移除 */
         .menu-link .menu-index {
-            transition: color 0.3s ease;
+            display: none;
+        }
+        
+        /* 主标题崩溃撕裂效果 - 锐利血红 */
+        .menu-link .menu-title {
+            position: relative;
+            display: inline-block;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 0 transparent);
+            color: #e8e8e8;
+        }
+        
+        .menu-link:hover .menu-title {
+            color: #fff;
+            text-shadow: 
+                0 0 25px rgba(255, 255, 255, 0.9),
+                0 0 45px var(--sharp-red),
+                0 0 80px var(--sharp-red),
+                5px 5px 0 rgba(45, 0, 0, 1),
+                -5px -5px 0 rgba(26, 10, 26, 1);
+            filter: 
+                drop-shadow(0 6px 12px rgba(45, 0, 0, 0.8))
+                contrast(1.2)
+                brightness(1.1);
+            animation: mentalBreakdown 2.5s ease-in-out infinite;
+        }
+        
+        @keyframes mentalBreakdown {
+            0%, 85%, 100% { 
+                transform: translate(0); 
+            }
+            87% { 
+                transform: translate(-4px, 3px) skewX(-3deg); 
+            }
+            89% { 
+                transform: translate(4px, -3px) skewX(3deg); 
+            }
+            91% { 
+                transform: translate(-3px, -2px) skewX(-2deg); 
+            }
+            93% { 
+                transform: translate(3px, 3px) skewX(2deg); 
+            }
+            95% { 
+                transform: translate(-2px, 1px) skewX(-1deg); 
+            }
+        }
+        
+        /* 副标题 - 已移除 */
+        .menu-subtitle {
+            display: none;
         }
 
         .group:hover .group-hover\:text-lime-400 {
             color: #a3e635;
+        }
+        
+        /* 扫描线效果 - 锐利血色静脉 */
+        .menu-link .menu-scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                var(--sharp-red) 50%, 
+                transparent 100%);
+            opacity: 0;
+            transform: translateY(-100%);
+            box-shadow: 
+                0 0 35px var(--sharp-red),
+                0 0 60px rgba(74, 0, 0, 0.6);
+        }
+        
+        .menu-link:hover .menu-scanline {
+            opacity: 0.75;
+            animation: bloodVeinScan 2.2s linear infinite;
+        }
+        
+        @keyframes bloodVeinScan {
+            0% { 
+                transform: translateY(0); 
+                opacity: 0.75; 
+                box-shadow: 
+                    0 0 35px var(--sharp-red),
+                    0 0 60px rgba(74, 0, 0, 0.6);
+            }
+            100% { 
+                transform: translateY(calc(100% + 100px)); 
+                opacity: 0.2;
+                box-shadow: 
+                    0 0 15px var(--sharp-red),
+                    0 0 30px rgba(74, 0, 0, 0.3);
+            }
+        }
+        
+        /* 装饰性粒子 - 深黑红血滴 */
+        .menu-particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .menu-particle {
+            position: absolute;
+            width: 5px;
+            height: 6px;
+            background: var(--blood-red);
+            border-radius: 50% 50% 50% 0%;
+            transform: rotate(-45deg);
+            opacity: 0.5;
+            animation: bloodDrop 9s ease-in-out infinite;
+            box-shadow: 
+                0 0 15px var(--sharp-red),
+                0 0 30px rgba(74, 0, 0, 0.8);
+            filter: contrast(1.3);
+        }
+        
+        .menu-particle:nth-child(2n) {
+            background: var(--sick-purple);
+            box-shadow: 
+                0 0 15px rgba(26, 10, 26, 0.9),
+                0 0 30px rgba(26, 10, 26, 0.7);
+            animation-duration: 11s;
+            animation-delay: -2.5s;
+            width: 4px;
+            height: 5px;
+        }
+        
+        .menu-particle:nth-child(3n) {
+            background: var(--dark-red);
+            box-shadow: 
+                0 0 15px var(--dark-red),
+                0 0 30px rgba(45, 0, 0, 0.8);
+            animation-duration: 13s;
+            animation-delay: -5s;
+            width: 6px;
+            height: 7px;
+        }
+        
+        .menu-particle:nth-child(4n) {
+            background: rgba(30, 0, 0, 0.95);
+            box-shadow: 
+                0 0 12px rgba(30, 0, 0, 0.9),
+                0 0 25px rgba(30, 0, 0, 0.7);
+            animation-duration: 10s;
+            animation-delay: -7s;
+            width: 4px;
+            height: 5px;
+        }
+        
+        @keyframes bloodDrop {
+            0%, 100% {
+                transform: translate(0, 0) rotate(-45deg) scale(0.5);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.65;
+            }
+            50% {
+                transform: translate(calc(100vw * var(--x-offset, 0.5)), calc(-100vh * 0.85)) rotate(-45deg) scale(1.4);
+                opacity: 0.55;
+            }
+            95% {
+                opacity: 0.3;
+            }
+        }
+        
+        /* 关闭按钮样式 - 深血色 */
+        .drain-close-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .drain-close-btn:hover {
+            border-color: var(--sharp-red) !important;
+            background: rgba(74, 0, 0, 0.2) !important;
+            box-shadow: 0 0 30px rgba(102, 0, 0, 0.7);
+            transform: rotate(90deg);
+            color: #fff !important;
+        }
+        
+        .drain-close-btn:hover i {
+            filter: drop-shadow(0 0 15px var(--sharp-red)) contrast(1.3);
         }
 
         /* ========== 工具类 ========== */
@@ -661,6 +1014,59 @@
             .md\:text-lg { font-size: 1.125rem; line-height: 1.75rem; }
             .md\:text-7xl { font-size: 4.5rem; line-height: 1; }
         }
+        
+        /* 移动端菜单优化 */
+        @media (max-width: 768px) {
+            .menu-link {
+                padding: 1.2rem 2rem;
+            }
+            
+            .menu-link .menu-title {
+                font-size: 2.5rem !important;
+            }
+            
+            .menu-link:hover {
+                transform: translateY(-2px) scale(1.01);
+            }
+            
+            .gothic-symbol {
+                display: none;
+            }
+            
+            .cross-symbol {
+                font-size: 1rem;
+                right: 1rem;
+            }
+            
+            #close-menu {
+                top: 1rem;
+                right: 1rem;
+                padding: 0.6rem;
+            }
+            
+            .vhs-noise-layer {
+                opacity: 0.05;
+            }
+            
+            .blood-pulse-layer {
+                opacity: 0.5;
+            }
+            
+            .menu-particle {
+                width: 4px;
+                height: 5px;
+            }
+            
+            .menu-particle:nth-child(2n) {
+                width: 3px;
+                height: 4px;
+            }
+            
+            .menu-particle:nth-child(3n) {
+                width: 5px;
+                height: 6px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -701,7 +1107,7 @@
     </div>
 
     <!-- 导航栏 -->
-    <nav class="fixed top-0 left-0 w-full z-40 px-5 md:px-8 flex justify-between items-center backdrop-blur-md" style="height: 52px; background: linear-gradient(180deg, rgba(10,10,10,0.98) 0%, rgba(5,5,5,0.95) 100%); border-bottom: 1px solid rgba(188,254,45,0.15); box-shadow: 0 1px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(188,254,45,0.08);">
+    <nav class="fixed top-0 left-0 w-full z-40 px-5 md:px-8 flex justify-between items-center backdrop-blur-md" style="height: 52px; background: linear-gradient(180deg, rgba(10,10,10,0.98) 0%, rgba(5,5,5,0.95) 100%); border-bottom: 1px solid rgba(188,254,45,0.15); box-shadow: 0 1px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(188,254,45,0.08); padding-right: 2rem;">
         <div class="flex items-center gap-2 md:gap-3">
             <img src="asset/logo-e.jpg" alt="E" class="w-7 h-7 md:w-8 md:h-8 object-contain">
             <span class="font-black tracking-tighter text-base md:text-lg">EMOBOI</span>
@@ -712,37 +1118,66 @@
     </nav>
 
     <!-- 全屏菜单 -->
-    <div id="fullscreen-menu" class="fixed inset-0 hidden items-center justify-center" style="background: rgba(0,0,0,0.97); z-index: 9995;">
-        <!-- 背景装饰大字 -->
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-            <span class="menu-bg-text" style="font-family: 'Archivo Black', 'Arial Black', sans-serif; font-size: clamp(20vw, 35vw, 45vw); font-style: italic; color: rgba(255,255,255,0.02); letter-spacing: -0.05em; line-height: 0.8;">MENU</span>
+    <div id="fullscreen-menu" class="fixed inset-0 hidden items-center justify-center" style="background: radial-gradient(ellipse at center, rgba(20,5,8,0.98) 0%, rgba(0,0,0,0.99) 100%); z-index: 9995;">
+        
+        <!-- VHS噪点层 -->
+        <div class="vhs-noise-layer"></div>
+        
+        <!-- 血色渗透脉搏层 -->
+        <div class="blood-pulse-layer"></div>
+        
+        <!-- 装饰性粒子背景 -->
+        <div class="menu-particles">
+            <div class="menu-particle" style="left: 10%; bottom: 0; --x-offset: 0.2;"></div>
+            <div class="menu-particle" style="left: 25%; bottom: 0; --x-offset: 0.4;"></div>
+            <div class="menu-particle" style="left: 40%; bottom: 0; --x-offset: 0.6;"></div>
+            <div class="menu-particle" style="left: 55%; bottom: 0; --x-offset: 0.8;"></div>
+            <div class="menu-particle" style="left: 70%; bottom: 0; --x-offset: 0.3;"></div>
+            <div class="menu-particle" style="left: 85%; bottom: 0; --x-offset: 0.7;"></div>
+            <div class="menu-particle" style="left: 15%; bottom: 0; --x-offset: 0.5;"></div>
+            <div class="menu-particle" style="left: 60%; bottom: 0; --x-offset: 0.9;"></div>
+            <div class="menu-particle" style="left: 32%; bottom: 0; --x-offset: 0.35;"></div>
+            <div class="menu-particle" style="left: 78%; bottom: 0; --x-offset: 0.65;"></div>
         </div>
-        <button id="close-menu" class="absolute top-6 right-6 p-2 border border-zinc-700 hover:bg-white hover:text-black transition-all" style="z-index: 10;">
+        
+        <!-- 哥特装饰符号 - 深血红色 -->
+        <div class="gothic-symbol" style="position: absolute; top: 20%; left: 12%; font-size: 1.8rem; opacity: 0.15; color: var(--sharp-red); animation: fadeGothicDrain 5s ease-in-out infinite;">✝</div>
+        <div class="gothic-symbol" style="position: absolute; bottom: 25%; left: 8%; font-size: 1.5rem; opacity: 0.12; color: var(--dark-red); animation: fadeGothicDrain 6s ease-in-out infinite; animation-delay: -2s;">☠</div>
+        <div class="gothic-symbol" style="position: absolute; top: 25%; right: 10%; font-size: 1.6rem; opacity: 0.13; color: var(--drain-red); animation: fadeGothicDrain 5.5s ease-in-out infinite; animation-delay: -1.5s;">♰</div>
+        <div class="gothic-symbol" style="position: absolute; bottom: 22%; right: 12%; font-size: 1.7rem; opacity: 0.16; color: var(--sharp-red); animation: fadeGothicDrain 5.8s ease-in-out infinite; animation-delay: -3s;">✞</div>
+        
+        <!-- 顶部血管装饰线 -->
+        <div class="absolute top-0 left-0 w-full h-1" style="background: linear-gradient(90deg, transparent, var(--sharp-red), var(--dark-red), transparent); opacity: 0.35; box-shadow: 0 0 25px rgba(102, 0, 0, 0.6); animation: pulseBlood 3s ease-in-out infinite;"></div>
+        
+        <!-- 底部血管装饰线 -->
+        <div class="absolute bottom-0 left-0 w-full h-1" style="background: linear-gradient(90deg, transparent, var(--sick-purple), var(--sharp-red), transparent); opacity: 0.35; box-shadow: 0 0 25px rgba(26, 10, 26, 0.6); animation: pulseBlood 3s ease-in-out infinite; animation-delay: -1.5s;"></div>
+        
+        <button id="close-menu" class="absolute top-6 right-6 p-3 border-2 transition-all drain-close-btn" style="z-index: 10; background: rgba(0, 0, 0, 0.8); border-color: #600; color: #999;">
             <i data-lucide="x" class="w-6 h-6"></i>
         </button>
-        <div class="flex flex-col gap-4 text-center relative" style="z-index: 5;">
-            <a href="sf6/" onclick="closeMenu()" class="menu-link group flex items-center justify-center gap-4">
-                <span class="menu-index mono text-zinc-600 text-sm">01</span>
-                <span class="text-4xl md:text-7xl font-black italic tracking-tighter group-hover:text-lime-400 transition-colors uppercase">SF6 FRAME LAB</span>
+        
+        <div class="flex flex-col gap-4 text-center relative" style="z-index: 5; max-width: 900px; width: 90%;">
+            <a href="sf6/" onclick="closeMenu()" class="menu-link group flex items-center justify-center">
+                <span class="menu-scanline"></span>
+                <span class="cross-symbol">✝</span>
+                <span class="menu-title text-4xl md:text-7xl font-black italic tracking-tighter uppercase" style="font-family: 'Syne', sans-serif;">SF6</span>
             </a>
-            <a href="gojuon/" onclick="closeMenu()" class="menu-link group flex items-center justify-center gap-4">
-                <span class="menu-index mono text-zinc-600 text-sm">02</span>
-                <span class="text-4xl md:text-7xl font-black italic tracking-tighter group-hover:text-lime-400 transition-colors uppercase">GOJUON</span>
+            <a href="gojuon/" onclick="closeMenu()" class="menu-link group flex items-center justify-center">
+                <span class="menu-scanline"></span>
+                <span class="cross-symbol">✞</span>
+                <span class="menu-title text-4xl md:text-7xl font-black italic tracking-tighter uppercase" style="font-family: 'Syne', sans-serif;">GOJUON</span>
             </a>
-            <a href="gallery/" onclick="closeMenu()" class="menu-link group flex items-center justify-center gap-4">
-                <span class="menu-index mono text-zinc-600 text-sm">03</span>
-                <span class="text-4xl md:text-7xl font-black italic tracking-tighter group-hover:text-lime-400 transition-colors uppercase">GALLERY</span>
+            <a href="gallery/" onclick="closeMenu()" class="menu-link group flex items-center justify-center">
+                <span class="menu-scanline"></span>
+                <span class="cross-symbol">♰</span>
+                <span class="menu-title text-4xl md:text-7xl font-black italic tracking-tighter uppercase" style="font-family: 'Syne', sans-serif;">GALLERY</span>
             </a>
-            <a href="music/" onclick="closeMenu()" class="menu-link group flex items-center justify-center gap-4">
-                <span class="menu-index mono text-zinc-600 text-sm">04</span>
-                <span class="text-4xl md:text-7xl font-black italic tracking-tighter group-hover:text-lime-400 transition-colors uppercase">IAMMUSIC</span>
+            <a href="music/" onclick="closeMenu()" class="menu-link group flex items-center justify-center">
+                <span class="menu-scanline"></span>
+                <span class="cross-symbol">✟</span>
+                <span class="menu-title text-4xl md:text-7xl font-black italic tracking-tighter uppercase" style="font-family: 'Syne', sans-serif;">IAMMUSIC</span>
             </a>
         </div>
-    </div>
-
-    <!-- 右上角 Logo -->
-    <div class="corner-logo glitch-text select-none" id="corner-logo">
-        EMO<br>BOI
     </div>
 
     <!-- ========== 拼贴装饰图片 (27张，优化布局 - 左中右均衡分布) ========== -->
@@ -1014,20 +1449,32 @@
         const menuBtn = document.getElementById('menu-btn');
         const closeMenuBtn = document.getElementById('close-menu');
         const fullscreenMenu = document.getElementById('fullscreen-menu');
-        const cornerLogo = document.getElementById('corner-logo');
 
         menuBtn.addEventListener('click', () => {
             fullscreenMenu.style.display = 'flex';
-            cornerLogo.style.opacity = '0';
-            cornerLogo.style.visibility = 'hidden';
+            // 触发进入动画
+            requestAnimationFrame(() => {
+                fullscreenMenu.classList.add('menu-entering');
+                fullscreenMenu.classList.add('menu-visible');
+            });
+            // 移除进入动画类，但保留visible类
+            setTimeout(() => {
+                fullscreenMenu.classList.remove('menu-entering');
+            }, 600);
         });
 
         closeMenuBtn.addEventListener('click', closeMenu);
 
         function closeMenu() {
-            fullscreenMenu.style.display = 'none';
-            cornerLogo.style.opacity = '';
-            cornerLogo.style.visibility = '';
+            // 移除visible类
+            fullscreenMenu.classList.remove('menu-visible');
+            // 触发退出动画
+            fullscreenMenu.classList.add('menu-leaving');
+            // 动画完成后隐藏
+            setTimeout(() => {
+                fullscreenMenu.style.display = 'none';
+                fullscreenMenu.classList.remove('menu-leaving');
+            }, 400);
         }
 
         // ESC 键关闭菜单
@@ -1036,16 +1483,6 @@
                 closeMenu();
             }
         });
-
-        // ==================== 右上角 Logo 随机抖动效果 ====================
-        setInterval(() => {
-            if (Math.random() > 0.96 && fullscreenMenu.style.display !== 'flex') {
-                cornerLogo.style.transform = `translate(${Math.random()*8-4}px, ${Math.random()*8-4}px) skew(${Math.random()*6-3}deg)`;
-                setTimeout(() => {
-                    cornerLogo.style.transform = 'none';
-                }, 60);
-            }
-        }, 120);
     </script>
 </body>
 </html>

@@ -54,7 +54,6 @@
             font-style: italic; 
         }
         
-        /* ========== 阶段A：Glitch 动态效果 ========== */
         /* 主标题 - 常驻发光 + 呼吸效果 */
         .glitch-hover {
             position: relative;
@@ -265,7 +264,6 @@
             100% { opacity: 0; transform: scale(0.8); }
         }
         
-        /* ========== 第一阶段：New-Brutalism 结构强化 ========== */
         .trend-card { 
             background: color-mix(in srgb, var(--theme-primary) 10%, #0a0a0c);
             border: 3px solid color-mix(in srgb, var(--theme-primary) 40%, #333);
@@ -316,7 +314,6 @@
             filter: brightness(0.9);
         }
         
-        /* ========== 第三阶段：物理点击反馈 ========== */
         .btn-hype:active {
             transform: translateY(3px);
             box-shadow: none;
@@ -388,7 +385,6 @@
             }
         }
         
-        /* ========== 第五阶段：收藏印章标签 ========== */
         .favorite-stamp {
             position: absolute;
             top: -4px;
@@ -631,6 +627,8 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 6px;
             padding-bottom: 8px; /* 为hover放大效果预留空间，避免出现滚动条 */
+            padding-top: 40px; /* 为向上的 tooltip 预留空间 */
+            overflow: visible; /* 确保 tooltip 可见但不影响滚动 */
         }
         
         /* 超小屏幕优化：3列更易点击 */
@@ -668,7 +666,8 @@
             padding: 4px;
         }
         
-        .char-item:hover {
+        /* 只有可选角色才有 hover 效果 */
+        .char-item:not(.no-data):not(.other-mode-only):hover {
             border-color: var(--theme-secondary);
             transform: scale(1.05);
         }
@@ -679,15 +678,121 @@
             box-shadow: 0 0 15px color-mix(in srgb, var(--theme-primary) 30%, transparent);
         }
         
+        /* 另一个模式有数据：半透明显示 */
+        .char-item.other-mode-only {
+            opacity: 0.55 !important;
+            cursor: help !important;  /* 改为帮助光标，提示用户可以切换模式 */
+            filter: grayscale(0.4) brightness(1.1) !important;
+            border-color: #555 !important;
+            background: #252535 !important;
+            border-width: 2px !important;
+            border-style: solid !important;
+            position: relative;
+        }
+        .char-item.other-mode-only:hover {
+            opacity: 0.7 !important;
+            transform: scale(1.02) !important;  /* 轻微放大，显示它是特殊的 */
+            border-color: #777 !important;
+        }
+        
+        /* 自定义 tooltip - 在 title 属性基础上增强 */
+        .char-item.other-mode-only::after {
+            content: attr(title);
+            position: absolute;
+            top: -35px; /* 改为向上显示 */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 100;
+            border: 1px solid #555;
+        }
+        
+        /* 添加小三角箭头指向卡片 */
+        .char-item.other-mode-only::before {
+            content: '';
+            position: absolute;
+            top: -6px; /* 箭头位置 */
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid rgba(0, 0, 0, 0.95); /* 向下的三角 */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 101;
+        }
+        
+        .char-item.other-mode-only:hover::after,
+        .char-item.other-mode-only:hover::before {
+            opacity: 1;
+        }
+        
+        /* 完全无数据：更暗的灰色，无边框 */
         .char-item.no-data { 
-            opacity: 0.3; 
-            cursor: not-allowed;
-            filter: grayscale(0.8);
+            opacity: 0.25 !important;
+            cursor: not-allowed !important;
+            filter: grayscale(0.9) !important;
+            border: none !important;  /* 去掉边框，与 other-mode-only 区分 */
+            background: #0f0f0f !important;
         }
         .char-item.no-data:hover { 
-            opacity: 0.35; 
-            transform: none;
-            border-color: #333;
+            opacity: 0.28 !important;
+            transform: none !important;
+        }
+        
+        /* 操作模式切换按钮 */
+        .control-mode-switch {
+            display: flex;
+            gap: 0;
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .mode-btn {
+            font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.4rem 0.8rem;
+            background: transparent;
+            color: #666;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .mode-btn:not(:last-child) {
+            border-right: 1px solid #333;
+        }
+        
+        .mode-btn:hover {
+            color: #aaa;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .mode-btn.active {
+            background: var(--theme-primary);
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        
+        @media (max-width: 640px) {
+            .mode-btn {
+                font-size: 0.65rem;
+                padding: 0.35rem 0.6rem;
+            }
         }
         
         .char-name {
@@ -816,6 +921,37 @@
         }
         .modal-btn-active {
             background-color: var(--theme-btn-primary);
+        }
+        
+        /* 帮助模态框翻页样式 */
+        .help-page {
+            min-height: 400px;
+            animation: helpPageFadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes helpPageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .help-dot {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .help-dot:hover {
+            transform: scale(1.3) !important;
+            opacity: 0.8;
+        }
+        
+        .help-dot.active {
+            box-shadow: 0 0 10px var(--theme-primary);
         }
         
         /* 排序按钮样式 */
@@ -1316,7 +1452,6 @@
             100% { transform: translateX(-50%); }
         }
         
-        /* 第二条胶带 - 隐藏 */
         .marquee-tape-2 {
             display: none;
         }
@@ -1365,7 +1500,6 @@
             100% { transform: translateX(0); }
         }
         
-        /* ========== 阶段F：背景氛围层 ========== */
         .ambient-layer {
             position: fixed;
             inset: 0;
@@ -1394,7 +1528,6 @@
             }
         }
         
-        /* ========== 阶段G：页面过渡动画 ========== */
         /* 卡片入场动画 */
         .card-enter {
             opacity: 0;
@@ -1581,6 +1714,11 @@
             text-shadow: 0 0 15px var(--theme-secondary);
         }
         
+        .sf6-menu-link.current::before,
+        .sf6-menu-link.current::after {
+            width: 15px;
+        }
+        
         /* 菜单项装饰线 */
         .sf6-menu-link::before {
             content: '';
@@ -1594,7 +1732,20 @@
             transition: width 0.3s ease;
         }
         
-        .sf6-menu-link:hover::before {
+        .sf6-menu-link::after {
+            content: '';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            width: 0;
+            height: 3px;
+            background: var(--theme-primary);
+            transform: translateY(-50%);
+            transition: width 0.3s ease;
+        }
+        
+        .sf6-menu-link:hover::before,
+        .sf6-menu-link:hover::after {
             width: 15px;
         }
         
@@ -1645,7 +1796,7 @@
             <i data-lucide="x"></i>
         </button>
         <a href="../" class="sf6-menu-link">HOME</a>
-        <a href="./" class="sf6-menu-link current">SF6 FRAME LAB</a>
+        <a href="./" class="sf6-menu-link current">SF6</a>
         <a href="../gojuon/" class="sf6-menu-link">GOJUON</a>
         <a href="../gallery/" class="sf6-menu-link">GALLERY</a>
         <a href="../music/" class="sf6-menu-link">IAMMUSIC</a>
@@ -1975,9 +2126,28 @@
 
     <!-- MODAL: Character Select -->
     <div id="charModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm hidden flex items-center justify-center p-2 sm:p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="charModalTitle">
-        <div class="bg-zinc-900 border w-full max-w-3xl p-4 sm:p-6 md:p-8 max-h-[85vh] sm:max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-card-border);">
+        <div class="bg-zinc-900 border w-full max-w-3xl p-4 sm:p-6 md:p-8 max-h-[85vh] sm:max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-card-border); overflow-x: hidden;">
             <div class="flex justify-between items-center mb-4 sm:mb-6">
-                <h2 id="charModalTitle" class="impact-text text-xl sm:text-2xl md:text-3xl font-black" style="color: var(--theme-modal-title);">选择角色</h2>
+                <div class="flex items-center gap-4">
+                    <h2 id="charModalTitle" class="impact-text text-xl sm:text-2xl md:text-3xl font-black" style="color: var(--theme-modal-title);">选择角色</h2>
+                    <!-- 经典/现代模式切换 -->
+                    <div class="control-mode-switch">
+                        <button 
+                            onclick="switchControlMode('classic')" 
+                            id="modeBtn-classic" 
+                            class="mode-btn active"
+                            title="经典操作">
+                            经典
+                        </button>
+                        <button 
+                            onclick="switchControlMode('modern')" 
+                            id="modeBtn-modern" 
+                            class="mode-btn"
+                            title="现代操作">
+                            现代
+                        </button>
+                    </div>
+                </div>
                 <button onclick="closeCharModal()" class="text-zinc-500 hover:text-white text-2xl sm:text-3xl p-2 -m-2" title="关闭">&times;</button>
             </div>
             <div class="char-grid" id="charGrid"></div>
@@ -2000,6 +2170,9 @@
                 <button onclick="switchRuleTab('combo')" id="ruleTab-combo" class="rule-tab-btn px-4 py-2 text-xs font-bold transition-colors">
                     禁用组合
                 </button>
+                <button onclick="switchRuleTab('context')" id="ruleTab-context" class="rule-tab-btn px-3 py-2 text-xs font-bold transition-colors">
+                    条件禁用
+                </button>
                 <button onclick="switchRuleTab('prefer')" id="ruleTab-prefer" class="rule-tab-btn px-4 py-2 text-xs font-bold transition-colors">
                     倾向压制
                 </button>
@@ -2015,7 +2188,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">禁用场景</label>
+                    <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">禁用类型</label>
                     <select id="inputDisableUsage" class="w-full bg-black border p-3 text-sm text-white" style="border-color: var(--theme-card-border);">
                         <option value="kill">用于卡帧</option>
                         <option value="meaty_after_kill">用于卡帧后的压制</option>
@@ -2076,6 +2249,40 @@
                 </div>
                 <div class="flex gap-2 pt-2">
                     <button onclick="savePreferRule()" class="flex-1 text-white py-3 font-bold text-sm transition-all modal-btn-primary">保存规则</button>
+                    <button onclick="closeRuleModal()" class="px-4 py-3 bg-zinc-800 text-zinc-400 font-bold text-sm hover:text-white transition-all">取消</button>
+                </div>
+            </div>
+            
+            <!-- 条件禁用规则表单 -->
+            <div id="ruleForm-context" class="space-y-4 hidden">
+                <p class="text-zinc-500 text-xs mb-4">基于前置场景禁用特定招式用于压制。例如：投技后禁用投技压制（距离过远）。</p>
+                <div>
+                    <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">前置场景</label>
+                    <select id="inputContextPattern" class="w-full bg-black border p-3 text-sm font-bold text-white" style="border-color: var(--theme-card-border);">
+                        <option value="">-- 请选择场景 --</option>
+                    </select>
+                    <div class="text-[9px] text-zinc-600 mt-1">选择前置场景作为禁用条件</div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">要禁用的招式</label>
+                    <select id="inputContextMove" class="w-full bg-black border p-3 text-sm font-bold text-white" style="border-color: var(--theme-card-border);">
+                        <option value="">-- 请选择招式 --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">禁用类型</label>
+                    <select id="inputContextUsage" class="w-full bg-black border p-3 text-sm text-white" style="border-color: var(--theme-card-border);">
+                        <option value="meaty">所有压制</option>
+                        <option value="meaty_after_kill">卡帧后压制</option>
+                        <option value="meaty_direct">直接压制</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black uppercase mb-1 text-zinc-500">说明 (可选)</label>
+                    <input type="text" id="inputContextDesc" class="w-full bg-black border p-3 text-sm text-zinc-400" style="border-color: var(--theme-card-border);" placeholder="例如: 投技后距离过远">
+                </div>
+                <div class="flex gap-2 pt-2">
+                    <button onclick="saveContextRule()" class="flex-1 text-white py-3 font-bold text-sm transition-all modal-btn-primary">保存规则</button>
                     <button onclick="closeRuleModal()" class="px-4 py-3 bg-zinc-800 text-zinc-400 font-bold text-sm hover:text-white transition-all">取消</button>
                 </div>
             </div>
@@ -2158,67 +2365,159 @@
 
     <!-- MODAL: Help -->
     <div id="helpModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
-        <div class="bg-zinc-900 border w-full max-w-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto" style="border-color: var(--theme-card-border);">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="helpModalTitle" class="impact-text text-2xl sm:text-3xl font-black" style="color: var(--theme-modal-title);">使用说明</h2>
-                <button onclick="closeHelpModal()" class="text-zinc-500 hover:text-white text-3xl sm:text-2xl p-2 -m-2" title="关闭">&times;</button>
+        <div class="bg-zinc-900 border w-full max-w-3xl flex flex-col" style="border-color: var(--theme-card-border); height: 700px;">
+            <!-- 标题栏 -->
+            <div class="flex justify-between items-center px-8 pt-6 pb-4 flex-shrink-0">
+                <h2 id="helpModalTitle" class="impact-text text-3xl font-black" style="color: var(--theme-modal-title);">使用说明</h2>
+                <button onclick="closeHelpModal()" class="text-zinc-500 hover:text-white text-3xl p-2 -m-2 transition-colors" title="关闭">&times;</button>
             </div>
-            <div class="space-y-6 text-zinc-300 text-sm leading-relaxed">
-                <section>
-                    <h3 class="text-lg font-bold text-white mb-2">📌 这是什么？</h3>
-                    <p>SF6 FRAME LAB 是一款卡帧套路压制计算工具，帮助找到最优的<strong class="text-cyan-400">卡帧压制</strong>组合方案。</p>
-                </section>
+            
+            <!-- 内容区域 (固定高度，不滚动) -->
+            <div class="px-8 flex-1 overflow-hidden">
+                <!-- 页面 1: 快速开始 -->
+                <div id="helpPage1" class="help-page h-full flex flex-col justify-center text-zinc-300 text-sm">
+                    <div>
+                        <h3 class="text-3xl font-bold text-white mb-8 text-center" style="color: var(--theme-primary);">三步开始</h3>
+                        <div class="space-y-5 max-w-2xl mx-auto">
+                            <div class="flex gap-5 items-center">
+                                <div class="flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg" style="background: linear-gradient(135deg, var(--theme-primary), var(--theme-accent));">1</div>
+                                <div class="flex-1 bg-zinc-800/40 border border-zinc-700 p-5 rounded-lg hover:border-zinc-600 transition-colors">
+                                    <div class="font-bold text-white text-base mb-2">选择角色</div>
+                                    <div class="text-sm text-zinc-400">点击顶部「角色」按钮或横幅图标</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-5 items-center">
+                                <div class="flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg" style="background: linear-gradient(135deg, var(--theme-primary), var(--theme-accent));">2</div>
+                                <div class="flex-1 bg-zinc-800/40 border border-zinc-700 p-5 rounded-lg hover:border-zinc-600 transition-colors">
+                                    <div class="font-bold text-white text-base mb-2">查看或添加场景</div>
+                                    <div class="text-sm text-zinc-400">「方案」页签查看预设，或点击「+ 新增场景」输入有利帧数</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-5 items-center">
+                                <div class="flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg" style="background: linear-gradient(135deg, var(--theme-primary), var(--theme-accent));">3</div>
+                                <div class="flex-1 bg-zinc-800/40 border border-zinc-700 p-5 rounded-lg hover:border-zinc-600 transition-colors">
+                                    <div class="font-bold text-white text-base mb-2">查看压制方案</div>
+                                    <div class="text-sm text-zinc-400">系统自动计算最优卡帧组合，点击 <span class="text-yellow-400 font-bold">☆</span> 收藏常用方案</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
-                <section>
-                    <h3 class="text-lg font-bold text-white mb-2">🎮 如何使用</h3>
-                    <ol class="list-decimal list-inside space-y-3 text-zinc-400">
-                        <li><strong class="text-white">选择角色</strong> - 点击 <span class="text-cyan-400">角色</span> 按钮或顶部滚动横幅切换角色</li>
-                        <li>
-                            <strong class="text-white">查看卡帧策略</strong> - <span class="text-cyan-400">方案</span> 页签展示各种击倒情境下的最优方案
-                            <p class="text-zinc-500 text-xs mt-1 ml-5">*使用搜索框查找特定帧数或场景，点击排序按钮切换排序方向</p>
-                            <p class="text-zinc-500 text-xs ml-5">*点击 <span class="text-yellow-400">☆</span> 收藏喜欢的方案，点击 <span class="text-zinc-400">_</span> 最小化到备选区</p>
-                        </li>
-                        <li>
-                            <strong class="text-white">新增场景</strong> - 点击 <span class="text-cyan-400">+ 新增场景</span> 输入有利帧数，系统自动计算
-                            <p class="text-zinc-500 text-xs mt-1 ml-5">*切换「模糊」模式可输入帧数范围，系统计算通用方案</p>
-                            <p class="text-zinc-500 text-xs ml-5">*可展开「期望后续」指定剩余帧数或压制招式，系统验证可行性</p>
-                        </li>
-                        <li>
-                            <strong class="text-white">管理帧数据</strong> - <span class="text-cyan-400">数据</span> 页签可查看/导入角色招式数据
-                            <p class="text-zinc-500 text-xs mt-1 ml-5">*管理组合规则：<span class="text-zinc-400">全局</span> 规则全角色生效，其他规则仅当前角色</p>
-                        </li>
-                    </ol>
-                </section>
+                <!-- 页面 2: 功能模块总览 -->
+                <div id="helpPage2" class="help-page hidden h-full flex flex-col justify-center space-y-5 text-zinc-300 text-sm">
+                    <h3 class="text-2xl font-bold text-white mb-2 text-center" style="color: var(--theme-primary);">功能模块</h3>
+                    
+                    <div class="grid grid-cols-2 gap-5">
+                        <div class="bg-zinc-800/30 border border-zinc-700 p-5 rounded hover:border-cyan-700 transition-colors">
+                            <h4 class="text-white font-bold mb-3 flex items-center gap-2 text-base">
+                                <span class="text-2xl">📊</span> 方案页签
+                            </h4>
+                            <ul class="space-y-2 text-xs text-zinc-400">
+                                <li>• 查看所有场景的压制方案</li>
+                                <li>• 搜索/排序/收藏/最小化</li>
+                                <li>• 打投择方案（混合策略）</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-zinc-800/30 border border-zinc-700 p-5 rounded hover:border-cyan-700 transition-colors">
+                            <h4 class="text-white font-bold mb-3 flex items-center gap-2 text-base">
+                                <span class="text-2xl">➕</span> 新增场景
+                            </h4>
+                            <ul class="space-y-2 text-xs text-zinc-400">
+                                <li>• <strong class="text-white">精确</strong>：具体帧数（27）</li>
+                                <li>• <strong class="text-white">模糊</strong>：帧数范围（28~31）</li>
+                                <li>• <strong class="text-white">期望</strong>：指定理想压制</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-zinc-800/30 border border-zinc-700 p-5 rounded hover:border-cyan-700 transition-colors">
+                            <h4 class="text-white font-bold mb-3 flex items-center gap-2 text-base">
+                                <span class="text-2xl">📚</span> 数据页签
+                            </h4>
+                            <ul class="space-y-2 text-xs text-zinc-400">
+                                <li>• <strong class="text-white">招式库</strong>：查看/编辑/导入</li>
+                                <li>• <strong class="text-white">规则</strong>：自定义禁用规则</li>
+                                <li>• <strong class="text-white">收藏</strong>：保存/导出模板</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-zinc-800/30 border border-zinc-700 p-5 rounded hover:border-cyan-700 transition-colors">
+                            <h4 class="text-white font-bold mb-3 flex items-center gap-2 text-base">
+                                <span class="text-2xl">⭐</span> 常用操作
+                            </h4>
+                            <ul class="space-y-2 text-xs text-zinc-400">
+                                <li>• <span class="text-yellow-400">☆</span> 收藏喜欢的方案</li>
+                                <li>• <span class="text-zinc-400">-</span> 最小化到备选区</li>
+                                <li>• 搜索框快速筛选场景</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 
-                <section>
-                    <h3 class="text-lg font-bold text-white mb-2">💡 方案解读</h3>
-                    <ul class="space-y-2 text-zinc-400">
-                        <li><span class="text-yellow-500">卡帧招式</span> → 用来消耗多余的有利帧</li>
-                        <li><span class="text-white">压制招式</span> → 对手起身时攻击命中的招式</li>
-                        <li><span class="text-cyan-400">H +X</span> / <span class="text-white">H 0</span> / <span class="text-rose-400">H -X</span> → 命中时的帧数优势</li>
-                        <li><span class="text-cyan-400">B +X</span> / <span class="text-white">B 0</span> / <span class="text-rose-400">B -X</span> →打防时的帧数优势</li>
-                        <li><span class="text-emerald-400">偷 XF</span> → 比正常更早命中，多偷的帧数</li>
-                    </ul>
-                </section>
+                <!-- 页面 3: 符号速查 + 联系 -->
+                <div id="helpPage3" class="help-page hidden h-full flex flex-col justify-center space-y-8 text-zinc-300 text-sm py-6">
+                    <section>
+                        <h3 class="text-2xl font-bold text-white mb-4 text-center" style="color: var(--theme-primary);">帧数标记</h3>
+                        <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg max-w-2xl mx-auto">
+                            <table class="w-full text-sm">
+                                <tbody>
+                                    <tr class="border-b border-zinc-700">
+                                        <td class="p-4 font-mono font-bold text-cyan-400">H +X / H -X</td>
+                                        <td class="p-4 text-zinc-400">命中后的优势 / 劣势帧数</td>
+                                    </tr>
+                                    <tr class="border-b border-zinc-700">
+                                        <td class="p-4 font-mono font-bold text-rose-400">B +X / B -X</td>
+                                        <td class="p-4 text-zinc-400">防御后的优势 / 劣势帧数</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-4 font-mono font-bold text-emerald-400">偷 XF</td>
+                                        <td class="p-4 text-zinc-400">提前命中多偷到的帧数</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    
+                    <section class="pt-4">
+                        <div class="text-center">
+                            <p class="text-sm text-zinc-400 mb-4">功能建议 / Bug反馈 / 数据整理</p>
+                            <a href="https://space.bilibili.com/3493085064914308" target="_blank" class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-pink-600 to-blue-600 hover:from-pink-500 hover:to-blue-500 rounded-lg text-white font-bold text-base transition-all transform hover:scale-105 shadow-lg">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
+                                </svg>
+                                <span>B站私信 @Cold_Visions</span>
+                            </a>
+                            <p class="text-sm text-zinc-500 mt-4">感谢您的使用和反馈！</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            
+            <!-- 页码指示器和翻页按钮 -->
+            <div class="flex-shrink-0 border-t border-zinc-800 p-5">
+                <div class="flex items-center justify-between">
+                    <!-- 上一页按钮 -->
+                    <button onclick="prevHelpPage()" id="helpPrevBtn" class="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all font-bold text-sm disabled:opacity-30 disabled:cursor-not-allowed rounded" disabled>
+                        ← 上一页
+                    </button>
+                    
+                    <!-- 页码指示器 -->
+                    <div class="flex items-center gap-3">
+                        <button onclick="goToHelpPage(1)" class="help-dot w-2.5 h-2.5 rounded-full transition-all active" style="background-color: var(--theme-primary);" data-page="1"></button>
+                        <button onclick="goToHelpPage(2)" class="help-dot w-2.5 h-2.5 rounded-full bg-zinc-600 transition-all" data-page="2"></button>
+                        <button onclick="goToHelpPage(3)" class="help-dot w-2.5 h-2.5 rounded-full bg-zinc-600 transition-all" data-page="3"></button>
+                    </div>
+                    
+                    <!-- 下一页按钮 -->
+                    <button onclick="nextHelpPage()" id="helpNextBtn" class="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all font-bold text-sm disabled:opacity-30 disabled:cursor-not-allowed rounded">
+                        下一页 →
+                    </button>
+                </div>
                 
-                <section>
-                    <h3 class="text-lg font-bold text-white mb-2">⚙️ 规则管理</h3>
-                    <p class="text-zinc-400 mb-2">在<span class="text-cyan-400">数据</span>页签可添加自定义规则：</p>
-                    <ul class="space-y-2 text-zinc-400 text-sm">
-                        <li><span class="text-red-400">禁用招式</span> → 禁止某招式用于卡帧、压制或直接压制</li>
-                        <li><span class="text-red-400">禁止组合</span> → 禁止两个招式连续使用（如 5LP × 5LP）</li>
-                        <li><span class="text-green-400">偏好压制</span> → 优先推荐某招式作为压制招式</li>
-                    </ul>
-                    <p class="text-zinc-500 text-xs mt-2">*<span class="text-zinc-400">全局</span>规则（如 LP+LP）对所有角色生效且不可删除</p>
-                </section>
-                
-                <section>
-                    <h3 class="text-lg font-bold text-white mb-2">📝 写在最后</h3>
-                    <p class="text-zinc-400">本网页仍处于测试早期版本，如有反馈和建议，请B站私信 <strong class="text-cyan-400">Cold_Visions</strong>，十分感谢！</p>
-                </section>
-                
-                <div class="pt-4 border-t border-zinc-800 text-center text-zinc-600 text-xs">
-                    Made by Yuetian
+                <!-- 页码文字 -->
+                <div class="text-center mt-3">
+                    <span class="text-xs text-zinc-500">第 <span id="helpCurrentPage" class="text-white font-bold">1</span> / 3 页</span>
                 </div>
             </div>
         </div>
@@ -2226,11 +2525,13 @@
 
     <!-- 角色数据存储（全局变量，由各角色JS文件填充） -->
     <script>const CHARACTER_DATA = {};</script>
-    <!-- 加载角色数据文件 -->
+    <!-- 加载角色数据文件 - 经典操作 -->
     <script src="data/ryu.js"></script>
     <script src="data/blanka.js"></script>
     <script src="data/sagat.js"></script>
     <script src="data/juri.js"></script>
+    <!-- 加载角色数据文件 - 现代操作 -->
+    <script src="data/zangief_modern.js"></script>
 
     <script>
         // ==================== 配置常量 ====================
@@ -2243,8 +2544,10 @@
                 "RASHID", "A.K.I.", "ED", "GOUKI", "VEGA", "TERRY",
                 "MAI", "ELENA", "SAGAT", "C.VIPER"
             ],
-            // 已有JSON数据的角色
+            // 已有JSON数据的角色（经典操作）
             CHARACTERS_WITH_DATA: ["RYU", "BLANKA", "SAGAT", "JURI"],
+            // 已有JSON数据的角色（现代操作） - 待补充
+            CHARACTERS_WITH_DATA_MODERN: ["ZANGIEF"],
             // 安全跳所需帧数（大部分角色42F）
             SAFE_JUMP_FRAMES: {
                 "DEFAULT": 42,
@@ -2298,6 +2601,16 @@
                         usage: "meaty_direct",
                         description: "无法取消，不适合用于压制"
                     }
+                ],
+                "ZANGIEF": [
+                    {
+                        id: "zangief_preset_throw_after_throw",
+                        type: "context_disable",
+                        contextPattern: "投",
+                        moveName: "投",
+                        usage: "meaty",
+                        description: "投技后距离过远，无法再次投技压制"
+                    }
                 ]
             },
             // 角色图标映射
@@ -2324,15 +2637,15 @@
             // bgImage    - 背景图片路径
             CHAR_THEMES: {
                 "RYU": {
-                    primary: "#6b2020",      // 道服暗红
+                    primary: "#643330",      // 脏朱红（红感更强）
                     secondary: "#d4a574",    // 道服米色（文本高亮）
-                    accent: "#1a1a1a",       // 水墨黑（Glitch对比）
-                    modalTitle: "#a04040",
-                    btnPrimary: "#6b2020",
-                    btnPrimaryHover: "#4a1515",
-                    inputAccent: "#a04040",
-                    cardBg: "#1a1210",       // 深棕红
-                    cardBorder: "#3d2218",
+                    accent: "#1c1714",       // 深墨棕（Glitch对比）
+                    modalTitle: "#844542",   // 褪色朱砂
+                    btnPrimary: "#643330",   // 脏朱红
+                    btnPrimaryHover: "#442420",  // 深脏红
+                    inputAccent: "#844542",  // 褪色朱砂
+                    cardBg: "#181614",       // 墨灰底
+                    cardBorder: "#422e28",   // 暗红褐边框
                     bgImage: "asset/ryu_ss01.jpg"
                 },
                 "BLANKA": {
@@ -2371,6 +2684,18 @@
                     cardBorder: "#3d1a3d",   // 紫色边框
                     bgImage: "asset/juri_ss01.jpg"
                 },
+                "ZANGIEF": {
+                    primary: "#d32f2f",      // 正红色（苏联红色旋风）
+                    secondary: "#ffffff",    // 纯白（文本高亮，强烈对比）
+                    accent: "#ffa726",       // 金色/橙黄（护腕、腰带）
+                    modalTitle: "#ef5350",   // 亮红
+                    btnPrimary: "#c62828",   // 深红按钮
+                    btnPrimaryHover: "#b71c1c",
+                    inputAccent: "#ef5350",  // 亮红强调
+                    cardBg: "#141414",       // 纯中性深灰（不带棕调）
+                    cardBorder: "#d4a349",   // 金黄色边框（护腕的金色）
+                    bgImage: "asset/zangief_ss01.jpg"
+                },
                 // 默认主题（用于无特定主题的角色）
                 "_DEFAULT": {
                     primary: "#ff007a",      // 霓虹粉
@@ -2404,6 +2729,18 @@
                     "5HP||2MP|40"
                 ],
                 mixupFavorites: []
+            },
+            "ZANGIEF": {
+                favorites: [
+                    "66||投|27",
+                    "↓L||Auto H|28",
+                    "66||Auto H|36",
+                    "66||Auto H|38",
+                    "L||Auto H|40"
+                ],
+                mixupFavorites: [
+                    "27|5|66"
+                ]
             }
             // 其他角色暂无推荐，可以根据需要添加
         };
@@ -2411,6 +2748,7 @@
         // ==================== 应用状态 ====================
         const state = {
             currentCharacter: "JURI",
+            controlMode: "classic", // 操作模式：'classic' 经典 | 'modern' 现代
             moveLibrary: [],
             notes: [],
             // 角色数据缓存：{ moves: [], scenarios: [] }
@@ -2433,7 +2771,6 @@
             showOnlyFavorites: false,
             // 打投择收藏 { "charName:adv:remain:killDesc": true } - 旧版，保留用于迁移
             mixupFavorites: {},
-            // 打投择隐藏的方案 { "charName:adv:remain:killDesc": true }
             mixupHidden: {},
             // 收藏模板系统 { charName: { current: "my", templates: {...} } }
             favoriteTemplates: {},
@@ -2522,7 +2859,7 @@
                 bgOverlay.style.opacity = '0';
             }
             
-            console.log(`[主题] 应用 ${char} 主题:`, theme);
+            // 应用主题
         }
 
         // 解析active字符串为段数组（支持多段如 "10-14,20-23"）
@@ -2546,7 +2883,6 @@
         }
 
         // 检查targetFrame是否命中某个active段，返回命中信息或null
-        // 对于两段招式：只有命中最后一段时才计算偷帧，命中第一段时偷帧为0
         function checkActiveHit(activeStr, targetFrame) {
             const ranges = parseActiveRanges(activeStr);
             const isMultiHit = ranges.length > 1;  // 是否是多段招式
@@ -2556,7 +2892,6 @@
                 const range = ranges[i];
                 if (range.start <= targetFrame && targetFrame <= range.end) {
                     const isLastSegment = (i === lastRangeIndex);
-                    // 两段招式：只有最后一段才计算偷帧，第一段偷帧为0
                     const effectiveStolen = (isMultiHit && !isLastSegment) ? 0 : (targetFrame - range.start);
                     
                     return {
@@ -2587,7 +2922,7 @@
             try {
                 localStorage.setItem(getGlobalStorageKey('currentCharacter'), char);
             } catch (e) {
-                console.warn('保存当前角色失败:', e);
+                // 静默失败
             }
         }
         
@@ -2605,7 +2940,7 @@
                 // 只保存用户修改过的数据（与预设不同）
                 localStorage.setItem(getStorageKey(char, 'moves'), JSON.stringify(moves));
             } catch (e) {
-                console.warn('保存招式数据失败:', e);
+                // 静默失败
             }
         }
         
@@ -2616,7 +2951,7 @@
                     return JSON.parse(saved);
                 }
             } catch (e) {
-                console.warn('读取招式数据失败:', e);
+                // 静默失败
             }
             return null;
         }
@@ -2633,7 +2968,7 @@
                 const userScenarios = allScenarios.filter(s => s.isUserAdded === true);
                 localStorage.setItem(getStorageKey(char, 'scenarios'), JSON.stringify(userScenarios));
             } catch (e) {
-                console.warn('保存 scenario 失败:', e);
+                // 静默失败
             }
         }
 
@@ -2660,7 +2995,7 @@
                     return userScenarios;
                 }
             } catch (e) {
-                console.warn('读取 scenario 失败:', e);
+                // 静默失败
             }
             return []; // 返回空数组表示没有用户自定义
         }
@@ -2690,7 +3025,7 @@
             try {
                 localStorage.setItem(getStorageKey(char, 'rules'), JSON.stringify(rules));
             } catch (e) {
-                console.warn('保存规则失败:', e);
+                // 静默失败
             }
         }
         
@@ -2702,7 +3037,7 @@
                     return JSON.parse(saved);
                 }
             } catch (e) {
-                console.warn('读取规则失败:', e);
+                // 静默失败
             }
             return [];
         }
@@ -2719,13 +3054,32 @@
         }
         
         // 检查招式是否被禁用（用于特定用途）
-        function isMoveDisabled(move, usage, rules) {
+        // 新增 context 参数：当前场景名称（可选）
+        function isMoveDisabled(move, usage, rules, context = null) {
             if (!move) return false;
             const moveName = (move.name || '').toUpperCase();
             
             for (const rule of rules) {
+                // 原有的 disable 规则
                 if (rule.type === 'disable' && rule.moveName && rule.usage === usage) {
                     if (moveName === rule.moveName.toUpperCase()) {
+                        return true;
+                    }
+                }
+                
+                // 新的 context_disable 规则：基于前置场景禁用
+                if (rule.type === 'context_disable' && rule.contextPattern && rule.moveName && context) {
+                    // 检查招式名称是否匹配
+                    if (moveName !== rule.moveName.toUpperCase()) continue;
+                    
+                    // 检查用途是否匹配（meaty 匹配所有压制，或精确匹配）
+                    if (rule.usage === 'meaty' && !usage.startsWith('meaty')) continue;
+                    if (rule.usage !== 'meaty' && rule.usage !== usage) continue;
+                    
+                    // 检查场景是否匹配（支持关键词匹配）
+                    const contextUpper = context.toUpperCase();
+                    const patternUpper = rule.contextPattern.toUpperCase();
+                    if (contextUpper.includes(patternUpper) || patternUpper.includes(contextUpper)) {
                         return true;
                     }
                 }
@@ -2767,7 +3121,7 @@
             try {
                 localStorage.setItem(getGlobalStorageKey('favorites'), JSON.stringify(state.favorites));
             } catch (e) {
-                console.warn('保存收藏状态失败:', e);
+                // 静默失败
             }
         }
         
@@ -2784,7 +3138,7 @@
             try {
                 localStorage.setItem(getGlobalStorageKey('minimized'), JSON.stringify(state.minimized));
             } catch (e) {
-                console.warn('保存最小化状态失败:', e);
+                // 静默失败
             }
         }
         
@@ -2853,7 +3207,7 @@
             return getMoveStrength(plan.meatyMove);
         }
 
-        function calculateBestPlan(adv) {
+        function calculateBestPlan(adv, contexts = []) {
             const possiblePlans = [];
             // 获取当前角色的所有规则
             const rules = getAllRulesForCharacter(state.currentCharacter);
@@ -2864,7 +3218,15 @@
             
             state.moveLibrary
                 .filter(m => !m.isDash && m.active)
-                .filter(m => !isMoveDisabled(m, 'meaty_direct', rules))  // 过滤被禁用的直接压制招式
+                .filter(m => {
+                    // 检查是否被禁用（传递所有场景）
+                    for (const context of contexts) {
+                        if (isMoveDisabled(m, 'meaty_direct', rules, context)) {
+                            return false;
+                        }
+                    }
+                    return !isMoveDisabled(m, 'meaty_direct', rules);
+                })
                 .forEach(meatyMove => {
                     // 使用新的多段active检查函数
                     const hitInfo = checkActiveHit(meatyMove.active, directTargetFrame);
@@ -2903,7 +3265,15 @@
                     // Dash 后接压制招式
                     state.moveLibrary
                         .filter(m => !m.isDash && m.active)
-                        .filter(m => !isMoveDisabled(m, 'meaty_after_kill', rules))  // 过滤被禁用的卡帧后压制招式
+                        .filter(m => {
+                            // 检查是否被禁用（传递所有场景）
+                            for (const context of contexts) {
+                                if (isMoveDisabled(m, 'meaty_after_kill', rules, context)) {
+                                    return false;
+                                }
+                            }
+                            return !isMoveDisabled(m, 'meaty_after_kill', rules);
+                        })
                         .forEach(meatyMove => {
                             const hitInfo = checkActiveHit(meatyMove.active, targetFrame);
                             if (hitInfo) {
@@ -2912,7 +3282,7 @@
                                     isDirect: false,
                                     isThrow: isThrowPlan,
                                     killMove,
-                                    killMove2: null,  // 单步卡帧无第二步
+                                    killMove2: null,
                                     killTotal,
                                     killTotal2: 0,
                                     remain,
@@ -2939,7 +3309,15 @@
                 
                 state.moveLibrary
                     .filter(m => !m.isDash && m.active)
-                    .filter(m => !isMoveDisabled(m, 'meaty_after_kill', rules))  // 过滤被禁用的卡帧后压制招式
+                    .filter(m => {
+                        // 检查是否被禁用（传递所有场景）
+                        for (const context of contexts) {
+                            if (isMoveDisabled(m, 'meaty_after_kill', rules, context)) {
+                                return false;
+                            }
+                        }
+                        return !isMoveDisabled(m, 'meaty_after_kill', rules);
+                    })
                     .forEach(meatyMove => {
                         const hitInfo = checkActiveHit(meatyMove.active, targetFrame);
                         
@@ -2954,7 +3332,7 @@
                                 isDirect: false,
                                 isThrow: isThrowPlan,
                                 killMove,
-                                killMove2: null,  // 单步卡帧无第二步
+                                killMove2: null,
                                 killTotal,
                                 killTotal2: 0,
                                 remain,
@@ -2969,10 +3347,8 @@
 
             // ========== 方案C: 两步卡帧后压制 ==========
             state.moveLibrary.forEach(killMove1 => {
-                // 检查第一步是否被禁用用于卡帧
                 if (isMoveDisabled(killMove1, 'kill', rules)) return;
                 
-                // 计算第一步卡帧消耗
                 let killTotal1;
                 if (killMove1.isDash) {
                     killTotal1 = killMove1.dashFrames || 19;
@@ -2986,12 +3362,9 @@
                 if (killTotal1 >= adv) return;
                 const remain1 = adv - killTotal1;
                 
-                // 遍历第二步卡帧招式
                 state.moveLibrary.forEach(killMove2 => {
-                    // 检查第二步是否被禁用用于卡帧
                     if (isMoveDisabled(killMove2, 'kill', rules)) return;
                     
-                    // 计算第二步卡帧消耗
                     let killTotal2;
                     if (killMove2.isDash) {
                         killTotal2 = killMove2.dashFrames || 19;
@@ -3006,7 +3379,6 @@
                     const remain2 = remain1 - killTotal2;
                     const targetFrame2 = remain2 + 1;
                     
-                    // 使用规则系统检查第一步+第二步是否禁止组合
                     if (isComboForbidden(killMove1, killMove2, rules)) {
                         return;
                     }
@@ -3014,12 +3386,19 @@
                     // 找压制招式
                     state.moveLibrary
                         .filter(m => !m.isDash && m.active)
-                        .filter(m => !isMoveDisabled(m, 'meaty_after_kill', rules))  // 过滤被禁用的卡帧后压制招式
+                        .filter(m => {
+                            // 检查是否被禁用（传递所有场景）
+                            for (const context of contexts) {
+                                if (isMoveDisabled(m, 'meaty_after_kill', rules, context)) {
+                                    return false;
+                                }
+                            }
+                            return !isMoveDisabled(m, 'meaty_after_kill', rules);
+                        })
                         .forEach(meatyMove => {
                             const hitInfo = checkActiveHit(meatyMove.active, targetFrame2);
                             
                             if (hitInfo) {
-                                // 使用规则系统检查第二步+压制是否禁止组合
                                 if (isComboForbidden(killMove2, meatyMove, rules)) {
                                     return;
                                 }
@@ -3078,29 +3457,28 @@
         // ==================== 数据加载 ====================
         // 从全局 CHARACTER_DATA 加载角色数据（由外部 .js 文件填充）
         function loadCharacterData(char) {
-            console.log(`[加载] 角色: ${char}`);
+            // 根据当前模式构造数据键名
+            const dataKey = state.controlMode === 'modern' ? `${char}_MODERN` : char;
             
             // 1. 优先从 localStorage 加载用户保存的数据
             const savedMoves = loadMovesFromStorage(char);
             if (savedMoves && savedMoves.length > 0) {
-                console.log(`[localStorage] 使用用户保存的招式数据: ${savedMoves.length} 个`);
                 state.moveLibrary = savedMoves;
                 state.characterCache[char] = {
                     moves: savedMoves,
-                    scenarios: CHARACTER_DATA[char]?.scenarios || []
+                    scenarios: CHARACTER_DATA[dataKey]?.scenarios || []
                 };
                 return true;
             }
             
             // 2. 检查内存缓存
             if (state.characterCache[char]?.moves?.length > 0) {
-                console.log(`[缓存] 使用缓存数据`);
                 state.moveLibrary = [...state.characterCache[char].moves];
                 return true;
             }
 
             // 3. 从全局变量读取（由 <script src="xxx.js"> 加载）
-            const data = CHARACTER_DATA[char];
+            const data = CHARACTER_DATA[dataKey];
             
             if (data && data.moves) {
                 state.characterCache[char] = {
@@ -3108,10 +3486,9 @@
                     scenarios: data.scenarios ? [...data.scenarios] : []
                 };
                 state.moveLibrary = [...data.moves];
-                console.log(`[成功] 加载预设 ${data.moves.length} 个招式, ${data.scenarios?.length || 0} 个场景`);
                 return true;
             } else {
-                console.warn(`[警告] 未找到 ${char} 的数据，请确保已加载对应的 .js 文件`);
+                // 数据文件未加载
                 state.moveLibrary = [];
                 state.characterCache[char] = { moves: [], scenarios: [] };
                 return false;
@@ -3121,9 +3498,11 @@
         // ==================== 角色切换 ====================
         function selectCharacter(char) {
             // 检查是否有数据，无数据角色不可选
-            const hasData = CONFIG.CHARACTERS_WITH_DATA.includes(char);
+            const hasData = state.controlMode === 'classic' ? 
+                CONFIG.CHARACTERS_WITH_DATA.includes(char) :
+                CONFIG.CHARACTERS_WITH_DATA_MODERN.includes(char);
+            
             if (!hasData) {
-                console.log(`[角色] ${char} 暂无数据，无法选择`);
                 return; // 阻止选择
             }
             
@@ -3137,7 +3516,6 @@
             // 重置收藏视图状态
             if (state.showOnlyFavorites) {
                 state.showOnlyFavorites = false;
-                // 显示正常列表，隐藏收藏视图
                 const normalView = document.getElementById('noteListContainer');
                 const favView = document.getElementById('favoritesGridView');
                 const viewNotes = document.getElementById('view-notes');
@@ -3212,17 +3590,50 @@
 
         function initCharacterGrid() {
             const grid = document.getElementById('charGrid');
+            const mode = state.controlMode; // 'classic' 或 'modern'
+            
             grid.innerHTML = CONFIG.ALL_CHARACTERS.map(char => {
-                const hasData = CONFIG.CHARACTERS_WITH_DATA.includes(char);
-                const isSelected = char === state.currentCharacter;
+                // 根据模式判断角色是否有数据
+                let hasData = false;
+                let hasOtherModeData = false;
                 
-                // 无数据角色不添加点击事件
-                const clickHandler = hasData ? `onclick="selectCharacter('${char}')"` : '';
+                if (mode === 'classic') {
+                    hasData = CONFIG.CHARACTERS_WITH_DATA.includes(char);
+                    hasOtherModeData = !hasData && CONFIG.CHARACTERS_WITH_DATA_MODERN.includes(char);
+                } else if (mode === 'modern') {
+                    hasData = CONFIG.CHARACTERS_WITH_DATA_MODERN.includes(char);
+                    hasOtherModeData = !hasData && CONFIG.CHARACTERS_WITH_DATA.includes(char);
+                }
+                
+                const isSelected = char === state.currentCharacter && mode === state.controlMode;
+                
+                // 根据数据状态设置样式和提示
+                let cssClass = '';
+                let tooltip = '';
+                let clickHandler = '';
+                
+                if (hasData) {
+                    // 当前模式有数据：正常可选
+                    cssClass = isSelected ? 'selected' : '';
+                    tooltip = '点击选择';
+                    clickHandler = `onclick="selectCharacter('${char}')"`;
+                } else if (hasOtherModeData) {
+                    // 另一个模式有数据：半透明显示
+                    cssClass = 'other-mode-only';
+                    const otherMode = mode === 'classic' ? '现代' : '经典';
+                    tooltip = `当前仅有${otherMode}操作数据`;
+                    clickHandler = ''; // 不可点击
+                } else {
+                    // 完全无数据：灰色
+                    cssClass = 'no-data';
+                    tooltip = '暂无数据';
+                    clickHandler = '';
+                }
                 
                 return `
-                    <div class="char-item ${isSelected ? 'selected' : ''} ${!hasData ? 'no-data' : ''}" 
+                    <div class="char-item ${cssClass}" 
                          ${clickHandler}
-                         title="${hasData ? '点击选择' : '暂无数据'}">
+                         title="${tooltip}">
                         <div class="char-icon">${getCharIcon(char)}</div>
                         <div class="char-name">${char}</div>
                     </div>
@@ -3328,7 +3739,6 @@
             navigator.clipboard.writeText(text).then(() => {
                 showToast('已复制方案信息');
             }).catch(err => {
-                console.error('复制失败:', err);
                 showToast('复制失败');
             });
         }
@@ -3835,12 +4245,10 @@
             }
         }
         
-        // 检查打投择方案是否被隐藏
         function isMixupHidden(adv, remain, killDesc) {
             return state.mixupHidden[getMixupKey(adv, remain, killDesc)] === true;
         }
         
-        // 切换打投择方案隐藏
         function toggleMixupHidden(adv, remain, killDesc) {
             const key = getMixupKey(adv, remain, killDesc);
             if (state.mixupHidden[key]) {
@@ -3863,7 +4271,6 @@
             } catch(e) { return {}; }
         }
         
-        // 保存/加载打投择隐藏
         function saveMixupHidden() {
             localStorage.setItem('sf6_mixup_hidden', JSON.stringify(state.mixupHidden));
         }
@@ -3881,7 +4288,7 @@
             try {
                 localStorage.setItem(getGlobalStorageKey('favoriteTemplates'), JSON.stringify(state.favoriteTemplates));
             } catch (e) {
-                console.warn('保存收藏模板失败:', e);
+                // 静默失败
             }
         }
         
@@ -3900,7 +4307,7 @@
             try {
                 localStorage.setItem(getGlobalStorageKey('templateModifyWarned'), JSON.stringify(state.templateModifyWarned));
             } catch (e) {
-                console.warn('保存模板修改警告状态失败:', e);
+                // 静默失败
             }
         }
         
@@ -4011,8 +4418,6 @@
                 initCharacterTemplates(char);
                 state.favoriteTemplates[char].templates['my'].mixupFavorites = charMixup[char];
             });
-            
-            console.log('[迁移] 已从旧格式迁移收藏数据');
         }
         
         // 获取当前角色当前模板
@@ -4168,7 +4573,7 @@
                 const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
                 
                 state.notes.forEach((note, idx) => {
-                    if (note.isFuzzy && note.advRange) {
+                    if (note.advRange) {
                         const fuzzyKey = `fuzzy_${idx}`;
                         // 检查是否符合搜索条件
                         if (!searchTerm || matchesFuzzySearch(note, searchTerm)) {
@@ -4236,20 +4641,17 @@
             const normalView = document.getElementById('noteListContainer');
             const favView = document.getElementById('favoritesGridView');
             
-            // 获取所有需要隐藏的正常视图元素
             const viewNotes = document.getElementById('view-notes');
             const elementsToToggle = viewNotes ? Array.from(viewNotes.children).filter(el => 
                 el.id !== 'noteListContainer' && el.id !== 'favoritesGridView'
             ) : [];
             
             if (state.showOnlyFavorites) {
-                // 隐藏正常列表，显示收藏视图
                 normalView.classList.add('hidden');
                 elementsToToggle.forEach(el => el.classList.add('hidden'));
                 favView.classList.remove('hidden');
                 renderFavoritesView();
             } else {
-                // 显示正常列表，隐藏收藏视图
                 normalView.classList.remove('hidden');
                 elementsToToggle.forEach(el => el.classList.remove('hidden'));
                 favView.classList.add('hidden');
@@ -4312,7 +4714,7 @@
                 // 获取该 adv 对应的场景
                 const contexts = [];
                 state.notes.forEach(note => {
-                    if (note.adv === adv && !note.isFuzzy) {
+                    if (note.adv === adv && !note.advRange) {
                         contexts.push(note.context);
                     }
                 });
@@ -4333,7 +4735,7 @@
                     // 获取该 adv 对应的场景
                     const contexts = [];
                     state.notes.forEach(note => {
-                        if (note.adv === adv && !note.isFuzzy) {
+                        if (note.adv === adv && !note.advRange) {
                             contexts.push(note.context);
                         }
                     });
@@ -4635,11 +5037,11 @@
             const fuzzyGroups = [];
             
             state.notes.forEach((note, idx) => {
-                if (note.isFuzzy && note.advRange) {
-                    // 模糊场景
+                if (note.advRange) {
+                    // 模糊场景（有 advRange 就是模糊场景）
                     fuzzyGroups.push({
                         advRange: note.advRange,
-                        context: note.context,
+                        context: note.context || '未命名',
                         idx: idx,
                         isFuzzy: true
                     });
@@ -4691,7 +5093,7 @@
                         return false;
                     } else {
                         // 检查该场景是否有任何收藏的方案
-                        const allPlans = calculateBestPlan(group.adv);
+                        const allPlans = calculateBestPlan(group.adv, group.contexts || []);
                         const hasFavoritePlan = allPlans.some(plan => 
                             isPlanFavorite(group.adv, getPlanKey(plan))
                         );
@@ -4744,7 +5146,7 @@
                     return renderFuzzyScenario(group, cardIndex);
                 }
                 
-                const allPlans = calculateBestPlan(group.adv);
+                const allPlans = calculateBestPlan(group.adv, group.contexts || []);
                 
                 // 分离投技方案和普通方案
                 const throwPlans = allPlans.filter(p => p.isThrow && p.remain >= 4 && p.remain <= 5);
@@ -5375,7 +5777,6 @@
                 items.sort((a, b) => b.adv - a.adv);
             }
             
-            // 处理每个item的killDescs，过滤掉被隐藏的
             const processedItems = items.map(item => {
                 const visibleDescs = item.killDescs.filter(desc => 
                     !isMixupHidden(item.adv, currentMixupTab, desc)
@@ -5525,21 +5926,55 @@
             const item = mixups[remain].find(m => m.adv === adv);
             if (!item) return;
             
+            const char = state.currentCharacter;
+            const template = getCurrentTemplate();
+            
+            // 如果不是"我的收藏"模板，首次修改时弹窗提示
+            if (template.id !== 'my') {
+                const warnKey = `${char}:${template.id}`;
+                if (!state.templateModifyWarned[warnKey]) {
+                    showTemplateModifyWarning(template.name, () => {
+                        state.templateModifyWarned[warnKey] = true;
+                        saveTemplateModifyWarned();
+                        _performToggleMixupAll(adv, remain, item, template);
+                    });
+                    return;
+                }
+            }
+            
+            _performToggleMixupAll(adv, remain, item, template);
+        }
+        
+        // 执行打投择收藏切换（内部函数）
+        function _performToggleMixupAll(adv, remain, item, template) {
             // 检查是否所有方案都已收藏
             const allFavorited = item.killDescs.every(desc => isMixupFavorite(adv, remain, desc));
+            
+            if (!template.mixupFavorites) {
+                template.mixupFavorites = [];
+            }
             
             // 如果全部已收藏，则取消全部；否则收藏全部
             item.killDescs.forEach(desc => {
                 const key = getMixupKey(adv, remain, desc);
+                const idx = template.mixupFavorites.indexOf(key);
+                
                 if (allFavorited) {
-                    delete state.mixupFavorites[key];
+                    // 取消收藏
+                    if (idx !== -1) {
+                        template.mixupFavorites.splice(idx, 1);
+                    }
                 } else {
-                    state.mixupFavorites[key] = true;
+                    // 添加收藏
+                    if (idx === -1) {
+                        template.mixupFavorites.push(key);
+                    }
                 }
             });
             
-            saveMixupFavorites();
+            saveFavoriteTemplates();
             renderThrowMixupContent();
+            showToast(allFavorited ? '已取消收藏' : '已收藏');
         }
         
         // 打开打投择编辑弹窗
@@ -5548,7 +5983,6 @@
             const originalItem = mixups[remain].find(m => m.adv === adv);
             if (!originalItem) return;
             
-            // 获取所有卡帧方式（包括已隐藏的）
             const allDescs = originalItem.killDescs;
             
             // 创建弹窗HTML
@@ -5603,7 +6037,6 @@
             if (modal) modal.remove();
         }
         
-        // 恢复某个场景的所有隐藏
         function resetMixupHidden(adv, remain) {
             const mixups = calculateThrowMixups();
             const item = mixups[remain].find(m => m.adv === adv);
@@ -6143,13 +6576,109 @@
             document.getElementById('charModal').classList.add('hidden'); 
         }
         
+        // 切换操作模式（经典/现代）
+        function switchControlMode(mode) {
+            if (state.controlMode === mode) return;
+            
+            state.controlMode = mode;
+            
+            // 更新按钮状态
+            document.getElementById('modeBtn-classic').classList.toggle('active', mode === 'classic');
+            document.getElementById('modeBtn-modern').classList.toggle('active', mode === 'modern');
+            
+            // 重新渲染角色网格
+            initCharacterGrid();
+            
+            // 检查当前角色在新模式下是否有数据
+            const hasData = mode === 'classic' ? 
+                CONFIG.CHARACTERS_WITH_DATA.includes(state.currentCharacter) :
+                CONFIG.CHARACTERS_WITH_DATA_MODERN.includes(state.currentCharacter);
+            
+            if (!hasData) {
+                // 当前角色在新模式下无数据，清空数据并显示提示
+                showToast(`${state.currentCharacter} 暂无${mode === 'classic' ? '经典' : '现代'}操作数据`, 'info');
+                state.moveLibrary = [];
+                state.notes = [];
+                state.characterCache[state.currentCharacter] = { moves: [], scenarios: [] };
+                renderAll();
+            } else {
+                // 有数据，重新加载
+                loadCharacterData(state.currentCharacter);
+                state.notes = loadAllScenarios(state.currentCharacter);
+                state.characterRules[state.currentCharacter] = loadCharacterRules(state.currentCharacter);
+                renderAll();
+                showToast(`已切换到${mode === 'classic' ? '经典' : '现代'}操作模式`, 'success');
+            }
+        }
+        
+        // ==================== 帮助模态框翻页功能 ====================
+        let currentHelpPage = 1;
+        const totalHelpPages = 3;
+        
         function openHelpModal() {
+            currentHelpPage = 1;
+            updateHelpPage();
             document.getElementById('helpModal').classList.remove('hidden');
         }
         
         function closeHelpModal() {
             document.getElementById('helpModal').classList.add('hidden');
         }
+        
+        function nextHelpPage() {
+            if (currentHelpPage < totalHelpPages) {
+                currentHelpPage++;
+                updateHelpPage();
+            }
+        }
+        
+        function prevHelpPage() {
+            if (currentHelpPage > 1) {
+                currentHelpPage--;
+                updateHelpPage();
+            }
+        }
+        
+        function goToHelpPage(page) {
+            if (page >= 1 && page <= totalHelpPages) {
+                currentHelpPage = page;
+                updateHelpPage();
+            }
+        }
+        
+        function updateHelpPage() {
+            for (let i = 1; i <= totalHelpPages; i++) {
+                document.getElementById(`helpPage${i}`).classList.add('hidden');
+            }
+            
+            // 显示当前页面
+            document.getElementById(`helpPage${currentHelpPage}`).classList.remove('hidden');
+            
+            // 更新页码显示
+            document.getElementById('helpCurrentPage').textContent = currentHelpPage;
+            
+            // 更新页码指示器
+            document.querySelectorAll('.help-dot').forEach((dot, index) => {
+                const page = index + 1;
+                if (page === currentHelpPage) {
+                    dot.classList.add('active');
+                    dot.style.backgroundColor = 'var(--theme-primary)';
+                    dot.style.transform = 'scale(1.5)';
+                } else {
+                    dot.classList.remove('active');
+                    dot.style.backgroundColor = '#52525b'; // zinc-600
+                    dot.style.transform = 'scale(1)';
+                }
+            });
+            
+            // 更新按钮状态
+            const prevBtn = document.getElementById('helpPrevBtn');
+            const nextBtn = document.getElementById('helpNextBtn');
+            
+            prevBtn.disabled = currentHelpPage === 1;
+            nextBtn.disabled = currentHelpPage === totalHelpPages;
+        }
+        
         
         function openRuleModal() {
             // 填充招式下拉列表
@@ -6170,6 +6699,10 @@
             document.getElementById('inputComboDesc').value = '';
             document.getElementById('inputPreferMove').value = '';
             document.getElementById('inputPreferDesc').value = '';
+            document.getElementById('inputContextPattern').value = '';
+            document.getElementById('inputContextMove').value = '';
+            document.getElementById('inputContextUsage').value = 'meaty';
+            document.getElementById('inputContextDesc').value = '';
         }
         
         // 切换规则类型 tab
@@ -6178,9 +6711,9 @@
             document.querySelectorAll('.rule-tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`ruleTab-${type}`).classList.add('active');
             
-            // 显示/隐藏表单
             document.getElementById('ruleForm-disable').classList.toggle('hidden', type !== 'disable');
             document.getElementById('ruleForm-combo').classList.toggle('hidden', type !== 'combo');
+            document.getElementById('ruleForm-context').classList.toggle('hidden', type !== 'context');
             document.getElementById('ruleForm-prefer').classList.toggle('hidden', type !== 'prefer');
         }
         
@@ -6205,6 +6738,40 @@
             const preferSelect = document.getElementById('inputPreferMove');
             preferSelect.innerHTML = '<option value="">-- 请选择招式 --</option>' +
                 moves.map(m => `<option value="${m}">${m}</option>`).join('');
+            
+            // 条件禁用规则 - 招式下拉
+            const contextMoveSelect = document.getElementById('inputContextMove');
+            contextMoveSelect.innerHTML = '<option value="">-- 请选择招式 --</option>' +
+                moves.map(m => `<option value="${m}">${m}</option>`).join('');
+            
+            // 条件禁用规则 - 场景下拉
+            const contextPatternSelect = document.getElementById('inputContextPattern');
+            const scenarios = [];
+            
+            // 获取所有场景（包括精确和模糊场景）
+            state.notes.forEach(note => {
+                if (note.advRange) {
+                    // 模糊场景
+                    scenarios.push({
+                        label: `${note.context} (有利 ${note.advRange[0]}~${note.advRange[1]}F)`,
+                        value: note.context
+                    });
+                } else {
+                    // 精确场景
+                    scenarios.push({
+                        label: `${note.context} (有利 ${note.adv}F)`,
+                        value: note.context
+                    });
+                }
+            });
+            
+            // 去重并排序
+            const uniqueScenarios = Array.from(new Set(scenarios.map(s => s.value)))
+                .map(value => scenarios.find(s => s.value === value))
+                .sort((a, b) => a.value.localeCompare(b.value, 'zh-CN'));
+            
+            contextPatternSelect.innerHTML = '<option value="">-- 请选择场景 --</option>' +
+                uniqueScenarios.map(s => `<option value="${escapeHtml(s.value)}">${escapeHtml(s.label)}</option>`).join('');
         }
         
         // 保存禁用压制规则
@@ -6318,6 +6885,53 @@
             showToast('规则已添加');
         }
         
+        // 保存条件禁用规则
+        function saveContextRule() {
+            const contextPattern = document.getElementById('inputContextPattern').value.trim();
+            const moveName = document.getElementById('inputContextMove').value.trim();
+            const usage = document.getElementById('inputContextUsage').value;
+            const description = document.getElementById('inputContextDesc').value.trim();
+            
+            if (!contextPattern) {
+                showToast('请选择前置场景', 'error');
+                return;
+            }
+            
+            if (!moveName) {
+                showToast('请选择要禁用的招式', 'error');
+                return;
+            }
+            
+            const usageLabels = {
+                'meaty': '所有压制',
+                'meaty_after_kill': '卡帧后压制',
+                'meaty_direct': '直接压制'
+            };
+            
+            const newRule = {
+                id: `rule_${Date.now()}`,
+                type: 'context_disable',
+                contextPattern,
+                moveName,
+                usage,
+                description: description || `场景"${contextPattern}"后禁止${moveName}用于${usageLabels[usage]}`
+            };
+            
+            // 添加到角色专属规则
+            if (!state.characterRules[state.currentCharacter]) {
+                state.characterRules[state.currentCharacter] = [];
+            }
+            state.characterRules[state.currentCharacter].push(newRule);
+            
+            // 保存到 localStorage
+            saveCharacterRules(state.currentCharacter, state.characterRules[state.currentCharacter]);
+            
+            closeRuleModal();
+            renderRules();
+            renderNotes(); // 重新计算方案
+            showToast('条件禁用规则已添加');
+        }
+        
         function saveRule() {
             const pattern1 = document.getElementById('inputPattern1').value.trim().toUpperCase();
             const pattern2 = document.getElementById('inputPattern2').value.trim().toUpperCase();
@@ -6404,7 +7018,7 @@
             try {
                 localStorage.setItem(`${CONFIG.STORAGE_KEY}_deleted_preset_rules`, JSON.stringify(state.deletedPresetRules));
             } catch (e) {
-                console.warn('保存已删除预设规则失败:', e);
+                // 静默失败
             }
         }
         
@@ -6416,7 +7030,7 @@
                     return JSON.parse(saved);
                 }
             } catch (e) {
-                console.warn('加载已删除预设规则失败:', e);
+                // 静默失败
             }
             return {};
         }
@@ -6486,7 +7100,6 @@
             selectedBtn.style.backgroundColor = 'var(--theme-btn-primary)';
             selectedBtn.className = 'flex-1 py-2 text-xs font-bold transition-all text-white';
             
-            // 显示/隐藏字段
             if (currentMoveType === 'dash') {
                 frameFields.classList.add('hidden');
                 dashFields.classList.remove('hidden');
@@ -6494,7 +7107,6 @@
                 frameFields.classList.remove('hidden');
                 dashFields.classList.add('hidden');
                 
-                // 投技隐藏 Hit/Block 和 Knockdown 选项
                 if (currentMoveType === 'throw') {
                     hitBlockFields.classList.add('hidden');
                     knockdownField.classList.add('hidden');
@@ -6641,6 +7253,23 @@
                         <span class="text-zinc-600 mx-1">→</span>
                         <span class="text-zinc-400">禁止${usageLabels[rule.usage] || rule.usage}</span>
                     `;
+                } else if (rule.type === 'context_disable') {
+                    // 基于前置场景的禁用规则
+                    const usageLabels = {
+                        'kill': '卡帧',
+                        'meaty_after_kill': '卡帧后压制',
+                        'meaty_direct': '直接压制',
+                        'meaty': '压制'
+                    };
+                    typeLabel = '条件禁用';
+                    typeColor = 'text-orange-400';
+                    content = `
+                        <span class="text-cyan-400 font-mono">${escapeHtml(rule.contextPattern)}</span>
+                        <span class="text-zinc-600 mx-1">→</span>
+                        <span class="${typeColor} font-bold">${escapeHtml(rule.moveName)}</span>
+                        <span class="text-zinc-600 mx-1">×</span>
+                        <span class="text-zinc-400">${usageLabels[rule.usage] || rule.usage}</span>
+                    `;
                 } else if (rule.type === 'combo') {
                     // 禁用组合规则
                     typeLabel = '禁用';
@@ -6707,7 +7336,6 @@
                 exactGroup.classList.add('hidden');
                 fuzzyGroup.classList.remove('hidden');
                 hint.textContent = '输入帧数范围，系统将计算覆盖所有情况的最优方案';
-                // 隐藏期望后续（模糊模式不支持）
                 expectDetails.classList.add('hidden');
                 // 初始化计算
                 calculateFuzzyPreview();
@@ -7202,7 +7830,6 @@
             
             // 方案C：两步卡帧
             for (const killMove1 of state.moveLibrary) {
-                // 检查第一步是否被禁用用于卡帧
                 if (isMoveDisabled(killMove1, 'kill', rules)) continue;
                 
                 let killTotal1;
@@ -7218,7 +7845,6 @@
                 if (killTotal1 >= neededKill) continue;
                 
                 for (const killMove2 of state.moveLibrary) {
-                    // 检查第二步是否被禁用用于卡帧
                     if (isMoveDisabled(killMove2, 'kill', rules)) continue;
                     
                     // 检查规则禁止组合
@@ -7330,7 +7956,7 @@
                     <span class="text-cyan-400 font-black text-xl">${plan.displayMeaty}</span>
                 </div>`;
             } else if (plan.type === 'double') {
-                const remain1 = plan.killTotal;  // 第一步后的剩余
+                const remain1 = plan.killTotal;
                 stepsHtml = `<div class="flex items-center justify-center gap-2 flex-wrap">
                     <span class="text-white font-bold">${plan.killMove.name}</span>
                     <span class="text-zinc-600">(-${plan.killTotal}F)</span>
@@ -7645,7 +8271,6 @@
                 showToast(`已导入 ${newMoves.length} 个招式`);
             } catch (e) {
                 showToast('JSON 格式错误', 'error');
-                console.error('JSON 解析错误:', e);
             }
         }
 
@@ -7672,8 +8297,6 @@
 
         // ==================== 初始化 ====================
         window.onload = function() {
-            console.log('=== SF6 FRAME LAB 初始化 ===');
-            
             // 设置打投择方案折叠状态监听
             const mixupDetails = document.getElementById('mixupDetails');
             if (mixupDetails) {
@@ -7715,25 +8338,18 @@
             
             // 应用角色主题
             applyTheme(savedCharacter);
-            console.log(`[角色] 恢复上次选择: ${savedCharacter}`);
-            
-            console.log(`CHARACTER_DATA 已加载角色:`, Object.keys(CHARACTER_DATA));
             
             // 1. 加载角色数据 (优先 localStorage，其次全局变量 CHARACTER_DATA)
-            const loadSuccess = loadCharacterData(state.currentCharacter);
-            console.log(`数据加载${loadSuccess ? '成功' : '失败'}`);
+            loadCharacterData(state.currentCharacter);
             
             // 2. 加载scenarios: 预设 + 用户自定义
             state.notes = loadAllScenarios(state.currentCharacter);
-            console.log(`[Scenarios] 加载完成: 预设 ${getDefaultScenarios(state.currentCharacter).length} 个 + 用户自定义 ${loadScenariosFromStorage(state.currentCharacter).length} 个`);
             
             // 3. 加载角色专属规则
             state.characterRules[state.currentCharacter] = loadCharacterRules(state.currentCharacter);
-            console.log(`[Rules] 加载 ${state.characterRules[state.currentCharacter].length} 个角色规则`);
             
             // 4. 加载已删除的预设规则
             state.deletedPresetRules = loadDeletedPresetRules();
-            console.log(`[Rules] 加载 ${Object.keys(state.deletedPresetRules).length} 个已删除预设规则`);
             
             // 5. 加载收藏模板系统
             state.favoriteTemplates = loadFavoriteTemplates();
@@ -7746,24 +8362,16 @@
                 if (Object.keys(state.favoriteTemplates).length === 0) {
                     migrateLegacyFavorites();
                     saveFavoriteTemplates();
-                    console.log('[迁移] 旧版收藏数据已自动迁移到新系统');
                 }
             }
             
             // 初始化当前角色的模板结构
             initCharacterTemplates(state.currentCharacter);
-            console.log(`[模板] 加载 ${Object.keys(state.favoriteTemplates[state.currentCharacter]?.templates || {}).length} 个收藏模板`);
             
             // 5.2 加载最小化状态
             state.minimized = loadMinimized();
-            console.log(`[UI] 加载 ${Object.keys(state.minimized).length} 个最小化`);
             
-            // 6. 加载打投择隐藏状态
             state.mixupHidden = loadMixupHidden();
-            console.log(`[Mixup] 加载 ${Object.keys(state.mixupHidden).length} 个隐藏`);
-            
-            console.log(`最终状态: ${state.moveLibrary.length} 招式, ${state.notes.length} 场景`);
-            console.log('=== 初始化完成 ===');
             
             updateSortOrderUI();
             renderAll();
